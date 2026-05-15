@@ -4,153 +4,165 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="google-site-verification" content="s1LpdFQDsO-k3mGLHAsP62N2V955khk8kZsyeon9G1M" />
-    <title>OMNIVERSE | Supreme Absolute Authority</title>
+    <title>OMNIVERSE | Supreme Authority</title>
 
     <style>
-        :root { --bg: #050505; --panel: #111111; --accent: #FF4500; --text: #FFFFFF; --sub: #888888; --border: #222222; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        :root { --bg: #050505; --panel: #111; --accent: #FF4500; --text: #FFF; --sub: #888; --border: #222; }
+        .light-mode { --bg: #F0F0F0; --panel: #FFF; --accent: #E74C3C; --text: #111; --sub: #555; --border: #DDD; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; transition: background 0.3s, color 0.3s; }
         body { background: var(--bg); color: var(--text); overflow-x: hidden; }
 
-        /* 🔱 SUPREME HEADER */
-        header { padding: 15px 25px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: rgba(5,5,5,0.9); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 1000; }
-        header h1 { font-size: 20px; color: var(--accent); letter-spacing: 4px; font-weight: 900; text-transform: uppercase; }
-        .search-container { flex: 1; max-width: 500px; margin: 0 30px; display: flex; }
-        .search-bar { width: 100%; background: #000; border: 1px solid var(--border); padding: 10px 15px; border-radius: 5px 0 0 5px; color: white; font-size: 13px; outline: none; }
-        .search-go { background: var(--accent); border: none; padding: 0 20px; color: white; font-weight: bold; border-radius: 0 5px 5px 0; cursor: pointer; }
+        /* 🔱 HEADER */
+        header { padding: 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid var(--accent); background: var(--panel); position: sticky; top: 0; z-index: 1000; }
+        header h1 { font-size: 18px; color: var(--accent); letter-spacing: 3px; font-weight: 900; }
+        
+        .header-btns { display: flex; gap: 10px; align-items: center; }
+        .theme-btn { background: var(--accent); color: white; border: none; padding: 5px 10px; border-radius: 5px; font-size: 10px; cursor: pointer; font-weight: bold; }
 
-        /* 🔱 SUPREME HERO (FEATURED INTEL) */
-        .hero { width: 100%; height: 380px; position: relative; overflow: hidden; border-bottom: 2px solid var(--accent); }
-        .hero-img { width: 100%; height: 100%; object-fit: cover; opacity: 0.4; }
-        .hero-content { position: absolute; bottom: 40px; left: 30px; z-index: 10; max-width: 80%; }
-        .hero-title { font-size: 36px; font-weight: 900; text-transform: uppercase; margin-bottom: 5px; text-shadow: 0 0 20px rgba(255,69,0,0.5); }
+        /* 🔱 AUTO-SWIPE BANNER */
+        .banner { width: 100%; height: 250px; overflow: hidden; position: relative; border-bottom: 1px solid var(--border); }
+        .banner-track { display: flex; width: 400%; height: 100%; animation: slide 16s infinite; }
+        .banner-track img { width: 25%; height: 100%; object-fit: cover; filter: brightness(0.6); }
+        @keyframes slide { 0%, 20% { transform: translateX(0); } 25%, 45% { transform: translateX(-25%); } 50%, 70% { transform: translateX(-50%); } 75%, 95% { transform: translateX(-75%); } }
 
-        /* 🔱 MAIN OMNI-LAYOUT */
-        .omni-layout { display: flex; padding: 25px; gap: 25px; max-width: 1500px; margin: 0 auto; }
-        .left-intel { flex: 2.2; }
-        .right-nexus { flex: 1; position: sticky; top: 95px; height: calc(100vh - 120px); }
+        /* 🔱 LAYOUT */
+        .omni-layout { display: flex; flex-wrap: wrap; padding: 15px; gap: 15px; max-width: 1400px; margin: 0 auto; }
+        .left-intel { flex: 2; min-width: 300px; }
+        .right-nexus { flex: 1; min-width: 300px; position: sticky; top: 80px; height: calc(100vh - 100px); }
 
-        .label { font-size: 12px; font-weight: 800; color: var(--sub); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; border-left: 4px solid var(--accent); padding-left: 10px; display: flex; justify-content: space-between; }
+        .label { font-size: 11px; font-weight: 800; color: var(--accent); text-transform: uppercase; margin: 20px 0 10px; letter-spacing: 1px; display: block; border-left: 3px solid var(--accent); padding-left: 8px; }
 
-        /* 🔱 DETAILED DATA CARDS */
-        .intel-card { display: flex; gap: 15px; background: var(--panel); padding: 15px; border-radius: 4px; margin-bottom: 15px; border: 1px solid var(--border); text-decoration: none; color: inherit; transition: 0.2s; }
-        .intel-card:hover { border-color: var(--accent); transform: translateX(5px); background: #181818; }
-        .intel-card img { width: 110px; height: 160px; object-fit: cover; border-radius: 3px; }
-        .intel-info { flex: 1; }
-        .tag { font-size: 10px; color: var(--accent); font-weight: 900; text-transform: uppercase; }
-        .i-title { font-size: 18px; font-weight: 800; margin: 5px 0; color: #FFF; }
-        .i-meta { font-size: 11px; color: var(--sub); margin-bottom: 8px; line-height: 1.5; }
-        .i-meta b { color: #BBB; }
-        .countdown { color: #00FF00; font-weight: bold; font-size: 11px; margin-top: 8px; display: block; border: 1px solid #00FF0033; padding: 2px 8px; width: fit-content; border-radius: 3px; }
+        /* 🔱 CARDS */
+        .card { display: flex; gap: 12px; background: var(--panel); padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--border); text-decoration: none; color: inherit; }
+        .card img { width: 80px; height: 120px; object-fit: cover; border-radius: 4px; }
+        .card-info { flex: 1; }
+        .card-title { font-size: 15px; font-weight: 700; margin-bottom: 5px; }
+        .card-meta { font-size: 11px; color: var(--sub); line-height: 1.4; }
+        .countdown { font-size: 10px; color: #00FF00; font-weight: bold; margin-top: 5px; display: block; }
 
-        /* 🔱 GLOBAL NEXUS (CHAT) */
-        .nexus { background: var(--panel); border: 1px solid var(--border); height: 100%; display: flex; flex-direction: column; border-radius: 4px; }
-        #nexus-logs { flex: 1; padding: 15px; overflow-y: auto; font-size: 12px; font-family: 'Courier New', monospace; scroll-behavior: smooth; }
-        .nexus-input-box { padding: 10px; background: #000; display: flex; gap: 5px; }
-        .n-input { flex: 1; background: #151515; border: 1px solid #333; padding: 10px; color: white; border-radius: 3px; font-size: 12px; }
-        .n-btn { background: var(--accent); border: none; padding: 0 15px; color: white; font-weight: bold; border-radius: 3px; cursor: pointer; }
+        /* 🔱 CHAT SYSTEM (WITH NICKNAME) */
+        .nexus { background: var(--panel); border: 1px solid var(--border); height: 100%; display: flex; flex-direction: column; border-radius: 8px; overflow: hidden; }
+        #chat-logs { flex: 1; padding: 15px; overflow-y: auto; font-size: 12px; }
+        .chat-input-area { padding: 10px; background: rgba(0,0,0,0.1); border-top: 1px solid var(--border); }
+        .nick-input { width: 100%; background: var(--bg); border: 1px solid var(--border); padding: 5px; color: var(--accent); border-radius: 4px; margin-bottom: 5px; font-size: 11px; font-weight: bold; }
+        .msg-row { display: flex; gap: 5px; }
+        .msg-input { flex: 1; background: var(--bg); border: 1px solid var(--border); padding: 8px; color: var(--text); border-radius: 4px; font-size: 12px; }
+        .send-btn { background: var(--accent); border: none; padding: 0 15px; color: white; font-weight: bold; border-radius: 4px; cursor: pointer; }
 
-        @media (max-width: 1000px) { .omni-layout { flex-direction: column; } .right-nexus { height: 400px; position: static; } }
+        @media (max-width: 800px) { .right-nexus { position: static; height: 400px; } }
     </style>
 </head>
 <body>
 
     <header>
         <h1>OMNIVERSE</h1>
-        <div class="search-container">
-            <input type="text" class="search-bar" placeholder="Search Multi-Verse Database...">
-            <button class="search-go">GO</button>
+        <div class="header-btns">
+            <button class="theme-btn" onclick="toggleTheme()">WHITE / BLACK</button>
         </div>
-        <div style="color:var(--accent); font-size:12px; font-weight:bold;">AUTHORITY MODE</div>
     </header>
 
-    <div class="hero">
-        <img src="https://images.unsplash.com/photo-1618336753974-aae8e04506aa?w=1200" class="hero-img">
-        <div class="hero-content">
-            <div style="color:var(--accent); font-weight:900; font-size:12px;">SUPREME ABSOLUTE AUTHORITY</div>
-            <h2 class="hero-title">Omniverse Core Synchronized</h2>
-            <p style="color:var(--sub); font-size:14px;">Global #1 Nexus for Anime, Manga, Manhwa, Voice Actors, and Studios.</p>
+    <div class="banner">
+        <div class="banner-track">
+            <img src="https://images.unsplash.com/photo-1578632738908-4521c726eec6?w=800" alt="Anime 1">
+            <img src="https://images.unsplash.com/photo-1541876072-be623c44fc47?w=800" alt="Anime 2">
+            <img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800" alt="Anime 3">
+            <img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=800" alt="Anime 4">
         </div>
     </div>
 
     <div class="omni-layout">
         <div class="left-intel">
-            <div class="label">LATEST INTEL FEED <span>FULL DATABASE ACCESS</span></div>
-            <div id="master-feed">
-                <div style="color:var(--sub); text-align:center; padding:100px;">Accessing Multi-Verse Archives...</div>
-            </div>
+            <span class="label">Upcoming Anime & Countdowns</span>
+            <div id="upcoming-list"></div>
+            
+            <span class="label">Top Manga, Manhwa & Manhua</span>
+            <div id="manga-list"></div>
         </div>
 
         <div class="right-nexus">
-            <div class="label">GLOBAL NEXUS</div>
+            <span class="label">Global Nexus Chat</span>
             <div class="nexus">
-                <div id="nexus-logs">
-                    <div style="color:var(--accent)">[SYSTEM]: Omniverse Hub Verified.</div>
-                    <div style="color:var(--sub)">Database link established. Awaiting Command.</div>
+                <div id="chat-logs">
+                    <div style="color:var(--accent)">[SYSTEM]: Identity required for chat access.</div>
                 </div>
-                <div class="nexus-input-box">
-                    <input type="text" id="chat-msg" class="n-input" placeholder="Enter Command...">
-                    <button class="n-btn" onclick="sendMsg()">SEND</button>
+                <div class="chat-input-area">
+                    <input type="text" id="user-nick" class="nick-input" placeholder="Set Nickname..." value="Boss">
+                    <div class="msg-row">
+                        <input type="text" id="user-msg" class="msg-input" placeholder="Enter message...">
+                        <button class="send-btn" onclick="sendMessage()">SEND</button>
+                    </div>
                 </div>
             </div>
-            <div style="margin-top:15px; border:1px dashed #333; padding:10px; text-align:center; font-size:10px; color:#444;">GOOGLE ADSENSE PARTNER SLOT</div>
         </div>
     </div>
 
     <script>
-        function sendMsg() {
-            const input = document.getElementById('chat-msg');
-            if(input.value) {
-                const log = document.getElementById('nexus-logs');
-                log.innerHTML += `<div><span style="color:var(--accent)">[BOSS]:</span> ${input.value}</div>`;
-                input.value = "";
-                log.scrollTop = log.scrollHeight;
+        // 🔱 THEME TOGGLE (WHITE & BLACK)
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+        }
+
+        // 🔱 CHAT ENGINE WITH NICKNAME
+        function sendMessage() {
+            const nick = document.getElementById('user-nick').value || "Guest";
+            const msg = document.getElementById('user-msg').value;
+            const logs = document.getElementById('chat-logs');
+
+            if(msg) {
+                logs.innerHTML += `<div><b style="color:var(--accent)">${nick}:</b> ${msg}</div>`;
+                document.getElementById('user-msg').value = "";
+                logs.scrollTop = logs.scrollHeight;
             }
         }
 
+        // 🔱 DATA FETCHING (FULL DETAILS)
         async function fetchOmniData() {
             try {
-                // Fetch Anime (Season Upcoming)
-                const animeRes = await fetch('https://api.jikan.moe/v4/seasons/upcoming');
-                const animeData = await animeRes.json();
+                // Fetch Upcoming Anime
+                const aRes = await fetch('https://api.jikan.moe/v4/seasons/upcoming');
+                const aData = await aRes.json();
+                const uList = document.getElementById('upcoming-list');
                 
+                aData.data.slice(0, 10).forEach(item => {
+                    uList.innerHTML += `
+                        <a href="${item.url}" target="_blank" class="card">
+                            <img src="${item.images.jpg.image_url}">
+                            <div class="card-info">
+                                <div class="card-title">${item.title}</div>
+                                <div class="card-meta">
+                                    <b>Studio:</b> ${item.studios[0]?.name || 'TBA'}<br>
+                                    <b>Source:</b> ${item.source}<br>
+                                    <b>Staff:</b> Directors/VA available in Portal
+                                </div>
+                                <span class="countdown">PREMIERING NEXT SEASON</span>
+                            </div>
+                        </a>`;
+                });
+
                 // Fetch Top Manga/Manhwa/Manhua
-                const mangaRes = await fetch('https://api.jikan.moe/v4/top/manga');
-                const mangaData = await mangaRes.json();
+                const mRes = await fetch('https://api.jikan.moe/v4/top/manga');
+                const mData = await mRes.json();
+                const mList = document.getElementById('manga-list');
 
-                const feed = document.getElementById('master-feed');
-                feed.innerHTML = '';
-
-                // Combine renders
-                animeData.data.slice(0, 10).forEach(item => { feed.innerHTML += renderCard(item, 'UPCOMING ANIME'); });
-                mangaData.data.slice(0, 10).forEach(item => { feed.innerHTML += renderCard(item, item.type.toUpperCase()); });
-
-            } catch (err) { console.log("Database Sync Error."); }
-        }
-
-        function renderCard(item, tag) {
-            const studio = item.studios ? item.studios[0]?.name : (item.authors ? item.authors[0]?.name : 'Global Source');
-            const infoText = item.synopsis ? item.synopsis.substring(0, 130) + '...' : 'Accessing full dossiers in the next portal...';
-            
-            return `
-                <a href="${item.url}" target="_blank" class="intel-card">
-                    <img src="${item.images.jpg.large_image_url}" alt="Cover">
-                    <div class="intel-info">
-                        <span class="tag">${tag}</span>
-                        <div class="i-title">${item.title}</div>
-                        <div class="i-meta">
-                            <b>Studio/Author:</b> ${studio}<br>
-                            <b>Director/Artist:</b> ${item.producers?.[0]?.name || 'Official Staff'}<br>
-                            <b>Voice Actors:</b> Access via Full Intel Portal<br>
-                            <b>Rank:</b> #${item.rank || 'TBA'} | <b>Score:</b> ${item.score || 'PENDING'}
-                        </div>
-                        <div style="font-size:11px; color:#AAA; line-height:1.4;">${infoText}</div>
-                        <span class="countdown">SYNC STATUS: ${item.status}</span>
-                    </div>
-                </a>
-            `;
+                mData.data.slice(0, 10).forEach(item => {
+                    mList.innerHTML += `
+                        <a href="${item.url}" target="_blank" class="card">
+                            <img src="${item.images.jpg.image_url}">
+                            <div class="card-info">
+                                <div class="card-title">${item.title}</div>
+                                <div class="card-meta">
+                                    <b>Author:</b> ${item.authors[0]?.name || 'N/A'}<br>
+                                    <b>Type:</b> ${item.type} | <b>Rank:</b> #${item.rank}<br>
+                                    <b>Score:</b> ⭐ ${item.score}
+                                </div>
+                            </div>
+                        </a>`;
+                });
+            } catch (e) { console.log("Sync Error"); }
         }
 
         fetchOmniData();
     </script>
 </body>
-</html>
+                    </html>
