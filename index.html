@@ -1,0 +1,331 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMNIVERSE | Absolute Global Media Authority</title>
+    
+    <!-- SEO & LEGAL META TAGS -->
+    <meta name="description" content="OMNIVERSE - The world's fastest news aggregator for Anime, Manga, and Manhwa. Official news and updates platform.">
+    <meta name="robots" content="index, follow">
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Syncopate:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- ADSENSE CONFIGURATION (SAFE MODE) -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8691102556824057" crossorigin="anonymous"></script>
+
+    <style>
+        :root { --primary: #ff4500; --accent: #00f2ff; --bg: #030303; --surface: #0a0a0a; --text: #fff; --border: #1a1a1a; }
+        .light-mode { --bg: #f8f9fa; --surface: #ffffff; --text: #111; --border: #dee2e6; }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; transition: background 0.3s, color 0.3s; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+
+        header { background: var(--bg); border-bottom: 2px solid var(--primary); position: sticky; top: 0; z-index: 9999; padding: 12px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 5px 20px rgba(0,0,0,0.4); }
+        .logo { font-family: 'Syncopate', sans-serif; font-size: 1.6rem; color: var(--primary); text-transform: uppercase; cursor: pointer; letter-spacing: -1px; }
+        
+        .search-engine { flex: 1; max-width: 500px; margin: 0 20px; display: flex; gap: 8px; }
+        .search-engine input { flex: 1; padding: 10px 20px; border-radius: 30px; border: 1px solid var(--border); background: var(--surface); color: var(--text); outline: none; }
+        .search-go { background: var(--primary); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-weight: 900; }
+
+        .btn-mode { cursor: pointer; border: 1px solid var(--primary); padding: 5px 12px; border-radius: 20px; color: var(--primary); font-size: 0.6rem; font-family: 'Syncopate'; }
+
+        /* AD SPACES (SAFE PLACEMENT) */
+        .ad-container { text-align: center; padding: 20px 0; background: var(--surface); border-bottom: 1px solid var(--border); overflow: hidden; }
+        .ad-label { display: block; font-size: 10px; opacity: 0.5; margin-bottom: 5px; font-family: 'Syncopate'; }
+
+        /* Auto-Swipe Banner */
+        .hero { width: 100%; height: 500px; position: relative; overflow: hidden; background: #000; }
+        .slide { position: absolute; inset: 0; opacity: 0; transition: 1.2s ease-in-out; }
+        .slide.active { opacity: 1; }
+        .slide img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.5); }
+        .slide-info { position: absolute; bottom: 50px; left: 50px; z-index: 10; color: white; max-width: 700px; }
+        .slide-info h2 { font-family: 'Oswald'; font-size: 3.5rem; text-transform: uppercase; line-height: 1; margin-bottom: 10px; }
+
+        /* Main Layout */
+        .main-layout { max-width: 1600px; margin: 30px auto; display: grid; grid-template-columns: 1fr 380px; gap: 30px; padding: 0 20px; }
+        
+        .intel-card { display: grid; grid-template-columns: 220px 1fr; background: var(--surface); margin-bottom: 20px; border-radius: 15px; overflow: hidden; border: 1px solid var(--border); cursor: pointer; }
+        .intel-card:hover { border-color: var(--primary); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .intel-card img { width: 100%; height: 100%; object-fit: cover; }
+        .intel-body { padding: 25px; }
+
+        .nexus { background: var(--surface); border-radius: 20px; height: 750px; border: 1px solid var(--border); display: flex; flex-direction: column; position: sticky; top: 100px; }
+        #chat-flow { flex: 1; overflow-y: auto; padding: 20px; }
+        .chat-input { padding: 15px; border-top: 1px solid var(--border); display: flex; gap: 10px; }
+        .chat-input input { flex: 1; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+
+        /* Portal Modal */
+        .portal { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 10000; overflow-y: auto; }
+        .portal-header { background: var(--surface); padding: 15px 30px; position: sticky; top: 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 20px; z-index: 100; }
+        .back-btn { background: var(--primary); color: white; border: none; padding: 10px 25px; border-radius: 8px; cursor: pointer; font-family: 'Syncopate'; font-size: 0.7rem; font-weight: 900; }
+
+        /* Legal Footer */
+        footer { background: var(--surface); padding: 60px 20px; border-top: 4px solid var(--primary); text-align: center; margin-top: 100px; }
+        .legal-text { font-size: 0.75rem; opacity: 0.6; max-width: 900px; margin: 20px auto; line-height: 1.8; }
+        .footer-links a { color: var(--primary); text-decoration: none; margin: 0 15px; font-size: 0.7rem; font-family: 'Syncopate'; }
+
+        /* Entrance Overlay */
+        #gate-overlay { position: fixed; inset: 0; background: #000; z-index: 20000; display: flex; align-items: center; justify-content: center; text-align: center; }
+        .gate-box { background: var(--surface); padding: 60px; border-radius: 30px; border: 2px solid var(--primary); width: 90%; max-width: 500px; }
+
+        @media (max-width: 1000px) { 
+            .main-layout { grid-template-columns: 1fr; } 
+            .intel-card { grid-template-columns: 1fr; } 
+            .intel-card img { height: 350px; }
+            .hero { height: 350px; }
+            .slide-info h2 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body class="dark-mode">
+
+<div id="gate-overlay">
+    <div class="gate-box">
+        <h1 style="font-family:'Syncopate'; color:var(--primary); margin-bottom:10px;">OMNIVERSE</h1>
+        <p style="font-size:0.75rem; margin-bottom:30px; opacity:0.6; letter-spacing:2px;">WORLDWIDE NEWS AUTHORITY</p>
+        <input type="text" id="nick-field" placeholder="Create Nickname..." style="width:100%; padding:15px; border-radius:10px; border:1px solid var(--border); background:#111; color:white; margin-bottom:20px; text-align:center; font-size:1rem;">
+        <button onclick="setNick()" style="width:100%; padding:15px; background:var(--primary); color:white; border:none; border-radius:10px; font-weight:900; cursor:pointer; font-family:'Syncopate';">ACCESS CORE</button>
+    </div>
+</div>
+
+<header>
+    <div class="logo" onclick="location.reload()">OMNIVERSE</div>
+    <div class="search-engine">
+        <input type="text" id="searchIn" placeholder="Search the Multiverse..." onkeypress="if(event.key==='Enter') runSearch()">
+        <button class="search-go" onclick="runSearch()">></button>
+    </div>
+    <div style="display:flex; align-items:center; gap:20px;">
+        <span id="user-display" style="font-size:0.7rem; font-weight:900; color:var(--primary); font-family:'Syncopate';"></span>
+        <div class="btn-mode" onclick="toggleMode()">THEME</div>
+    </div>
+</header>
+
+<!-- TOP AD SPACE (SAFE PLACEMENT) -->
+<div class="ad-container">
+    <span class="ad-label">ADVERTISEMENT</span>
+    <ins class="adsbygoogle"
+         style="display:inline-block;width:728px;height:90px"
+         data-ad-client="ca-pub-8691102556824057"
+         data-ad-slot="AUTO_HEADER"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+<div id="hero-wrap" class="hero"></div>
+
+<div class="main-layout">
+    <main>
+        <h2 style="font-family:'Syncopate'; font-size:0.9rem; margin-bottom:25px; color:var(--primary); border-left:4px solid var(--primary); padding-left:15px;">LATEST INTEL</h2>
+        <div id="news-feed"></div>
+    </main>
+    <aside>
+        <div class="nexus">
+            <h3 style="padding:20px; font-family:'Syncopate'; font-size:0.75rem; border-bottom:1px solid var(--border); background:rgba(255,69,0,0.05);">GLOBAL NEXUS</h3>
+            <div id="chat-flow"></div>
+            <div class="chat-input">
+                <input type="text" id="msgIn" placeholder="Transmit data..." onkeypress="if(event.key==='Enter') pushChat()">
+                <button onclick="pushChat()" style="background:var(--primary); color:white; border:none; padding:10px 15px; border-radius:10px; cursor:pointer; font-weight:900;">SEND</button>
+            </div>
+            
+            <!-- SIDEBAR AD SPACE -->
+            <div style="padding:15px; text-align:center; border-top:1px solid var(--border);">
+                <span class="ad-label">SPONSORED</span>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-8691102556824057"
+                     data-ad-slot="AUTO_SIDEBAR"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+        </div>
+    </aside>
+</div>
+
+<div id="portal-view" class="portal">
+    <div class="portal-header">
+        <button class="back-btn" onclick="closePortal()">← BACK TO FEED</button>
+        <h2 id="portal-title" style="font-family:'Oswald'; font-size:1.8rem; letter-spacing:1px;"></h2>
+    </div>
+    <div id="portal-body" style="padding:40px;"></div>
+    
+    <!-- PORTAL AD SPACE -->
+    <div class="ad-container">
+        <ins class="adsbygoogle"
+             style="display:block; text-align:center;"
+             data-ad-layout="in-article"
+             data-ad-format="fluid"
+             data-ad-client="ca-pub-8691102556824057"
+             data-ad-slot="AUTO_PORTAL"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+</div>
+
+<footer>
+    <h2 style="font-family:'Syncopate'; color:var(--primary); letter-spacing:3px;">OMNIVERSE</h2>
+    <p class="legal-text">
+        <strong>LEGAL DISCLAIMER:</strong> OMNIVERSE is a news aggregation platform. We do not host, store, or distribute any copyrighted video files or pirated content. All anime/manga titles, images, and descriptions are copyright to their respective owners. We operate under fair use for news reporting and educational purposes.
+    </p>
+    <div class="footer-links">
+        <a href="#">PRIVACY POLICY</a>
+        <a href="#">TERMS OF SERVICE</a>
+        <a href="#">DMCA COMPLIANCE</a>
+        <a href="#">AD CHOICE</a>
+    </div>
+    <p style="font-size:0.6rem; opacity:0.4; margin-top:30px;">© 2024 OMNIVERSE GLOBAL MEDIA AUTHORITY. ALL RIGHTS RESERVED.</p>
+</footer>
+
+<script>
+    // FIREBASE INITIALIZATION
+    const firebaseConfig = { databaseURL: "https://studio-8164628274-c414a-default-rtdb.asia-southeast1.firebasedatabase.app/" };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    let myNick = localStorage.getItem('omni_nick');
+
+    window.onload = () => {
+        if(myNick) {
+            document.getElementById('gate-overlay').style.display = 'none';
+            document.getElementById('user-display').innerText = myNick.toUpperCase();
+        }
+        if(localStorage.getItem('mode') === 'light') document.body.classList.add('light-mode');
+        initBanner();
+        loadNews();
+    };
+
+    function setNick() {
+        const val = document.getElementById('nick-field').value;
+        if(val.length < 3) { alert("Nickname too short!"); return; }
+        myNick = val;
+        localStorage.setItem('omni_nick', myNick);
+        location.reload();
+    }
+
+    // AUTO-SWIPE BANNER
+    async function initBanner() {
+        try {
+            const r = await fetch('https://api.jikan.moe/v4/top/anime?limit=6');
+            const d = await r.json();
+            const hero = document.getElementById('hero-wrap');
+            hero.innerHTML = d.data.map((a, i) => `
+                <div class="slide ${i===0?'active':''}">
+                    <img src="${a.images.jpg.large_image_url}">
+                    <div class="slide-info">
+                        <small style="background:var(--primary); padding:5px 15px; font-weight:900; font-family:'Syncopate'; font-size:0.6rem;">TRENDING INTEL</small>
+                        <h2>${a.title}</h2>
+                        <p style="font-size:1.2rem; font-weight:600; color:var(--accent);">SCORE: ${a.score}</p>
+                    </div>
+                </div>`).join('');
+            
+            let cur = 0;
+            setInterval(() => {
+                const slides = document.querySelectorAll('.slide');
+                if(slides.length > 0) {
+                    slides[cur].classList.remove('active');
+                    cur = (cur + 1) % slides.length;
+                    slides[cur].classList.add('active');
+                }
+            }, 6000);
+        } catch(e) { console.log("Banner overload"); }
+    }
+
+    // DATA LOADERS
+    async function loadNews() {
+        try {
+            const r = await fetch('https://api.jikan.moe/v4/seasons/now?limit=20');
+            const d = await r.json();
+            renderList(d.data);
+        } catch(e) { setTimeout(loadNews, 5000); }
+    }
+
+    function renderList(list) {
+        document.getElementById('news-feed').innerHTML = list.map(a => `
+            <div class="intel-card" onclick="openPortal(${a.mal_id}, 'anime')">
+                <img src="${a.images.jpg.image_url}">
+                <div class="intel-body">
+                    <small style="color:var(--primary); font-family:'Syncopate'; font-size:0.6rem; letter-spacing:1px;">${a.type} • ${a.status.toUpperCase()}</small>
+                    <h3 style="font-family:'Oswald'; font-size:1.8rem; margin:10px 0; line-height:1.2;">${a.title}</h3>
+                    <p style="font-size:0.85rem; opacity:0.7; line-height:1.6;">${a.synopsis ? a.synopsis.substring(0,180) : 'Access full file for details.'}...</p>
+                </div>
+            </div>`).join('');
+    }
+
+    async function runSearch() {
+        const q = document.getElementById('searchIn').value;
+        if(!q) return;
+        document.getElementById('news-feed').innerHTML = "<h1 style='text-align:center; padding:100px;'>SCANNING MULTIVERSE...</h1>";
+        const r = await fetch(`https://api.jikan.moe/v4/anime?q=${q}&limit=20`);
+        const d = await r.json();
+        renderList(d.data);
+    }
+
+    // PORTAL LOGIC (BACK BUTTON READY)
+    async function openPortal(id, type) {
+        const portal = document.getElementById('portal-view');
+        const body = document.getElementById('portal-body');
+        portal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        body.innerHTML = "<h1 style='text-align:center; padding:100px;'>DECRYPTING FULL INTEL...</h1>";
+        
+        try {
+            const r = await fetch(`https://api.jikan.moe/v4/${type}/${id}/full`);
+            const d = await r.json();
+            const a = d.data;
+            document.getElementById('portal-title').innerText = a.title;
+            body.innerHTML = `
+                <div style="display:grid; grid-template-columns: 350px 1fr; gap:50px; max-width:1400px; margin:auto;">
+                    <div>
+                        <img src="${a.images.jpg.large_image_url}" style="width:100%; border-radius:20px; border:5px solid var(--primary); box-shadow: 0 20px 40px rgba(0,0,0,0.6);">
+                        <div style="margin-top:30px; background:var(--surface); padding:20px; border-radius:15px; border:1px solid var(--border);">
+                            <p style="margin-bottom:10px;"><strong>RANK:</strong> #${a.rank}</p>
+                            <p style="margin-bottom:10px;"><strong>POPULARITY:</strong> #${a.popularity}</p>
+                            <p style="margin-bottom:10px;"><strong>SEASON:</strong> ${a.season} ${a.year}</p>
+                            <p><strong>STUDIO:</strong> ${a.studios.map(s=>s.name).join(', ')}</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h1 style="font-family:'Oswald'; font-size:4rem; color:var(--primary); line-height:1; margin-bottom:20px;">${a.title}</h1>
+                        <div style="display:flex; gap:10px; margin-bottom:30px;">
+                            ${a.genres.map(g => `<span style="background:var(--primary); padding:5px 12px; border-radius:20px; font-size:0.7rem; font-weight:900;">${g.name.toUpperCase()}</span>`).join('')}
+                        </div>
+                        <p style="line-height:2; font-size:1.1rem; opacity:0.8; margin-bottom:40px;">${a.synopsis}</p>
+                        <h3 style="font-family:'Syncopate'; font-size:0.8rem; color:var(--primary); margin-bottom:15px;">SECURE EXTERNAL LINKS</h3>
+                        <div style="display:flex; gap:15px; flex-wrap:wrap;">
+                            <a href="${a.url}" target="_blank" style="background:#2d2d2d; color:white; padding:12px 25px; text-decoration:none; border-radius:10px; font-weight:900; font-size:0.8rem;">MYANIMELIST FILE</a>
+                            ${a.streaming ? a.streaming.map(s => `<a href="${s.url}" target="_blank" style="background:var(--primary); color:white; padding:12px 25px; text-decoration:none; border-radius:10px; font-weight:900; font-size:0.8rem;">WATCH ON ${s.name.toUpperCase()}</a>`).join('') : ''}
+                        </div>
+                    </div>
+                </div>`;
+        } catch(e) { body.innerHTML = "<h1>ERROR: DATA STREAM INTERRUPTED.</h1>"; }
+    }
+
+    function closePortal() { 
+        document.getElementById('portal-view').style.display = 'none'; 
+        document.body.style.overflow = 'auto';
+    }
+
+    function toggleMode() {
+        document.body.classList.toggle('light-mode');
+        localStorage.setItem('mode', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+    }
+
+    // CHAT NEXUS
+    function pushChat() {
+        const m = document.getElementById('msgIn').value;
+        if(m.trim()) { 
+            db.ref("global_chat").push({user: myNick, text: m, time: Date.now()}); 
+            document.getElementById('msgIn').value=""; 
+        }
+    }
+    db.ref("global_chat").limitToLast(40).on("child_added", s => {
+        const f = document.getElementById('chat-flow');
+        const data = s.val();
+        f.innerHTML += `<div style="margin-bottom:15px; border-left:3px solid var(--primary); padding-left:15px;"><b style="color:var(--primary); font-size:0.7rem; font-family:'Syncopate';">${data.user}</b><br><span style="font-size:0.95rem;">${data.text}</span></div>`;
+        f.scrollTop = f.scrollHeight;
+    });
+</script>
+</body>
+</html>
