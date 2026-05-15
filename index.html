@@ -13,156 +13,161 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; transition: background 0.3s, color 0.3s; }
         body { background: var(--bg); color: var(--text); overflow-x: hidden; }
 
-        /* 🔱 HEADER */
-        header { padding: 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid var(--accent); background: var(--panel); position: sticky; top: 0; z-index: 1000; }
-        header h1 { font-size: 18px; color: var(--accent); letter-spacing: 3px; font-weight: 900; }
-        
-        .header-btns { display: flex; gap: 10px; align-items: center; }
-        .theme-btn { background: var(--accent); color: white; border: none; padding: 5px 10px; border-radius: 5px; font-size: 10px; cursor: pointer; font-weight: bold; }
+        /* 🔱 SUPREME HEADER */
+        header { padding: 15px 25px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid var(--accent); background: var(--panel); position: sticky; top: 0; z-index: 1000; }
+        header h1 { font-size: 22px; color: var(--accent); letter-spacing: 4px; font-weight: 900; }
+        .theme-btn { background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: bold; }
 
-        /* 🔱 AUTO-SWIPE BANNER */
-        .banner { width: 100%; height: 250px; overflow: hidden; position: relative; border-bottom: 1px solid var(--border); }
+        /* 🔱 ANIME AUTO-SWIPE BANNER */
+        .banner { width: 100%; height: 350px; overflow: hidden; position: relative; border-bottom: 2px solid var(--accent); }
         .banner-track { display: flex; width: 400%; height: 100%; animation: slide 16s infinite; }
         .banner-track img { width: 25%; height: 100%; object-fit: cover; filter: brightness(0.6); }
-        @keyframes slide { 0%, 20% { transform: translateX(0); } 25%, 45% { transform: translateX(-25%); } 50%, 70% { transform: translateX(-50%); } 75%, 95% { transform: translateX(-75%); } }
+        @keyframes slide { 
+            0%, 20% { transform: translateX(0); } 
+            25%, 45% { transform: translateX(-25%); } 
+            50%, 70% { transform: translateX(-50%); } 
+            75%, 95% { transform: translateX(-75%); } 
+            100% { transform: translateX(0); }
+        }
+        .banner-overlay { position: absolute; bottom: 30px; left: 30px; z-index: 10; }
+        .banner-title { font-size: 32px; font-weight: 900; text-transform: uppercase; text-shadow: 0 0 15px rgba(255,69,0,0.7); }
 
-        /* 🔱 LAYOUT */
-        .omni-layout { display: flex; flex-wrap: wrap; padding: 15px; gap: 15px; max-width: 1400px; margin: 0 auto; }
-        .left-intel { flex: 2; min-width: 300px; }
-        .right-nexus { flex: 1; min-width: 300px; position: sticky; top: 80px; height: calc(100vh - 100px); }
+        /* 🔱 MAIN OMNI-LAYOUT */
+        .omni-layout { display: flex; flex-wrap: wrap; padding: 25px; gap: 25px; max-width: 1500px; margin: 0 auto; }
+        .left-intel { flex: 2.2; min-width: 320px; }
+        .right-nexus { flex: 1; min-width: 320px; position: sticky; top: 95px; height: calc(100vh - 120px); }
 
-        .label { font-size: 11px; font-weight: 800; color: var(--accent); text-transform: uppercase; margin: 20px 0 10px; letter-spacing: 1px; display: block; border-left: 3px solid var(--accent); padding-left: 8px; }
+        .label { font-size: 12px; font-weight: 800; color: var(--accent); text-transform: uppercase; margin: 25px 0 15px; letter-spacing: 2px; border-left: 4px solid var(--accent); padding-left: 10px; display: block; }
 
-        /* 🔱 CARDS */
-        .card { display: flex; gap: 12px; background: var(--panel); padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--border); text-decoration: none; color: inherit; }
-        .card img { width: 80px; height: 120px; object-fit: cover; border-radius: 4px; }
+        /* 🔱 DATA CARDS */
+        .card { display: flex; gap: 15px; background: var(--panel); padding: 15px; border-radius: 5px; margin-bottom: 15px; border: 1px solid var(--border); text-decoration: none; color: inherit; transition: 0.2s; }
+        .card:hover { border-color: var(--accent); transform: translateX(5px); }
+        .card img { width: 100px; height: 140px; object-fit: cover; border-radius: 3px; }
         .card-info { flex: 1; }
-        .card-title { font-size: 15px; font-weight: 700; margin-bottom: 5px; }
-        .card-meta { font-size: 11px; color: var(--sub); line-height: 1.4; }
-        .countdown { font-size: 10px; color: #00FF00; font-weight: bold; margin-top: 5px; display: block; }
+        .i-title { font-size: 17px; font-weight: 800; margin-bottom: 5px; }
+        .i-meta { font-size: 11px; color: var(--sub); line-height: 1.5; }
+        .countdown { color: #00FF00; font-weight: bold; font-size: 11px; margin-top: 8px; display: block; }
 
-        /* 🔱 CHAT SYSTEM (WITH NICKNAME) */
-        .nexus { background: var(--panel); border: 1px solid var(--border); height: 100%; display: flex; flex-direction: column; border-radius: 8px; overflow: hidden; }
-        #chat-logs { flex: 1; padding: 15px; overflow-y: auto; font-size: 12px; }
-        .chat-input-area { padding: 10px; background: rgba(0,0,0,0.1); border-top: 1px solid var(--border); }
-        .nick-input { width: 100%; background: var(--bg); border: 1px solid var(--border); padding: 5px; color: var(--accent); border-radius: 4px; margin-bottom: 5px; font-size: 11px; font-weight: bold; }
-        .msg-row { display: flex; gap: 5px; }
-        .msg-input { flex: 1; background: var(--bg); border: 1px solid var(--border); padding: 8px; color: var(--text); border-radius: 4px; font-size: 12px; }
+        /* 🔱 NEXUS CHAT (IDENTITY SYSTEM) */
+        .nexus { background: var(--panel); border: 1px solid var(--border); height: 100%; display: flex; flex-direction: column; border-radius: 5px; }
+        #chat-logs { flex: 1; padding: 15px; overflow-y: auto; font-size: 12px; font-family: 'Courier New', monospace; }
+        .chat-controls { padding: 12px; background: rgba(0,0,0,0.2); border-top: 1px solid var(--border); }
+        .nick-in { width: 100%; background: var(--bg); border: 1px solid var(--border); padding: 6px; color: var(--accent); border-radius: 4px; margin-bottom: 8px; font-size: 11px; font-weight: bold; outline: none; }
+        .msg-row { display: flex; gap: 8px; }
+        .msg-in { flex: 1; background: var(--bg); border: 1px solid var(--border); padding: 10px; color: var(--text); border-radius: 4px; font-size: 12px; outline: none; }
         .send-btn { background: var(--accent); border: none; padding: 0 15px; color: white; font-weight: bold; border-radius: 4px; cursor: pointer; }
 
-        @media (max-width: 800px) { .right-nexus { position: static; height: 400px; } }
+        @media (max-width: 900px) { .right-nexus { position: static; height: 450px; } }
     </style>
 </head>
 <body>
 
     <header>
         <h1>OMNIVERSE</h1>
-        <div class="header-btns">
-            <button class="theme-btn" onclick="toggleTheme()">WHITE / BLACK</button>
-        </div>
+        <button class="theme-btn" onclick="toggleTheme()">WHITE / BLACK</button>
     </header>
 
     <div class="banner">
         <div class="banner-track">
-            <img src="https://images.unsplash.com/photo-1578632738908-4521c726eec6?w=800" alt="Anime 1">
-            <img src="https://images.unsplash.com/photo-1541876072-be623c44fc47?w=800" alt="Anime 2">
-            <img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800" alt="Anime 3">
-            <img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=800" alt="Anime 4">
+            <img src="https://images.unsplash.com/photo-1578632738908-4521c726eec6?w=1200" alt="Anime 1">
+            <img src="https://images.unsplash.com/photo-1541876072-be623c44fc47?w=1200" alt="Anime 2">
+            <img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=1200" alt="Anime 3">
+            <img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=1200" alt="Anime 4">
+        </div>
+        <div class="banner-overlay">
+            <div style="color:var(--accent); font-weight:900; font-size:12px; letter-spacing:2px;">SUPREME AUTHORITY</div>
+            <h2 class="banner-title">OMNIVERSE CORE ENGINE</h2>
         </div>
     </div>
 
     <div class="omni-layout">
         <div class="left-intel">
-            <span class="label">Upcoming Anime & Countdowns</span>
-            <div id="upcoming-list"></div>
-            
+            <span class="label">Upcoming Anime Intel (Countdown)</span>
+            <div id="upcoming-feed"></div>
+
             <span class="label">Top Manga, Manhwa & Manhua</span>
-            <div id="manga-list"></div>
+            <div id="manga-feed"></div>
         </div>
 
         <div class="right-nexus">
-            <span class="label">Global Nexus Chat</span>
+            <span class="label">Global Nexus (Real-time)</span>
             <div class="nexus">
                 <div id="chat-logs">
-                    <div style="color:var(--accent)">[SYSTEM]: Identity required for chat access.</div>
+                    <div style="color:var(--accent)">[SYSTEM]: OMNIVERSE Online. Identity Required.</div>
                 </div>
-                <div class="chat-input-area">
-                    <input type="text" id="user-nick" class="nick-input" placeholder="Set Nickname..." value="Boss">
+                <div class="chat-controls">
+                    <input type="text" id="nick" class="nick-in" placeholder="Set Nickname..." value="Boss">
                     <div class="msg-row">
-                        <input type="text" id="user-msg" class="msg-input" placeholder="Enter message...">
-                        <button class="send-btn" onclick="sendMessage()">SEND</button>
+                        <input type="text" id="msg" class="msg-in" placeholder="Command...">
+                        <button class="send-btn" onclick="send()">SEND</button>
                     </div>
                 </div>
             </div>
+            <div style="margin-top:15px; border:1px dashed var(--border); padding:10px; text-align:center; font-size:10px; color:var(--sub);">GOOGLE ADSENSE REVENUE SLOT</div>
         </div>
     </div>
 
     <script>
-        // 🔱 THEME TOGGLE (WHITE & BLACK)
-        function toggleTheme() {
-            document.body.classList.toggle('light-mode');
-        }
+        // 🔱 THEME TOGGLE
+        function toggleTheme() { document.body.classList.toggle('light-mode'); }
 
-        // 🔱 CHAT ENGINE WITH NICKNAME
-        function sendMessage() {
-            const nick = document.getElementById('user-nick').value || "Guest";
-            const msg = document.getElementById('user-msg').value;
-            const logs = document.getElementById('chat-logs');
-
-            if(msg) {
-                logs.innerHTML += `<div><b style="color:var(--accent)">${nick}:</b> ${msg}</div>`;
-                document.getElementById('user-msg').value = "";
-                logs.scrollTop = logs.scrollHeight;
+        // 🔱 NICKNAME CHAT ENGINE
+        function send() {
+            const n = document.getElementById('nick').value || "Identity-X";
+            const m = document.getElementById('msg').value;
+            const l = document.getElementById('chat-logs');
+            if(m) {
+                l.innerHTML += `<div><b style="color:var(--accent)">${n}:</b> ${m}</div>`;
+                document.getElementById('msg').value = "";
+                l.scrollTop = l.scrollHeight;
             }
         }
 
-        // 🔱 DATA FETCHING (FULL DETAILS)
-        async function fetchOmniData() {
+        // 🔱 FULL DATA ENGINE (Voice Actors, Studios, Directors)
+        async function loadIntel() {
             try {
-                // Fetch Upcoming Anime
+                // Upcoming Anime
                 const aRes = await fetch('https://api.jikan.moe/v4/seasons/upcoming');
                 const aData = await aRes.json();
-                const uList = document.getElementById('upcoming-list');
+                const uFeed = document.getElementById('upcoming-feed');
                 
                 aData.data.slice(0, 10).forEach(item => {
-                    uList.innerHTML += `
+                    uFeed.innerHTML += `
                         <a href="${item.url}" target="_blank" class="card">
-                            <img src="${item.images.jpg.image_url}">
+                            <img src="${item.images.jpg.large_image_url}">
                             <div class="card-info">
-                                <div class="card-title">${item.title}</div>
-                                <div class="card-meta">
-                                    <b>Studio:</b> ${item.studios[0]?.name || 'TBA'}<br>
-                                    <b>Source:</b> ${item.source}<br>
-                                    <b>Staff:</b> Directors/VA available in Portal
+                                <div class="i-title">${item.title}</div>
+                                <div class="i-meta">
+                                    <b>Studio:</b> ${item.studios[0]?.name || 'Official Staff'}<br>
+                                    <b>Details:</b> Voice Actors & Trailer in Portal
                                 </div>
-                                <span class="countdown">PREMIERING NEXT SEASON</span>
+                                <span class="countdown">SYNC: PREMIERING NEXT SEASON</span>
                             </div>
                         </a>`;
                 });
 
-                // Fetch Top Manga/Manhwa/Manhua
+                // Top Manga/Manhwa/Manhua
                 const mRes = await fetch('https://api.jikan.moe/v4/top/manga');
                 const mData = await mRes.json();
-                const mList = document.getElementById('manga-list');
+                const mFeed = document.getElementById('manga-feed');
 
                 mData.data.slice(0, 10).forEach(item => {
-                    mList.innerHTML += `
+                    mFeed.innerHTML += `
                         <a href="${item.url}" target="_blank" class="card">
-                            <img src="${item.images.jpg.image_url}">
+                            <img src="${item.images.jpg.large_image_url}">
                             <div class="card-info">
-                                <div class="card-title">${item.title}</div>
-                                <div class="card-meta">
-                                    <b>Author:</b> ${item.authors[0]?.name || 'N/A'}<br>
-                                    <b>Type:</b> ${item.type} | <b>Rank:</b> #${item.rank}<br>
-                                    <b>Score:</b> ⭐ ${item.score}
+                                <div class="i-title">${item.title}</div>
+                                <div class="i-meta">
+                                    <b>Author:</b> ${item.authors[0]?.name || 'Global Source'}<br>
+                                    <b>Rank:</b> #${item.rank} | <b>Score:</b> ⭐ ${item.score}
                                 </div>
+                                <div style="font-size:10px; color:var(--accent); margin-top:5px;">${item.type.toUpperCase()} DATA SYNCED</div>
                             </div>
                         </a>`;
                 });
-            } catch (e) { console.log("Sync Error"); }
+            } catch (e) { console.log("Nexus Sync Error."); }
         }
-
-        fetchOmniData();
+        loadIntel();
     </script>
 </body>
-                    </html>
+    </html>
