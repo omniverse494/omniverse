@@ -2,97 +2,105 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>OMNIVERSE | Absolute Authority</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Omniverse - The Supreme Absolute Authority for Anime, Manga, and Manhwa Database.">
+    <meta name="google-site-verification" content="s1LpdFQDsO-k3mGLHAsP62N2V955khk8kZsyeon9G1M" />
+    <title>OMNIVERSE | Supreme Absolute Authority</title>
+    
     <style>
         :root { --bg: #050505; --panel: #111; --accent: #FF4500; --text: #FFF; --sub: #888; --border: #222; }
         .light-mode { --bg: #F5F5F5; --panel: #FFF; --accent: #E74C3C; --text: #111; --sub: #666; --border: #DDD; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; transition: 0.3s; }
         body { background: var(--bg); color: var(--text); overflow-x: hidden; }
 
-        header { padding: 15px; background: var(--panel); border-bottom: 2px solid var(--accent); position: sticky; top: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; }
-        header h1 { font-size: 20px; color: var(--accent); letter-spacing: 3px; font-weight: 900; }
-        
-        .search-box { flex: 1; margin: 0 20px; display: flex; max-width: 500px; }
-        .search-box input { width: 100%; padding: 10px; background: #000; border: 1px solid var(--border); color: white; border-radius: 5px 0 0 5px; outline: none; }
-        .search-box button { background: var(--accent); border: none; padding: 0 15px; color: white; font-weight: bold; border-radius: 0 5px 5px 0; cursor: pointer; }
+        /* HEADER & SEARCH FIXED */
+        header { padding: 15px 25px; background: var(--panel); border-bottom: 2px solid var(--accent); position: sticky; top: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; gap: 15px; }
+        header h1 { font-size: 22px; color: var(--accent); letter-spacing: 4px; font-weight: 900; }
+        .search-area { flex: 1; display: flex; max-width: 600px; }
+        .search-area input { width: 100%; padding: 12px; background: #000; border: 1px solid var(--border); color: white; border-radius: 5px 0 0 5px; outline: none; }
+        .search-area button { background: var(--accent); border: none; padding: 0 20px; color: white; font-weight: bold; border-radius: 0 5px 5px 0; cursor: pointer; }
 
-        .banner { width: 100%; height: 320px; overflow: hidden; position: relative; border-bottom: 2px solid var(--accent); }
-        .banner-track { display: flex; width: 400%; height: 100%; animation: slide 18s infinite; }
-        .banner-track img { width: 25%; height: 100%; object-fit: cover; filter: brightness(0.4); }
+        /* ANIME BANNER WITH REAL PICS */
+        .banner { width: 100%; height: 350px; overflow: hidden; position: relative; border-bottom: 2px solid var(--accent); }
+        .banner-track { display: flex; width: 400%; height: 100%; animation: slide 16s infinite; }
+        .banner-track .slide { width: 25%; height: 100%; position: relative; }
+        .banner-track img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.4); }
         @keyframes slide { 0%, 20% { transform: translateX(0); } 25%, 45% { transform: translateX(-25%); } 50%, 70% { transform: translateX(-50%); } 75%, 95% { transform: translateX(-75%); } }
-        .banner-text { position: absolute; bottom: 30px; left: 20px; z-index: 5; pointer-events: none; }
+        .banner-text { position: absolute; bottom: 40px; left: 30px; z-index: 10; }
 
-        .omni-container { display: flex; flex-wrap: wrap; padding: 20px; gap: 20px; max-width: 1600px; margin: 0 auto; }
-        .content-feed { flex: 2.5; min-width: 350px; }
-        .side-chat { flex: 1; min-width: 300px; position: sticky; top: 90px; height: calc(100vh - 110px); }
+        /* LAYOUT */
+        .main-grid { display: flex; flex-wrap: wrap; padding: 25px; gap: 25px; max-width: 1600px; margin: 0 auto; }
+        .content { flex: 2.5; min-width: 350px; }
+        .side { flex: 1; min-width: 300px; position: sticky; top: 100px; height: calc(100vh - 130px); }
 
-        .label { font-size: 11px; font-weight: 900; color: var(--accent); text-transform: uppercase; margin: 25px 0 15px; border-left: 4px solid var(--accent); padding-left: 10px; display: block; letter-spacing: 1px; }
+        .label { font-size: 12px; font-weight: 900; color: var(--accent); text-transform: uppercase; margin: 25px 0 15px; border-left: 5px solid var(--accent); padding-left: 12px; display: block; }
 
-        /* MULTI-DETAIL CARDS */
-        .card { display: flex; gap: 15px; background: var(--panel); padding: 18px; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--border); text-decoration: none; color: inherit; position: relative; }
-        .card:hover { border-color: var(--accent); transform: translateX(8px); }
-        .card img { width: 110px; height: 160px; object-fit: cover; border-radius: 5px; border: 1px solid #333; }
-        .info { flex: 1; }
-        .info h3 { font-size: 17px; margin-bottom: 5px; color: var(--text); }
-        .meta-data { font-size: 11px; color: var(--sub); line-height: 1.5; margin-bottom: 8px; }
-        .meta-data b { color: var(--accent); }
-        .action-links { display: flex; gap: 10px; margin-top: 10px; }
-        .btn-link { font-size: 10px; padding: 5px 10px; border: 1px solid var(--accent); color: var(--accent); border-radius: 4px; font-weight: bold; text-decoration: none; }
-        .btn-link:hover { background: var(--accent); color: white; }
+        /* CARDS WITH LINKS */
+        .card { display: flex; gap: 20px; background: var(--panel); padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid var(--border); text-decoration: none; color: inherit; }
+        .card:hover { border-color: var(--accent); transform: translateX(10px); }
+        .card img { width: 120px; height: 170px; object-fit: cover; border-radius: 6px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .details h3 { font-size: 18px; margin-bottom: 8px; color: var(--text); }
+        .meta { font-size: 12px; color: var(--sub); line-height: 1.6; margin-bottom: 12px; }
+        .meta b { color: var(--accent); }
+        .links { display: flex; gap: 10px; }
+        .btn { font-size: 10px; padding: 6px 12px; border: 1px solid var(--accent); color: var(--accent); border-radius: 4px; font-weight: bold; }
 
-        .nexus-chat { background: var(--panel); border: 1px solid var(--border); height: 100%; display: flex; flex-direction: column; border-radius: 10px; overflow: hidden; }
-        #logs { flex: 1; padding: 15px; overflow-y: auto; font-size: 12px; font-family: 'Courier New', monospace; }
-        .chat-ui { padding: 12px; background: rgba(0,0,0,0.3); border-top: 1px solid var(--border); }
-        .nick-box { width: 100%; padding: 8px; background: var(--bg); border: 1px solid var(--border); color: var(--accent); border-radius: 5px; font-size: 11px; font-weight: bold; margin-bottom: 8px; }
-        .msg-input { display: flex; gap: 8px; }
-        .msg-input input { flex: 1; padding: 10px; background: var(--bg); border: 1px solid var(--border); color: white; border-radius: 5px; font-size: 12px; }
-        .send-btn { background: var(--accent); border: none; padding: 0 15px; color: white; font-weight: bold; border-radius: 5px; cursor: pointer; }
+        /* CHAT FIXED */
+        .nexus { background: var(--panel); border: 1px solid var(--border); height: 100%; display: flex; flex-direction: column; border-radius: 10px; overflow: hidden; }
+        #logs { flex: 1; padding: 15px; overflow-y: auto; font-size: 12px; }
+        .ui { padding: 15px; background: rgba(0,0,0,0.2); border-top: 1px solid var(--border); }
+        .nick-in { width: 100%; padding: 8px; background: var(--bg); border: 1px solid var(--border); color: var(--accent); border-radius: 5px; font-weight: bold; margin-bottom: 8px; }
+        .msg-row { display: flex; gap: 8px; }
+        .msg-row input { flex: 1; padding: 10px; background: var(--bg); border: 1px solid var(--border); color: white; border-radius: 5px; }
 
-        @media (max-width: 1000px) { .side-chat { position: static; height: 450px; } .banner { height: 220px; } }
+        .ads-slot { background: rgba(255,255,255,0.03); border: 1px dashed #333; padding: 15px; text-align: center; color: #555; font-size: 10px; margin-bottom: 15px; border-radius: 8px; }
+
+        @media (max-width: 900px) { .side { position: static; height: 450px; } }
     </style>
 </head>
 <body>
 
 <header>
     <h1>OMNIVERSE</h1>
-    <div class="search-box">
-        <input type="text" id="searchInp" placeholder="Search Anime, Manga, Staff...">
-        <button onclick="search()">GO</button>
+    <div class="search-area">
+        <input type="text" id="searchInput" placeholder="Search Anime, Manga, Staff...">
+        <button onclick="search()">SEARCH</button>
     </div>
-    <button class="send-btn" style="padding:8px" onclick="document.body.classList.toggle('light-mode')">THEME</button>
+    <button class="btn" style="background:var(--accent); color:white" onclick="document.body.classList.toggle('light-mode')">W/B</button>
 </header>
 
 <div class="banner">
     <div class="banner-track">
-        <img src="https://images.unsplash.com/photo-1541876072-be623c44fc47?w=1200" alt="Anime Slider 1">
-        <img src="https://images.unsplash.com/photo-1578632738908-4521c726eec6?w=1200" alt="Anime Slider 2">
-        <img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=1200" alt="Anime Slider 3">
-        <img src="https://images.unsplash.com/photo-1519661148489-4b9804001185?w=1200" alt="Anime Slider 4">
+        <div class="slide"><img src="https://images6.alphacoders.com/133/1338575.png"></div>
+        <div class="slide"><img src="https://images2.alphacoders.com/516/516664.jpg"></div>
+        <div class="slide"><img src="https://images5.alphacoders.com/132/1327170.jpeg"></div>
+        <div class="slide"><img src="https://images8.alphacoders.com/133/1330364.png"></div>
     </div>
     <div class="banner-text">
-        <h2 style="font-size:32px; font-weight:900; letter-spacing:2px; text-shadow:0 0 15px #FF4500;">SUPREME CORE</h2>
+        <h2 style="font-size:35px; font-weight:900; text-shadow:0 0 20px #FF4500;">SUPREME AUTHORITY</h2>
     </div>
 </div>
 
-<div class="omni-container">
-    <div class="content-feed">
-        <span class="label">Upcoming Official Releases & Trailers</span>
+<div class="main-grid">
+    <div class="content">
+        <div class="ads-slot">GOOGLE ADSENSE - REVENUE PARTNER SLOT</div>
+        
+        <span class="label">Upcoming Official Releases (Countdown)</span>
         <div id="upcoming-feed"></div>
         
-        <span class="label">Top Manga, Manhwa & Manhua Official Portal</span>
+        <span class="label">Top Manga, Manhwa & Manhua Portal</span>
         <div id="manga-feed"></div>
     </div>
 
-    <div class="side-chat">
+    <div class="side">
         <span class="label">Global Nexus (Nickname Chat)</span>
-        <div class="nexus-chat">
-            <div id="logs"><div style="color:var(--accent)">[SYSTEM]: Database connection secure. Set Nickname.</div></div>
-            <div class="chat-ui">
-                <input type="text" id="userNick" class="nick-box" placeholder="Nickname..." value="Boss">
-                <div class="msg-input">
-                    <input type="text" id="userMsg" placeholder="Transmit command...">
-                    <button class="send-btn" onclick="sendMsg()">SEND</button>
+        <div class="nexus">
+            <div id="logs"><div style="color:var(--accent)">[SYSTEM]: OMNIVERSE Online. Set Identity.</div></div>
+            <div class="ui">
+                <input type="text" id="nick" class="nick-in" placeholder="Set Nickname..." value="Boss">
+                <div class="msg-row">
+                    <input type="text" id="msg" placeholder="Command...">
+                    <button class="btn" onclick="send()">SEND</button>
                 </div>
             </div>
         </div>
@@ -100,78 +108,77 @@
 </div>
 
 <script>
-    function sendMsg() {
-        const n = document.getElementById('userNick').value || "Identity-X";
-        const m = document.getElementById('userMsg').value;
+    function send() {
+        const n = document.getElementById('nick').value || "Guest";
+        const m = document.getElementById('msg').value;
         const l = document.getElementById('logs');
         if(m) {
             l.innerHTML += `<div><b style="color:var(--accent)">${n}:</b> ${m}</div>`;
-            document.getElementById('userMsg').value = "";
+            document.getElementById('msg').value = "";
             l.scrollTop = l.scrollHeight;
         }
     }
 
-    async function fetchData(query = '') {
+    async function fetchData(q = '') {
         try {
-            const api = query ? `https://api.jikan.moe/v4/anime?q=${query}` : 'https://api.jikan.moe/v4/seasons/upcoming';
+            const api = q ? `https://api.jikan.moe/v4/anime?q=${q}` : 'https://api.jikan.moe/v4/seasons/upcoming';
             const res = await fetch(api);
             const data = await res.json();
             const uFeed = document.getElementById('upcoming-feed');
             uFeed.innerHTML = '';
 
-            data.data.slice(0, 12).forEach(item => {
+            data.data.slice(0, 10).forEach(item => {
                 uFeed.innerHTML += `
                     <div class="card">
                         <img src="${item.images.jpg.large_image_url}">
-                        <div class="info">
+                        <div class="details">
                             <h3>${item.title}</h3>
-                            <div class="meta-data">
-                                <b>Studio:</b> ${item.studios[0]?.name || 'TBA'}<br>
-                                <b>Director/Staff:</b> Official Intel Portal Linked<br>
-                                <b>Source:</b> ${item.source} | <b>Rating:</b> ${item.score || 'PENDING'}
+                            <div class="meta">
+                                <b>Studio:</b> ${item.studios[0]?.name || 'Official Staff'}<br>
+                                <b>Source:</b> ${item.source} | <b>Score:</b> ⭐ ${item.score || 'N/A'}<br>
+                                <b>Staff:</b> Directors, Seiyuu, Animators Linked
                             </div>
-                            <div class="action-links">
-                                <a href="${item.url}" target="_blank" class="btn-link">OFFICIAL INFO</a>
-                                <a href="${item.trailer.url || item.url}" target="_blank" class="btn-link">WATCH TRAILER</a>
+                            <div class="links">
+                                <a href="${item.url}" target="_blank" class="btn">OFFICIAL INFO</a>
+                                <a href="${item.trailer.url || item.url}" target="_blank" class="btn">TRAILER</a>
                             </div>
-                            <span style="color:#00FF00; font-size:10px; font-weight:bold; margin-top:8px; display:block;">SEASONAL COUNTDOWN ACTIVE</span>
+                            <span style="color:#00FF00; font-size:10px; font-weight:bold; margin-top:10px; display:block;">STATUS: SYNCING COUNTDOWN...</span>
                         </div>
                     </div>`;
             });
 
-            if(!query) {
+            if(!q) {
                 const mRes = await fetch('https://api.jikan.moe/v4/top/manga');
                 const mData = await mRes.json();
                 const mFeed = document.getElementById('manga-feed');
                 mFeed.innerHTML = '';
-                mData.data.slice(0, 12).forEach(item => {
+                mData.data.slice(0, 10).forEach(item => {
                     mFeed.innerHTML += `
                         <div class="card">
                             <img src="${item.images.jpg.large_image_url}">
-                            <div class="info">
+                            <div class="details">
                                 <h3>${item.title}</h3>
-                                <div class="meta-data">
-                                    <b>Author/Artist:</b> ${item.authors[0]?.name}<br>
-                                    <b>Rank:</b> #${item.rank} | <b>Type:</b> ${item.type}<br>
-                                    <b>Score:</b> ⭐ ${item.score}
+                                <div class="meta">
+                                    <b>Author:</b> ${item.authors[0]?.name}<br>
+                                    <b>Type:</b> ${item.type} | <b>Rank:</b> #${item.rank}<br>
+                                    <b>Details:</b> Characters & Publisher Info Linked
                                 </div>
-                                <div class="action-links">
-                                    <a href="${item.url}" target="_blank" class="btn-link">READ OFFICIAL</a>
-                                    <a href="${item.url}" target="_blank" class="btn-link">CHARACTER INFO</a>
+                                <div class="links">
+                                    <a href="${item.url}" target="_blank" class="btn">OFFICIAL PORTAL</a>
                                 </div>
                             </div>
                         </div>`;
                 });
             }
-        } catch (e) { console.log("Nexus Error."); }
+        } catch (e) { console.log("Connection Error."); }
     }
 
     function search() {
-        const q = document.getElementById('searchInp').value;
+        const q = document.getElementById('searchInput').value;
         if(q) fetchData(q);
     }
 
     fetchData();
 </script>
 </body>
-                                 </html>
+    </html>
