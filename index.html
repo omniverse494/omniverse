@@ -4,170 +4,176 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="google-site-verification" content="s1LpdFQDsO-k3mGLHAsP62N2V955khk8kZsyeon9G1M" />
-    <title>OMNIVERSE | Supreme Authority</title>
+    <title>OMNIVERSE | Absolute Authority</title>
 
     <style>
         :root { --bg: #050505; --panel: #111; --accent: #FF4500; --text: #FFF; --sub: #888; --border: #222; }
-        .light-mode { --bg: #F0F0F0; --panel: #FFF; --accent: #E74C3C; --text: #111; --sub: #555; --border: #DDD; }
+        .light-mode { --bg: #F5F5F5; --panel: #FFF; --accent: #E74C3C; --text: #111; --sub: #666; --border: #DDD; }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; transition: background 0.3s, color 0.3s; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; transition: 0.3s; }
         body { background: var(--bg); color: var(--text); overflow-x: hidden; }
 
-        /* 🔱 SUPREME HEADER */
+        /* 🔱 HEADER */
         header { padding: 15px 25px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid var(--accent); background: var(--panel); position: sticky; top: 0; z-index: 1000; }
-        header h1 { font-size: 22px; color: var(--accent); letter-spacing: 4px; font-weight: 900; }
-        .theme-btn { background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: bold; }
+        header h1 { font-size: 24px; color: var(--accent); letter-spacing: 5px; font-weight: 900; text-transform: uppercase; }
+        .theme-toggle { background: var(--accent); color: white; border: none; padding: 8px 15px; border-radius: 5px; font-size: 11px; cursor: pointer; font-weight: bold; text-transform: uppercase; }
 
         /* 🔱 ANIME AUTO-SWIPE BANNER */
-        .banner { width: 100%; height: 350px; overflow: hidden; position: relative; border-bottom: 2px solid var(--accent); }
-        .banner-track { display: flex; width: 400%; height: 100%; animation: slide 16s infinite; }
-        .banner-track img { width: 25%; height: 100%; object-fit: cover; filter: brightness(0.6); }
-        @keyframes slide { 
-            0%, 20% { transform: translateX(0); } 
-            25%, 45% { transform: translateX(-25%); } 
-            50%, 70% { transform: translateX(-50%); } 
-            75%, 95% { transform: translateX(-75%); } 
+        .hero-banner { width: 100%; height: 400px; overflow: hidden; position: relative; border-bottom: 2px solid var(--accent); background: #000; }
+        .banner-track { display: flex; width: 400%; height: 100%; animation: swipe 20s infinite; }
+        .banner-track img { width: 25%; height: 100%; object-fit: cover; filter: brightness(0.5); }
+        @keyframes swipe {
+            0%, 20% { transform: translateX(0); }
+            25%, 45% { transform: translateX(-25%); }
+            50%, 70% { transform: translateX(-50%); }
+            75%, 95% { transform: translateX(-75%); }
             100% { transform: translateX(0); }
         }
-        .banner-overlay { position: absolute; bottom: 30px; left: 30px; z-index: 10; }
-        .banner-title { font-size: 32px; font-weight: 900; text-transform: uppercase; text-shadow: 0 0 15px rgba(255,69,0,0.7); }
+        .banner-text { position: absolute; bottom: 50px; left: 30px; z-index: 10; }
+        .banner-text h2 { font-size: 40px; font-weight: 900; text-transform: uppercase; text-shadow: 0 0 20px var(--accent); }
 
-        /* 🔱 MAIN OMNI-LAYOUT */
-        .omni-layout { display: flex; flex-wrap: wrap; padding: 25px; gap: 25px; max-width: 1500px; margin: 0 auto; }
-        .left-intel { flex: 2.2; min-width: 320px; }
-        .right-nexus { flex: 1; min-width: 320px; position: sticky; top: 95px; height: calc(100vh - 120px); }
+        /* 🔱 MAIN LAYOUT */
+        .main-layout { display: flex; flex-wrap: wrap; padding: 30px; gap: 30px; max-width: 1600px; margin: 0 auto; }
+        .intel-column { flex: 2.5; min-width: 350px; }
+        .nexus-column { flex: 1; min-width: 320px; position: sticky; top: 100px; height: calc(100vh - 150px); }
 
-        .label { font-size: 12px; font-weight: 800; color: var(--accent); text-transform: uppercase; margin: 25px 0 15px; letter-spacing: 2px; border-left: 4px solid var(--accent); padding-left: 10px; display: block; }
+        .section-label { font-size: 13px; font-weight: 900; color: var(--accent); text-transform: uppercase; margin: 30px 0 15px; border-left: 5px solid var(--accent); padding-left: 12px; letter-spacing: 2px; }
 
-        /* 🔱 DATA CARDS */
-        .card { display: flex; gap: 15px; background: var(--panel); padding: 15px; border-radius: 5px; margin-bottom: 15px; border: 1px solid var(--border); text-decoration: none; color: inherit; transition: 0.2s; }
-        .card:hover { border-color: var(--accent); transform: translateX(5px); }
-        .card img { width: 100px; height: 140px; object-fit: cover; border-radius: 3px; }
-        .card-info { flex: 1; }
-        .i-title { font-size: 17px; font-weight: 800; margin-bottom: 5px; }
-        .i-meta { font-size: 11px; color: var(--sub); line-height: 1.5; }
-        .countdown { color: #00FF00; font-weight: bold; font-size: 11px; margin-top: 8px; display: block; }
+        /* 🔱 KUMPLETONG DETALYE CARDS */
+        .omni-card { display: flex; gap: 20px; background: var(--panel); padding: 20px; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--border); text-decoration: none; color: inherit; transition: 0.3s; }
+        .omni-card:hover { border-color: var(--accent); transform: translateX(10px); background: rgba(255,69,0,0.05); }
+        .omni-card img { width: 120px; height: 170px; object-fit: cover; border-radius: 5px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .info { flex: 1; }
+        .info h3 { font-size: 18px; font-weight: 800; margin-bottom: 8px; color: var(--text); }
+        .meta-grid { display: grid; grid-template-columns: 1fr; gap: 5px; font-size: 12px; color: var(--sub); line-height: 1.4; }
+        .meta-grid b { color: var(--accent); font-size: 10px; text-transform: uppercase; }
+        .countdown-tag { margin-top: 10px; display: inline-block; padding: 4px 10px; background: rgba(0,255,0,0.1); border: 1px solid #00FF00; color: #00FF00; font-weight: bold; font-size: 10px; border-radius: 3px; }
 
-        /* 🔱 NEXUS CHAT (IDENTITY SYSTEM) */
-        .nexus { background: var(--panel); border: 1px solid var(--border); height: 100%; display: flex; flex-direction: column; border-radius: 5px; }
-        #chat-logs { flex: 1; padding: 15px; overflow-y: auto; font-size: 12px; font-family: 'Courier New', monospace; }
-        .chat-controls { padding: 12px; background: rgba(0,0,0,0.2); border-top: 1px solid var(--border); }
-        .nick-in { width: 100%; background: var(--bg); border: 1px solid var(--border); padding: 6px; color: var(--accent); border-radius: 4px; margin-bottom: 8px; font-size: 11px; font-weight: bold; outline: none; }
-        .msg-row { display: flex; gap: 8px; }
-        .msg-in { flex: 1; background: var(--bg); border: 1px solid var(--border); padding: 10px; color: var(--text); border-radius: 4px; font-size: 12px; outline: none; }
-        .send-btn { background: var(--accent); border: none; padding: 0 15px; color: white; font-weight: bold; border-radius: 4px; cursor: pointer; }
+        /* 🔱 REAL-TIME CHAT (NEXUS) */
+        .nexus-chat { background: var(--panel); border: 1px solid var(--border); height: 100%; display: flex; flex-direction: column; border-radius: 10px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        #chat-flow { flex: 1; padding: 20px; overflow-y: auto; font-size: 13px; scroll-behavior: smooth; }
+        .chat-ui { padding: 15px; background: rgba(0,0,0,0.2); border-top: 1px solid var(--border); }
+        .id-input { width: 100%; background: var(--bg); border: 1px solid var(--border); padding: 8px; color: var(--accent); border-radius: 5px; margin-bottom: 10px; font-weight: 900; outline: none; }
+        .input-row { display: flex; gap: 10px; }
+        .msg-input { flex: 1; background: var(--bg); border: 1px solid var(--border); padding: 12px; color: var(--text); border-radius: 5px; outline: none; }
+        .send-btn { background: var(--accent); border: none; padding: 0 20px; color: white; font-weight: bold; border-radius: 5px; cursor: pointer; }
 
-        @media (max-width: 900px) { .right-nexus { position: static; height: 450px; } }
+        @media (max-width: 950px) { .nexus-column { position: static; height: 500px; } .hero-banner { height: 250px; } }
     </style>
 </head>
 <body>
 
     <header>
         <h1>OMNIVERSE</h1>
-        <button class="theme-btn" onclick="toggleTheme()">WHITE / BLACK</button>
+        <button class="theme-toggle" onclick="swapTheme()">White / Black</button>
     </header>
 
-    <div class="banner">
+    <div class="hero-banner">
         <div class="banner-track">
-            <img src="https://images.unsplash.com/photo-1578632738908-4521c726eec6?w=1200" alt="Anime 1">
-            <img src="https://images.unsplash.com/photo-1541876072-be623c44fc47?w=1200" alt="Anime 2">
+            <img src="https://images.unsplash.com/photo-1541876072-be623c44fc47?w=1200" alt="Anime 1">
+            <img src="https://images.unsplash.com/photo-1578632738908-4521c726eec6?w=1200" alt="Anime 2">
             <img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=1200" alt="Anime 3">
-            <img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=1200" alt="Anime 4">
+            <img src="https://images.unsplash.com/photo-1519661148489-4b9804001185?w=1200" alt="Anime 4">
         </div>
-        <div class="banner-overlay">
-            <div style="color:var(--accent); font-weight:900; font-size:12px; letter-spacing:2px;">SUPREME AUTHORITY</div>
-            <h2 class="banner-title">OMNIVERSE CORE ENGINE</h2>
+        <div class="banner-text">
+            <div style="color:var(--accent); font-weight:900; font-size:12px; letter-spacing:3px;">GLOBAL SUPREME AUTHORITY</div>
+            <h2>OMNIVERSE CORE</h2>
         </div>
     </div>
 
-    <div class="omni-layout">
-        <div class="left-intel">
-            <span class="label">Upcoming Anime Intel (Countdown)</span>
-            <div id="upcoming-feed"></div>
+    <div class="main-layout">
+        <div class="intel-column">
+            <div class="section-label">Upcoming Anime Intel (Countdown)</div>
+            <div id="upcoming-engine"></div>
 
-            <span class="label">Top Manga, Manhwa & Manhua</span>
-            <div id="manga-feed"></div>
+            <div class="section-label">Top Manga, Manhwa & Manhua</div>
+            <div id="manga-engine"></div>
         </div>
 
-        <div class="right-nexus">
-            <span class="label">Global Nexus (Real-time)</span>
-            <div class="nexus">
-                <div id="chat-logs">
-                    <div style="color:var(--accent)">[SYSTEM]: OMNIVERSE Online. Identity Required.</div>
+        <div class="nexus-column">
+            <div class="section-label">Global Nexus (Identity Chat)</div>
+            <div class="nexus-chat">
+                <div id="chat-flow">
+                    <div style="color:var(--accent); opacity:0.7;">[DATABASE]: Secure connection established...</div>
                 </div>
-                <div class="chat-controls">
-                    <input type="text" id="nick" class="nick-in" placeholder="Set Nickname..." value="Boss">
-                    <div class="msg-row">
-                        <input type="text" id="msg" class="msg-in" placeholder="Command...">
-                        <button class="send-btn" onclick="send()">SEND</button>
+                <div class="chat-ui">
+                    <input type="text" id="nick" class="id-input" placeholder="Set Identity (Nickname)..." value="Boss">
+                    <div class="input-row">
+                        <input type="text" id="msg" class="msg-input" placeholder="Enter transmission...">
+                        <button class="send-btn" onclick="transmit()">SEND</button>
                     </div>
                 </div>
             </div>
-            <div style="margin-top:15px; border:1px dashed var(--border); padding:10px; text-align:center; font-size:10px; color:var(--sub);">GOOGLE ADSENSE REVENUE SLOT</div>
+            <div style="margin-top:20px; border:1px dashed var(--border); padding:15px; text-align:center; font-size:11px; color:var(--sub); border-radius:5px;">
+                GOOGLE ADSENSE PARTNER SLOT (REVENUE ACTIVE)
+            </div>
         </div>
     </div>
 
     <script>
-        // 🔱 THEME TOGGLE
-        function toggleTheme() { document.body.classList.toggle('light-mode'); }
+        // 🔱 THEME ENGINE
+        function swapTheme() { document.body.classList.toggle('light-mode'); }
 
-        // 🔱 NICKNAME CHAT ENGINE
-        function send() {
-            const n = document.getElementById('nick').value || "Identity-X";
+        // 🔱 TRANSMISSION ENGINE (CHAT)
+        function transmit() {
+            const n = document.getElementById('nick').value || "Unknown";
             const m = document.getElementById('msg').value;
-            const l = document.getElementById('chat-logs');
+            const flow = document.getElementById('chat-flow');
             if(m) {
-                l.innerHTML += `<div><b style="color:var(--accent)">${n}:</b> ${m}</div>`;
+                flow.innerHTML += `<div><b style="color:var(--accent)">${n}:</b> ${m}</div>`;
                 document.getElementById('msg').value = "";
-                l.scrollTop = l.scrollHeight;
+                flow.scrollTop = flow.scrollHeight;
             }
         }
 
-        // 🔱 FULL DATA ENGINE (Voice Actors, Studios, Directors)
-        async function loadIntel() {
+        // 🔱 GLOBAL DATA CORE (FULL INFO)
+        async function runOmniEngine() {
             try {
-                // Upcoming Anime
+                // Upcoming Anime Feed
                 const aRes = await fetch('https://api.jikan.moe/v4/seasons/upcoming');
                 const aData = await aRes.json();
-                const uFeed = document.getElementById('upcoming-feed');
+                const uEng = document.getElementById('upcoming-engine');
                 
-                aData.data.slice(0, 10).forEach(item => {
-                    uFeed.innerHTML += `
-                        <a href="${item.url}" target="_blank" class="card">
+                aData.data.slice(0, 12).forEach(item => {
+                    uEng.innerHTML += `
+                        <a href="${item.url}" target="_blank" class="omni-card">
                             <img src="${item.images.jpg.large_image_url}">
-                            <div class="card-info">
-                                <div class="i-title">${item.title}</div>
-                                <div class="i-meta">
-                                    <b>Studio:</b> ${item.studios[0]?.name || 'Official Staff'}<br>
-                                    <b>Details:</b> Voice Actors & Trailer in Portal
+                            <div class="info">
+                                <h3>${item.title}</h3>
+                                <div class="meta-grid">
+                                    <span><b>Studio:</b> ${item.studios[0]?.name || 'TBA Staff'}</span>
+                                    <span><b>Source:</b> ${item.source || 'Original'}</span>
+                                    <span><b>Info:</b> Voice Actors & Trailer in Full Portal</span>
                                 </div>
-                                <span class="countdown">SYNC: PREMIERING NEXT SEASON</span>
+                                <div class="countdown-tag">T-MINUS: SEASONAL PREMIERE</div>
                             </div>
                         </a>`;
                 });
 
-                // Top Manga/Manhwa/Manhua
+                // Top Manga/Manhwa/Manhua Feed
                 const mRes = await fetch('https://api.jikan.moe/v4/top/manga');
                 const mData = await mRes.json();
-                const mFeed = document.getElementById('manga-feed');
+                const mEng = document.getElementById('manga-engine');
 
-                mData.data.slice(0, 10).forEach(item => {
-                    mFeed.innerHTML += `
-                        <a href="${item.url}" target="_blank" class="card">
+                mData.data.slice(0, 12).forEach(item => {
+                    mEng.innerHTML += `
+                        <a href="${item.url}" target="_blank" class="omni-card">
                             <img src="${item.images.jpg.large_image_url}">
-                            <div class="card-info">
-                                <div class="i-title">${item.title}</div>
-                                <div class="i-meta">
-                                    <b>Author:</b> ${item.authors[0]?.name || 'Global Source'}<br>
-                                    <b>Rank:</b> #${item.rank} | <b>Score:</b> ⭐ ${item.score}
+                            <div class="info">
+                                <h3>${item.title}</h3>
+                                <div class="meta-grid">
+                                    <span><b>Type:</b> ${item.type} | <b>Author:</b> ${item.authors[0]?.name || 'N/A'}</span>
+                                    <span><b>Rank:</b> #${item.rank} | <b>Score:</b> ⭐ ${item.score}</span>
+                                    <span><b>Status:</b> ${item.status}</span>
                                 </div>
-                                <div style="font-size:10px; color:var(--accent); margin-top:5px;">${item.type.toUpperCase()} DATA SYNCED</div>
+                                <div style="margin-top:8px; font-size:10px; color:var(--accent); font-weight:bold;">TECHNICAL DATA SYNCED</div>
                             </div>
                         </a>`;
                 });
-            } catch (e) { console.log("Nexus Sync Error."); }
+            } catch (e) { console.log("CORE ERROR: Connection interrupted."); }
         }
-        loadIntel();
+
+        runOmniEngine();
     </script>
 </body>
-    </html>
+                </html>
