@@ -2,126 +2,116 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>OMNIVERSE Neural App</title>
-    <link rel="manifest" href="manifest.json">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OMNIVERSE</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
     <style>
         :root {
-            --bg: #040408; --panel: rgba(15, 15, 28, 0.85); --accent: #FF3B30;
-            --accent-glow: rgba(255, 59, 48, 0.35); --text: #F8FAFC; --text-dim: #64748B;
-            --border: rgba(255, 59, 48, 0.25); --ai-color: #A855F7; --search-bg: rgba(20, 20, 35, 0.8);
-            --font-head: 'Orbitron', sans-serif; --font-body: 'Plus Jakarta Sans', sans-serif;
+            --bg: #040408;
+            --surface: #0c0c12;
+            --text: #ffffff;
+            --text-dim: #707080;
+            --accent: #ff0055;
+            --border: #141420;
+            --card-bg: #09090e;
         }
-        .light-mode {
-            --bg: #F8FAFC; --panel: rgba(255, 255, 255, 0.95); --accent: #E11D48;
-            --accent-glow: rgba(225, 29, 72, 0.15); --text: #0F172A; --text-dim: #64748B;
-            --border: rgba(225, 29, 72, 0.3); --ai-color: #7C3AED; --search-bg: #E2E8F0;
+        body.light-mode {
+            --bg: #f4f4f9;
+            --surface: #ffffff;
+            --text: #121214;
+            --text-dim: #606070;
+            --accent: #e6004c;
+            --border: #e0e0ea;
+            --card-bg: #fcfcfd;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; padding-bottom: 70px; }
+        .app-container { max-width: 600px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
         
-        /* FIX: Dynamic Viewport Height para hindi sumabay ang buttons sa keyboard */
-        body { 
-            background-color: var(--bg); color: var(--text); font-family: var(--font-body); 
-            overflow: hidden; height: 100vh; height: 100dvh; width: 100vw; position: relative; 
-            transition: background 0.25s ease, color 0.25s ease; 
-        }
-        .app-shell { display: flex; flex-direction: column; height: 100vh; height: 100dvh; width: 100vw; justify-content: space-between; }
-        header { background: rgba(4, 4, 8, 0.85); padding: 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); backdrop-filter: blur(20px); z-index: 1000; }
-        .light-mode header { background: rgba(255, 255, 255, 0.85); }
-        .brand-node h1 { font-family: var(--font-head); font-size: 20px; font-weight: 900; color: var(--accent); letter-spacing: 1.5px; text-shadow: 0 0 10px var(--accent-glow); }
-        .search-gate { position: relative; width: 52%; max-width: 280px; }
-        .search-gate input { width: 100%; padding: 10px 38px 10px 14px; background: var(--search-bg); border: 1px solid var(--border); border-radius: 20px; color: var(--text) !important; font-family: var(--font-body); font-size: 13.5px; outline: none; }
-        .search-gate svg { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; fill: var(--text-dim); cursor: pointer; z-index: 5; }
-        .ui-toggle-btn { width: 36px; height: 36px; background: var(--panel); border: 1px solid var(--border); color: var(--text); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-        .viewport-container { flex: 1; position: relative; overflow: hidden; width: 100%; height: 100%; background: var(--bg); }
-        .view-panel { position: absolute; top:0; left:0; width:100%; height:100%; display: none; flex-direction: column; padding: 16px; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: 110px; background: var(--bg); }
-        .view-panel.active-panel { display: flex; }
-        .app-hero-slider { width: 100%; height: 160px; border-radius: 14px; overflow: hidden; margin-bottom: 24px; border: 1px solid var(--border); position: relative; background: #000; }
-        .slider-track { display: flex; width: 400%; height: 100%; transition: transform 0.6s cubic-bezier(0.1, 1, 0.1, 1); }
-        .slide-frame { width: 25%; height: 100%; position: relative; }
+        /* HEADER BAR */
+        .app-header-node { background: var(--surface); border-bottom: 1px solid var(--border); padding: 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .brand-cluster { display: flex; align-items: center; gap: 8px; }
+        .glow-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 10px var(--accent); }
+        .brand-cluster h1 { font-size: 18px; font-weight: 900; letter-spacing: 1.5px; }
+        .icon-btn-node { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text); }
+
+        /* HERO BANNER */
+        .hero-banner-slider { width: 100%; height: 230px; overflow: hidden; position: relative; background: #000; border-bottom: 1px solid var(--border); }
+        .slider-track { display: flex; width: 400%; height: 100%; transition: transform 0.6s ease-in-out; }
+        .slide-frame { width: 25%; height: 100%; position: relative; flex-shrink: 0; }
         .slide-frame img { width: 100%; height: 100%; object-fit: cover; }
-        .slide-gradient { position: absolute; bottom: 0; left: 0; width: 100%; padding: 30px 16px 14px 16px; background: linear-gradient(0deg, rgba(4,4,8,1) 0%, rgba(0,0,0,0) 100%); color: #fff; font-family: var(--font-head); font-size: 12px; font-weight: 700; text-transform: uppercase; }
-        .light-mode .slide-gradient { background: linear-gradient(0deg, rgba(248,250,252,1) 0%, rgba(248,250,252,0) 100%); color: #0F172A; }
-        .headline-tag { font-family: var(--font-head); font-size: 12.5px; color: var(--accent); margin-bottom: 16px; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; font-weight: 900; }
-        .headline-tag::before { content: ''; width: 4px; height: 14px; background: var(--accent); border-radius: 2px; }
-        .cards-layout-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 28px; }
-        @media(min-width: 600px) { .cards-layout-grid { grid-template-columns: repeat(2, 1fr); } }
-        .app-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; display: flex; flex-direction: column; overflow: hidden; backdrop-filter: blur(16px); }
-        .card-body-core { display: flex; gap: 14px; padding: 14px; }
-        .card-media-box { width: 90px; height: 130px; flex-shrink: 0; overflow: hidden; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); }
+        .slide-gradient { position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px 15px 15px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); color: #fff; font-size: 16px; font-weight: bold; }
+
+        /* VIEWPORT CONFIG */
+        .viewport-canvas { padding: 15px; flex: 1; }
+        .view-panel { display: none; }
+        .view-panel.active-panel { display: block; }
+        .section-title-bar { margin: 15px 0 10px; font-size: 14px; letter-spacing: 0.5px; color: var(--text); }
+
+        /* CARD ARCHITECTURE */
+        .grid-feed-layout { display: flex; flex-direction: column; gap: 15px; }
+        .app-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; }
+        .card-body-core { display: flex; padding: 12px; gap: 12px; }
+        .card-media-box { width: 85px; height: 120px; border-radius: 8px; overflow: hidden; flex-shrink: 0; background: #111; }
         .card-media-box img { width: 100%; height: 100%; object-fit: cover; }
-        .card-meta-pane { flex: 1; display: flex; flex-direction: column; gap: 5px; min-width: 0; justify-content: center; }
-        .card-meta-pane h3 { font-size: 15px; font-weight: 800; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .info-row { font-size: 12.5px; color: var(--text-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .info-row b { color: var(--text); font-weight: 700; }
-        .deep-details-drawer { background: rgba(0,0,0,0.15); border-top: 1px solid rgba(255,255,255,0.02); padding: 12px; font-size: 12px; display: flex; flex-direction: column; gap: 5px; }
-        .card-footer-actions { display: flex; background: rgba(0,0,0,0.2); border-top: 1px solid var(--border); }
-        .btn-action-trigger { flex: 1; padding: 12px; background: transparent; border: none; color: var(--text); font-family: var(--font-head); font-size: 10px; font-weight: 700; cursor: pointer; text-align: center; border-right: 1px solid var(--border); text-decoration: none; }
-        .btn-action-trigger:last-child { border-right: none; }
-        .audio-app-view { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 68vh; }
-        .audio-disc-wrapper { width: 190px; height: 190px; border-radius: 50%; border: 4px dashed var(--accent); display: flex; align-items: center; justify-content: center; margin-bottom: 30px; }
-        .audio-disc-vinyl { width: 160px; height: 160px; border-radius: 50%; background: radial-gradient(circle, #200403 20%, #040408 100%); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; }
-        .audio-disc-vinyl.is-spinning { animation: spinDisc 4s linear infinite; }
-        @keyframes spinDisc { 100% { transform: rotate(360deg); } }
-        .disc-center-axis { width: 36px; height: 36px; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent); }
-        .track-info-plate { text-align: center; margin-bottom: 32px; }
-        #musicTitle { font-family: var(--font-head); font-size: 15px; color: var(--accent); margin-bottom: 8px; }
-        .audio-status-tag { font-size: 11px; color: var(--text-dim); font-weight: 700; }
-        .audio-actions-row { display: flex; align-items: center; gap: 28px; }
-        .btn-play-toggle { width: 60px; height: 60px; border-radius: 50%; background: rgba(255, 59, 48, 0.1); border: 2px solid var(--accent); color: var(--accent); display: flex; align-items: center; justify-content: center; cursor: pointer; }
-        .btn-track-skip { width: 44px; height: 44px; border-radius: 50%; background: var(--panel); border: 1px solid var(--border); color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer; }
-        .btn-play-toggle svg, .btn-track-skip svg { width: 22px; height: 22px; fill: currentColor; }
-        
-        #panel-chat { height: 100%; display: none; flex-direction: column; padding-bottom: 115px; background: var(--bg); }
-        #panel-chat.active-panel { display: flex; }
-        .chat-room-tabs { display: flex; gap: 8px; margin-bottom: 10px; }
-        .chat-tab-btn { flex: 1; padding: 10px; background: var(--panel); border: 1px solid var(--border); color: var(--text-dim); border-radius: 8px; font-family: var(--font-head); font-size: 11px; font-weight: 700; cursor: pointer; }
-        .chat-tab-btn.active-chat-tab { color: var(--accent); border-color: var(--accent); background: rgba(255,59,48,0.05); }
-        
-        .chat-logs-stream { flex: 1; background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; -webkit-overflow-scrolling: touch; }
-        .chat-bubble-row { display: flex; gap: 10px; align-items: flex-start; max-width: 90%; animation: popIn 0.2s ease forwards; cursor: pointer; }
-        @keyframes popIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-        .chat-user-avatar { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--border); object-fit: cover; }
-        .chat-msg-container { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-        .chat-meta-header { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--text); }
-        .badge-system { font-size: 8px; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; color: #fff; font-family: var(--font-head); }
-        .badge-system.badge-root { background: #FF3B30; } .badge-system.badge-member { background: #22C55E; }
-        .chat-bubble-payload { background: var(--bg); border-radius: 0 14px 14px 14px; padding: 11px 14px; font-size: 13.5px; word-break: break-word; color: var(--text); border: 1px solid var(--border); }
-        
-        .chat-input-toolbar { display: flex; gap: 8px; margin-top: 12px; background: var(--panel); padding: 6px; border-radius: 24px; border: 1px solid var(--border); z-index: 10; }
-        .chat-input-toolbar input { flex: 1; padding: 10px 16px; background: transparent; border: none; color: var(--text) !important; font-size: 14.5px; outline: none; }
-        .btn-msg-send { padding: 0 24px; background: var(--accent); border: none; color: #fff; border-radius: 20px; font-family: var(--font-head); font-size: 11px; cursor: pointer; }
-        
-        .profile-config-card { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 16px; }
-        .avatar-sync-box { display: flex; align-items: center; gap: 16px; background: rgba(0,0,0,0.05); padding: 14px; border-radius: 10px; }
-        .avatar-sync-box img { width: 56px; height: 56px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
-        .upload-action-node { position: relative; overflow: hidden; background: rgba(255,59,48,0.1); border: 1px solid var(--accent); color: var(--accent); font-size: 11px; padding: 8px 14px; cursor: pointer; border-radius: 6px; }
-        .upload-action-node input { position: absolute; right: 0; top: 0; opacity: 0; }
-        .field-group { display: flex; flex-direction: column; gap: 6px; }
-        .field-group label { font-size: 11px; color: var(--accent); font-family: var(--font-head); }
-        .field-group input, .field-group select { padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); outline: none; }
-        
-        .portal-modal-overlay { position: fixed; top:0; left:0; width:100vw; height:100vh; background: rgba(2,2,5,0.97); z-index: 99999; display: none; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(10px); }
-        .portal-modal-viewport { width: 100%; max-width: 640px; background: #000; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; position: relative; }
-        .iframe-aspect-box { position: relative; width: 100%; padding-top: 56.25%; }
-        .iframe-aspect-box iframe { position: absolute; top:0; left:0; width:100%; height:100%; border: none; }
-        .btn-portal-close { position: absolute; top: -46px; right: 0; background: transparent; border: none; color: #fff; font-size: 34px; cursor: pointer; }
-        
-        /* FIX: Footer fixed positioning to prevent keyboard override */
-        footer { position: fixed; bottom: 0; left: 0; width: 100vw; background: rgba(4, 4, 8, 0.98); border-top: 1px solid var(--border); padding: 10px 16px calc(10px + env(safe-area-inset-bottom)) 16px; z-index: 900; backdrop-filter: blur(20px); }
-        .bottom-nav-container { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 600px; margin: 0 auto; }
-        .nav-item-node { background: transparent; border: none; color: var(--text-dim); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; flex: 1; }
-        .nav-item-node svg { width: 22px; height: 22px; fill: currentColor; }
-        .nav-item-node span { font-size: 10px; font-family: var(--font-head); font-weight: 700; text-transform: uppercase; }
+        .card-meta-pane { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+        .card-meta-pane h3 { font-size: 14px; font-weight: bold; line-height: 1.3; color: var(--text); }
+        .info-row { font-size: 11px; color: var(--text-dim); line-height: 1.4; }
+        .deep-details-drawer { background: rgba(0,0,0,0.03); padding: 8px 12px; border-top: 1px dashed var(--border); }
+        body.light-mode .deep-details-drawer { background: rgba(0,0,0,0.02); }
+        .va-text-highlight { color: var(--text); font-weight: 500; }
+        .card-footer-actions { display: flex; border-top: 1px solid var(--border); background: rgba(0,0,0,0.1); }
+        .btn-action-trigger { flex: 1; padding: 10px; background: none; border: none; text-align: center; color: var(--text); font-size: 11px; font-weight: bold; text-decoration: none; cursor: pointer; transition: background 0.2s; }
+        .btn-action-trigger:first-child { border-right: 1px solid var(--border); }
+        .btn-action-trigger:hover { background: rgba(255,255,255,0.05); }
+
+        /* SEARCH INTERFACE */
+        .search-wrapper-node { display: flex; gap: 8px; }
+        .search-wrapper-node input, .music-search-box input { flex: 1; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: 14px; outline: none; }
+        .search-wrapper-node button { padding: 0 15px; border-radius: 10px; background: var(--accent); border: none; color: white; cursor: pointer; }
+
+        /* NAVIGATION SYSTEM */
+        .navigation-dock-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 600px; height: 60px; background: var(--surface); border-top: 1px solid var(--border); display: flex; z-index: 100; }
+        .nav-item-node { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: none; border: none; color: var(--text-dim); font-size: 16px; cursor: pointer; gap: 2px; }
+        .nav-item-node span { font-size: 10px; font-weight: bold; }
         .nav-item-node.tab-active { color: var(--accent); }
+
+        /* CHAT SYSTEMS */
+        .chat-interface-box { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; height: calc(100vh - 170px); display: flex; flex-direction: column; overflow: hidden; }
+        .chat-tab-row { display: flex; border-bottom: 1px solid var(--border); }
+        .chat-tab-btn { flex: 1; padding: 12px; background: none; border: none; color: var(--text-dim); font-size: 12px; font-weight: bold; cursor: pointer; }
+        .chat-tab-btn.active-chat-tab { color: var(--accent); border-bottom: 2px solid var(--accent); background: rgba(255,255,255,0.01); }
+        .chat-logs-viewport { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background: rgba(0,0,0,0.1); }
+        .chat-bubble-row { display: flex; gap: 10px; align-items: flex-start; animation: fadeUp 0.3s ease; }
+        .chat-user-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border); background: #222; flex-shrink: 0; }
+        .chat-msg-container { flex: 1; background: var(--card-bg); border: 1px solid var(--border); padding: 10px; border-radius: 12px; min-width: 0; }
+        .chat-meta-header { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; font-size: 11px; }
+        .chat-meta-header b { color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 120px; }
+        .badge-system { padding: 1px 5px; font-size: 8px; font-weight: 900; border-radius: 4px; color: #fff; text-transform: uppercase; }
+        .badge-member { background: #555; } .badge-otaku { background: #0088cc; } .badge-hacker { background: #00cc66; } .badge-vip { background: #cc00cc; }
+        .chat-bubble-payload { font-size: 13px; color: var(--text); line-height: 1.4; word-break: break-word; }
+        .chat-input-dock { padding: 10px; display: flex; gap: 8px; border-top: 1px solid var(--border); background: var(--surface); }
+        .chat-input-dock input { flex: 1; padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 13px; outline: none; }
+        .chat-input-dock button { width: 45px; background: var(--accent); border: none; border-radius: 10px; color: white; cursor: pointer; font-weight: bold; }
+
+        /* SETTINGS & VINYL ENGINE */
+        .settings-card-box { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .control-group-node { display: flex; flex-direction: column; gap: 5px; }
+        .control-group-node label { font-size: 11px; color: var(--text-dim); font-weight: bold; }
+        .control-group-node input, .control-group-node select { padding: 12px; border-radius: 8px; background: var(--bg); border: 1px solid var(--border); color: var(--text); outline: none; font-size: 13px; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .is-spinning { animation: spin 4s linear infinite; }
+
+        /* MODALS */
+        .video-modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); display:none; align-items:center; justify-content:center; z-index:500; padding:15px; }
+        .video-modal-container { width:100%; max-width:500px; background:#000; border-radius:12px; overflow:hidden; position:relative; aspect-ratio:16/9; }
+        .video-modal-container iframe { width:100%; height:100%; border:none; }
+        .close-modal-trigger { position:absolute; top:8px; right:12px; color:#fff; font-size:24px; font-weight:bold; cursor:pointer; z-index:10; text-shadow:0 2px 4px #000; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
-</head>
-<body>
+    </head>
+    <body>
     <div class="app-container">
         <header class="app-header-node">
             <div class="brand-cluster">
@@ -137,15 +127,12 @@
             
             <div id="panel-home" class="view-panel active-panel">
                 <div class="hero-banner-slider">
-                    <div class="slider-track" id="slider-track">
-                        </div>
+                    <div class="slider-track" id="slider-track"></div>
                 </div>
-
                 <div class="section-title-bar">
                     <h2>🔥 UPCOMING SEASONS</h2>
                 </div>
                 <div class="grid-feed-layout" id="upcoming-feed"></div>
-
                 <div class="section-title-bar" style="margin-top: 25px;">
                     <h2>📖 TOP MANGA ARCHIVES</h2>
                 </div>
@@ -175,37 +162,33 @@
             </div>
 
             <div id="panel-audio" class="view-panel">
-                <div class="music-player-card" style="background: var(--surface); padding: 20px; border-radius: 16px; border: 1px solid #1a1a26; text-align: center; max-width: 500px; margin: 0 auto;">
+                <div class="music-player-card" style="background: var(--surface); padding: 20px; border-radius: 16px; border: 1px solid var(--border); text-align: center; max-width: 500px; margin: 0 auto;">
                     <div class="disc-wrapper" style="margin-bottom: 20px; display: flex; justify-content: center;">
                         <div class="music-disc-node" id="musicDisc" style="width: 130px; height: 130px; border-radius: 50%; background: #0c0c12; border: 4px solid var(--accent); position: relative; display: flex; align-items: center; justify-content: center;">
                             <div class="disc-center-core" style="width: 35px; height: 35px; border-radius: 50%; background: var(--surface); border: 2px solid #222;"></div>
                         </div>
                     </div>
                     <div class="music-meta-block">
-                        <h2 id="musicTitle" style="font-size:15px; color:#fff; margin-bottom:4px; font-weight: bold;">🎵 Select a track or search below...</h2>
+                        <h2 id="musicTitle" style="font-size:14px; color:var(--text); margin-bottom:4px; font-weight: bold;">🎵 Select a track or search below...</h2>
                         <p style="font-size:11px; color:var(--text-dim); margin-bottom:15px;">Omniverse Audio Deck Interface</p>
                     </div>
                     <div style="display:flex; justify-content:center; gap:20px; align-items:center; margin-bottom:20px;">
                         <button class="player-btn" onclick="window.toggleMusic()" id="playIconSvg" style="width:50px; height:50px; border-radius:50%; background:var(--accent); border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; color:#fff;">
                             <svg viewBox="0 0 24 24" style="width:24px; height:24px; fill:currentColor;"><path d="M8 5v14l11-7z"/></svg>
                         </button>
-                        <button class="player-btn" onclick="window.nextMusic()" style="width:40px; height:40px; border-radius:50%; background:#1a1a26; border:1px solid #333; display:flex; align-items:center; justify-content:center; cursor:pointer; color:#fff;">
+                        <button class="player-btn" onclick="window.nextMusic()" style="width:40px; height:40px; border-radius:50%; background:var(--bg); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--text);">
                             <svg viewBox="0 0 24 24" style="width:20px; height:20px; fill:currentColor;"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
                         </button>
                     </div>
-                    <hr style="border:0; border-top:1px solid #1a1a26; margin:15px 0;">
+                    <hr style="border:0; border-top:1px solid var(--border); margin:15px 0;">
                     <div class="music-search-box" style="text-align: left;">
                         <label style="font-size:11px; color:var(--accent); font-weight:bold; letter-spacing:1px; display:block; margin-bottom:5px;">OMNIVERSE DECK SEARCH</label>
                         <div style="display:flex; gap:5px; margin-bottom:10px;">
-                            <input type="text" id="musicSearchInput" placeholder="Type Phonk, Anime, TikTok, Tagalog..." style="flex:1; padding:12px; border-radius:8px; border:1px solid #222; background:#08080c; color:#fff; font-size:14px; outline:none;">
-                            <button onclick="window.searchMusicDatabase()" style="padding:0 15px; border-radius:8px; background:var(--accent); color:#fff; border:none; cursor:pointer; font-weight:bold; font-size:13px; display:flex; align-items:center;">
-                                🔍 SEARCH
-                            </button>
+                            <input type="text" id="musicSearchInput" placeholder="Type Phonk, Anime, TikTok, Tagalog...">
+                            <button onclick="window.searchMusicDatabase()" style="padding:0 15px; border-radius:8px; background:var(--accent); color:#fff; border:none; cursor:pointer; font-weight:bold; font-size:13px;">🔍 SEARCH</button>
                         </div>
-                        <div id="musicSearchResultsPane" style="max-height:160px; overflow-y:auto; background:#040408; border-radius:8px; border:1px solid #141420; padding:5px;">
-                            <div style="padding:15px; text-align:center; color:var(--text-dim); font-size:12px;">
-                                Search results will load here. Try typing "Phonk"!
-                            </div>
+                        <div id="musicSearchResultsPane" style="max-height:160px; overflow-y:auto; background:rgba(0,0,0,0.1); border-radius:8px; border:1px solid var(--border); padding:5px;">
+                            <div style="padding:15px; text-align:center; color:var(--text-dim); font-size:12px;">Search results will load here. Try "Phonk"!</div>
                         </div>
                     </div>
                 </div>
@@ -248,13 +231,12 @@
     </div>
 
     <audio id="mainAudio" crossorigin="anonymous"></audio>
-
     <div class="video-modal-overlay" id="videoModal" onclick="window.closeVideo()">
         <div class="video-modal-container" onclick="event.stopPropagation()">
             <span class="close-modal-trigger" onclick="window.closeVideo()">×</span>
             <iframe id="videoIframe" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
-        </div>
+    </div>
     <script>
         const defaultAvatar = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm0-4h-2V7h2v8z'/></svg>";
         let userAvatarBase64 = defaultAvatar; let currentSlide = 0; let slideInterval;
@@ -267,7 +249,10 @@
         let currentTrackIdx = 0;
 
         if (localStorage.getItem('omniverse_theme') === 'light') { document.body.classList.add('light-mode'); }
-        window.toggleInterfaceMode = function() { document.body.classList.toggle('light-mode'); localStorage.setItem('omniverse_theme', document.body.classList.contains('light-mode') ? 'light' : 'dark'); };
+        window.toggleInterfaceMode = function() { 
+            document.body.classList.toggle('light-mode'); 
+            localStorage.setItem('omniverse_theme', document.body.classList.contains('light-mode') ? 'light' : 'dark'); 
+        };
         function sanitize(str) { return str ? str.replace(/</g, "&lt;").replace(/>/g, "&gt;") : ''; }
         
         window.switchAppView = function(viewId) {
@@ -278,42 +263,27 @@
             if(viewId === 'chat') { setTimeout(scrollChat, 50); }
         };
 
-        // AUDIO ENGINE CONTROLLER
+        // MUSIC SYSTEM ENGINE
         window.toggleMusic = function() {
             const aud = document.getElementById('mainAudio'), disc = document.getElementById('musicDisc'), icon = document.getElementById('playIconSvg');
             if (!aud.src || aud.src === "" || aud.src.includes(window.location.hostname)) { aud.src = tracks[currentTrackIdx].url; }
             if (aud.paused) { 
                 aud.load();
-                var playPromise = aud.play();
-                if (playPromise !== undefined) {
-                    playPromise.then(() => { 
-                        disc.classList.add('is-spinning'); 
-                        icon.innerHTML = `<svg viewBox="0 0 24 24" style="width:24px; height:24px; fill:currentColor;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`; 
-                    }).catch(() => {
-                        aud.load();
-                        setTimeout(function() {
-                            aud.play();
-                            disc.classList.add('is-spinning');
-                            icon.innerHTML = `<svg viewBox="0 0 24 24" style="width:24px; height:24px; fill:currentColor;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
-                        }, 300);
-                    });
-                }
+                aud.play().then(() => { 
+                    disc.classList.add('is-spinning'); 
+                    icon.innerHTML = `<svg viewBox="0 0 24 24" style="width:24px; height:24px; fill:currentColor;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`; 
+                }).catch(() => {
+                    setTimeout(() => { aud.play(); disc.classList.add('is-spinning'); }, 300);
+                });
             } else { aud.pause(); disc.classList.remove('is-spinning'); icon.innerHTML = `<svg viewBox="0 0 24 24" style="width:24px; height:24px; fill:currentColor;"><path d="M8 5v14l11-7z"/></svg>`; }
         };
 
         window.nextMusic = function() { 
             currentTrackIdx = (currentTrackIdx + 1) % tracks.length; 
             document.getElementById('musicTitle').innerText = tracks[currentTrackIdx].title; 
-            const aud = document.getElementById('mainAudio'); 
-            aud.src = tracks[currentTrackIdx].url; 
-            aud.load(); 
-            aud.play().then(() => { 
-                document.getElementById('musicDisc').classList.add('is-spinning'); 
-                document.getElementById('playIconSvg').innerHTML = `<svg viewBox="0 0 24 24" style="width:24px; height:24px; fill:currentColor;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`; 
-            }).catch(() => {}); 
+            window.playSelectedTrack(tracks[currentTrackIdx].title, tracks[currentTrackIdx].url);
         };
 
-        // LEGAL MUSIC ENGINE FETCH QUERY
         window.searchMusicDatabase = async function() {
             const query = document.getElementById('musicSearchInput')?.value || "phonk";
             const resultsBox = document.getElementById('musicSearchResultsPane');
@@ -327,121 +297,81 @@
                     data.forEach(song => {
                         if(!song.stream_url) return;
                         resultsBox.innerHTML += `
-                            <div onclick="window.playSelectedTrack('${sanitize(song.title)}', '${song.stream_url}')" style="display:flex; align-items:center; justify-content:space-between; padding:10px; border-bottom:1px solid #141420; cursor:pointer;">
-                                <div style="display:flex; align-items:center; gap:10px; text-align:left;">
+                            <div onclick="window.playSelectedTrack('${sanitize(song.title)}', '${song.stream_url}')" style="display:flex; align-items:center; justify-content:space-between; padding:10px; border-bottom:1px solid var(--border); cursor:pointer;">
+                                <div style="display:flex; align-items:center; gap:10px; text-align:left; min-width:0;">
                                     <img src="${song.background_url || 'https://images.alphacoders.com/112/1128711.jpg'}" style="width:35px; height:35px; border-radius:6px; object-fit:cover;">
-                                    <div>
-                                        <div style="color:#fff; font-size:13px; font-weight:bold; max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${sanitize(song.title)}</div>
+                                    <div style="min-width:0;">
+                                        <div style="color:var(--text); font-size:13px; font-weight:bold; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:220px;">${sanitize(song.title)}</div>
                                         <div style="color:var(--text-dim); font-size:11px;">${sanitize(song.user.username)}</div>
                                     </div>
                                 </div>
-                                <span style="color:var(--accent); font-size:11px; font-weight:bold;">▶ PLAY</span>
+                                <span style="color:var(--accent); font-size:11px; font-weight:bold; flex-shrink:0;">▶ PLAY</span>
                             </div>
                         `;
                     });
-                } else {
-                    resultsBox.innerHTML = '<div style="padding:15px; text-align:center; color:var(--text-dim); font-size:12px;">No free tracks found. Try "Phonk" or "TikTok".</div>';
-                }
-            } catch(e) {
-                resultsBox.innerHTML = '<div style="padding:15px; text-align:center; color:var(--text-dim); font-size:12px;">Network busy. Please retry search.</div>';
-            }
+                } else { resultsBox.innerHTML = '<div style="padding:15px; text-align:center; color:var(--text-dim); font-size:12px;">No free tracks found.</div>'; }
+            } catch(e) { resultsBox.innerHTML = '<div style="padding:15px; text-align:center; color:var(--text-dim); font-size:12px;">Network busy. Retry search.</div>'; }
         };
 
         window.playSelectedTrack = function(title, streamUrl) {
             const aud = document.getElementById('mainAudio');
             document.getElementById('musicTitle').innerText = title;
-            aud.src = streamUrl;
-            aud.load();
+            aud.src = streamUrl; aud.load();
             aud.play().then(() => {
                 document.getElementById('musicDisc').classList.add('is-spinning');
                 document.getElementById('playIconSvg').innerHTML = `<svg viewBox="0 0 24 24" style="width:24px; height:24px; fill:currentColor;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
             }).catch(() => {});
         };
 
-        // CHAT FIREBASE STREAM CONNECTIONS
+        // CHAT ENGINE
         function getMyName() { return localStorage.getItem('omniverse_nick') || "Guest Node"; }
         function scrollChat() { const l = document.getElementById('logs'); if(l) l.scrollTop = l.scrollHeight; }
-        window.switchChatMode = function(mode) { currentChatMode = mode; document.querySelectorAll('.chat-tab-btn').forEach(b => b.classList.remove('active-chat-tab')); document.getElementById(`chat-tab-${mode}`).classList.add('active-chat-tab'); if(mode === 'pm' && !activePmTargetNode) { document.getElementById('logs').innerHTML = '<div style="padding:20px; text-align:center; color:var(--text-dim);">Tap a user avatar or name in Global Matrix to start a Private PM.</div>'; return; } loadChatStream(); };
-        window.startPmWithUser = function(targetUser) { if(targetUser === getMyName()) { alert("You cannot launch a PM matrix channel with yourself."); return; } activePmTargetNode = targetUser; document.getElementById('chat-tab-pm').innerText = `🔒 PM: ${targetUser}`; window.switchChatMode('pm'); };
-        function loadChatStream() { const logs = document.getElementById('logs'); if(!logs) return; logs.innerHTML = '<div style="padding:10px; color:var(--accent);">Connecting streams...</div>'; if(currentChatMode === 'global') { globalChatRef.off(); globalChatRef.limitToLast(40).on("value", function(snap) { renderPackets(snap, logs); }); } else { if(!activePmTargetNode) return; privateChatRef.off(); privateChatRef.limitToLast(40).on("value", function(snap) { renderPackets(snap, logs, true); }); } }
-        function renderPackets(snap, targetElement, filterPm = false) { targetElement.innerHTML = ''; snap.forEach(function(child) { const d = child.val(); if(filterPm) { const combinedKey = [getMyName(), activePmTargetNode].sort().join("___"); if(d.pmKey !== combinedKey) return; } targetElement.innerHTML += `<div class="chat-bubble-row" onclick="window.startPmWithUser('${d.nickname}')" style="cursor:pointer;"><img class="chat-user-avatar" src="${d.avatar || defaultAvatar}"><div class="chat-msg-container"><div class="chat-meta-header"><span class="badge-system badge-${d.badge}">${d.badge}</span><b>${d.nickname}</b></div><div class="chat-bubble-payload">${d.message}</div></div></div>`; }); scrollChat(); }
+        window.switchChatMode = function(mode) { currentChatMode = mode; document.querySelectorAll('.chat-tab-btn').forEach(b => b.classList.remove('active-chat-tab')); document.getElementById(`chat-tab-${mode}`).classList.add('active-chat-tab'); if(mode === 'pm' && !activePmTargetNode) { document.getElementById('logs').innerHTML = '<div style="padding:20px; text-align:center; color:var(--text-dim); font-size:12px;">Tap a user avatar in Global Chat to launch a Private PM.</div>'; return; } loadChatStream(); };
+        window.startPmWithUser = function(targetUser) { if(targetUser === getMyName()) return; activePmTargetNode = targetUser; document.getElementById('chat-tab-pm').innerText = `🔒 PM: ${targetUser}`; window.switchChatMode('pm'); };
+        function loadChatStream() { const logs = document.getElementById('logs'); if(!logs) return; logs.innerHTML = '<div style="padding:10px; color:var(--accent);">Connecting...</div>'; if(currentChatMode === 'global') { globalChatRef.off(); globalChatRef.limitToLast(40).on("value", function(snap) { renderPackets(snap, logs); }); } else { if(!activePmTargetNode) return; privateChatRef.off(); privateChatRef.limitToLast(40).on("value", function(snap) { renderPackets(snap, logs, true); }); } }
+        function renderPackets(snap, targetElement, filterPm = false) { targetElement.innerHTML = ''; snap.forEach(function(child) { const d = child.val(); if(filterPm) { const combinedKey = [getMyName(), activePmTargetNode].sort().join("___"); if(d.pmKey !== combinedKey) return; } targetElement.innerHTML += `<div class="chat-bubble-row" onclick="window.startPmWithUser('${d.nickname}')"><img class="chat-user-avatar" src="${d.avatar || defaultAvatar}"><div class="chat-msg-container"><div class="chat-meta-header"><span class="badge-system badge-${d.badge}">${d.badge}</span><b>${d.nickname}</b></div><div class="chat-bubble-payload">${d.message}</div></div></div>`; }); scrollChat(); }
 
-        // EXCLUSION & BAD WORDS RADAR FILTER ENGINE
-        const BANNED_WORDS = [
-            "junrey teves", "junrey", "teves",
-            "gago", "tanga", "bobo", "putangina", "puta", "pota", "pakyu", 
-            "g@go", "t@nga", "b0b0", "p0ta", "salsal", "kantot", "ulol", "buraot",
-            "pepe", "puke", "tite", "titi", "kupal", "hudas", "hayop ka",
-            "fuck", "shit", "bitch", "asshole", "b@stard", "dick", "pussy", 
-            "cunt", "faggot", "motherfucker", "whore", "slut", "bastard"
-        ];
-
-        function filterAppropriateContent(text) {
-            let filteredText = text;
-            BANNED_WORDS.forEach(word => {
-                let regex = new RegExp("\\b" + word + "\\b", "gi");
-                let stars = "*".repeat(word.length);
-                filteredText = filteredText.replace(regex, stars);
-            });
-            return filteredText;
-        }
+        const BANNED_WORDS = ["junrey teves", "junrey", "teves", "gago", "tanga", "bobo", "putangina", "puta", "pota", "pakyu", "fuck", "shit", "bitch", "ulol"];
+        function filterAppropriateContent(text) { let filteredText = text; BANNED_WORDS.forEach(word => { let regex = new RegExp("\\b" + word + "\\b", "gi"); filteredText = filteredText.replace(regex, "*".repeat(word.length)); }); return filteredText; }
 
         window.sendMsg = function() {
-            const m = document.getElementById('msg').value; if(!m.trim()) return; 
-            window.saveProfileSettings();
-            const cleanMessage = filterAppropriateContent(sanitize(m));
-            const packet = { nickname: getMyName(), badge: localStorage.getItem('omniverse_badge') || "member", avatar: userAvatarBase64, message: cleanMessage, timestamp: firebase.database.ServerValue.TIMESTAMP }; 
+            const m = document.getElementById('msg').value; if(!m.trim()) return; window.saveProfileSettings();
+            const packet = { nickname: getMyName(), badge: localStorage.getItem('omniverse_badge') || "member", avatar: userAvatarBase64, message: filterAppropriateContent(sanitize(m)), timestamp: firebase.database.ServerValue.TIMESTAMP }; 
             if(currentChatMode === 'global') { globalChatRef.push(packet); } else { if(!activePmTargetNode) return; packet.pmKey = [getMyName(), activePmTargetNode].sort().join("___"); privateChatRef.push(packet); }
             document.getElementById('msg').value = "";
         };
 
-        // IMAGE SLIDER & JIKAN API PIPELINE WITH BACKUPS
+        // ANIME PIPELINE WITH CAST & DIRECTORS
         function initBannerSlider() { clearInterval(slideInterval); const track = document.getElementById('slider-track'); slideInterval = setInterval(() => { if (track && track.children.length > 0) { currentSlide = (currentSlide + 1) % track.children.length; track.style.transform = `translateX(-${currentSlide * 25}%)`; } }, 4000); }
-        async function fetchDeepAnimeMetadata(animeId, delayTime) { try { await new Promise(r => setTimeout(r, delayTime)); const staffRes = await fetch(`https://api.jikan.moe/v4/anime/${animeId}/staff`), staffData = await staffRes.json(); let director = "N/A"; if(staffData.data) { const dObj = staffData.data.find(s => s.positions.some(p => p.toLowerCase().includes('director'))); if(dObj) director = dObj.person.name; } const charRes = await fetch(`https://api.jikan.moe/v4/anime/${animeId}/characters`), charData = await charRes.json(); let vaList = []; if(charData.data) { let count = 0; for(let c of charData.data) { const jaVa = c.voice_actors.find(va => va.language === 'Japanese'); if(jaVa) { vaList.push(jaVa.person.name); count++; } if(count >= 3) break; } } return { director, voiceActors: vaList.join(', ') || "TBA Cast" }; } catch(e) { return { director: "Production Committee", voiceActors: "TBA" }; } }
+        async function fetchDeepAnimeMetadata(animeId, delayTime) { try { await new Promise(r => setTimeout(r, delayTime)); const staffRes = await fetch(`https://api.jikan.moe/v4/anime/${animeId}/staff`), staffData = await staffRes.json(); let director = "Production Committee"; if(staffData.data) { const dObj = staffData.data.find(s => s.positions.some(p => p.toLowerCase().includes('director'))); if(dObj) director = dObj.person.name; } const charRes = await fetch(`https://api.jikan.moe/v4/anime/${animeId}/characters`), charData = await charRes.json(); let vaList = []; if(charData.data) { let count = 0; for(let c of charData.data) { const jaVa = c.voice_actors.find(va => va.language === 'Japanese'); if(jaVa) { vaList.push(jaVa.person.name); count++; } if(count >= 3) break; } } return { director, voiceActors: vaList.join(', ') || "TBA" }; } catch(e) { return { director: "TBA", voiceActors: "TBA" }; } }
         
         async function fetchData(query = '') { 
             try { 
                 const topRes = await fetch('https://api.jikan.moe/v4/top/anime?limit=4'), topData = await topRes.json(); 
                 const track = document.getElementById('slider-track'); 
-                if(track) { 
+                if(track && !query) { 
                     track.innerHTML = ''; 
-                    if (topData && topData.data && topData.data.length > 0) {
-                        topData.data.forEach(a => { track.innerHTML += `<div class="slide-frame"><img src="${a.images.jpg.large_image_url}"><div class="slide-gradient">${sanitize(a.title)}</div></div>`; }); 
-                    } else {
-                        const backups = [
-                            { title: "Demon Slayer: Kimetsu no Yaiba", img: "https://images.alphacoders.com/100/1004169.jpg" },
-                            { title: "Jujutsu Kaisen Season 3", img: "https://images.alphacoders.com/112/1128711.jpg" },
-                            { title: "Attack on Titan Final Chapters", img: "https://images.alphacoders.com/131/1313337.jpeg" },
-                            { title: "Solo Leveling - Monarch Rising", img: "https://images.alphacoders.com/134/1344268.png" }
-                        ];
-                        backups.forEach(b => { track.innerHTML += `<div class="slide-frame"><img src="${b.img}"><div class="slide-gradient">${b.title}</div></div>`; });
-                    }
+                    topData.data.forEach(a => { track.innerHTML += `<div class="slide-frame"><img src="${a.images.jpg.large_image_url}"><div class="slide-gradient">${sanitize(a.title)}</div></div>`; }); 
                     initBannerSlider(); 
                 } 
-            } catch(e){
-                const track = document.getElementById('slider-track');
-                if(track) { track.innerHTML = `<div class="slide-frame"><img src="https://images.alphacoders.com/112/1128711.jpg"><div class="slide-gradient">OMNIVERSE TERMINAL ACTIVE</div></div>`; }
-            } 
+            } catch(e){} 
             try { 
-                const uFeed = document.getElementById('upcoming-feed'); uFeed.innerHTML = '<div style="padding:20px; color:var(--accent);">Synchronizing Pipeline Nodes...</div>'; 
+                const uFeed = document.getElementById(query ? 'explore-feed' : 'upcoming-feed'); uFeed.innerHTML = '<div style="padding:20px; color:var(--accent); font-size:12px;">Syncing matrix nodes...</div>'; 
                 const url = query ? `https://api.jikan.moe/v4/anime?q=${encodeURIComponent(query)}` : 'https://api.jikan.moe/v4/seasons/upcoming'; 
                 const res = await fetch(url), data = await res.json(); uFeed.innerHTML = ''; 
                 if(data.data) { 
                     let items = data.data.slice(0, 6); let dAcc = 0; 
                     items.forEach((item) => { 
-                        const studio = item.studios?.[0]?.name || 'TBA Production'; const cardId = `deep-${item.mal_id}`; 
-                        uFeed.innerHTML += `<div class="app-card"><div class="card-body-core"><div class="card-media-box"><img src="${item.images.jpg.image_url}"></div><div class="card-meta-pane"><h3>${sanitize(item.title)}</h3><div class="info-row"><b>Studio:</b> ${sanitize(studio)}</div><div class="info-row"><b>Origin:</b> ${sanitize(item.source || 'Original')}</div></div></div><div class="deep-details-drawer" id="${cardId}"><div class="info-row"><b>Director:</b> Compiling cluster...</div></div><div class="card-footer-actions"><button class="btn-action-trigger" onclick="window.playVideo('${item.trailer?.url || ''}')">🎬 TRAILER</button><a class="btn-action-trigger" href="${item.url || '#'}" target="_blank">🔗 LINK</a></div></div>`; 
-                        dAcc += 400; fetchDeepAnimeMetadata(item.mal_id, dAcc).then(extra => { const box = document.getElementById(cardId); if(box) { box.innerHTML = `<div class="info-row"><b>Director:</b> ${sanitize(extra.director)}</div><div class="info-row"><b>Main Cast:</b> <span class="va-text-highlight">${sanitize(extra.voiceActors)}</span></div>`; } }); 
+                        const studio = item.studios?.[0]?.name || 'TBA'; const cardId = `deep-${item.mal_id}`; 
+                        uFeed.innerHTML += `<div class="app-card"><div class="card-body-core"><div class="card-media-box"><img src="${item.images.jpg.image_url}"></div><div class="card-meta-pane"><h3>${sanitize(item.title)}</h3><div class="info-row"><b>Studio:</b> ${sanitize(studio)}</div><div class="info-row"><b>Source:</b> ${sanitize(item.source || 'Original')}</div></div></div><div class="deep-details-drawer" id="${cardId}"><div class="info-row"><b>Director:</b> Loading...</div></div><div class="card-footer-actions"><button class="btn-action-trigger" onclick="window.playVideo('${item.trailer?.url || ''}')">🎬 TRAILER</button><a class="btn-action-trigger" href="${item.url || '#'}" target="_blank">🔗 LINK</a></div></div>`; 
+                        dAcc += 300; fetchDeepAnimeMetadata(item.mal_id, dAcc).then(extra => { const box = document.getElementById(cardId); if(box) { box.innerHTML = `<div class="info-row"><b>Director:</b> ${sanitize(extra.director)}</div><div class="info-row"><b>Cast:</b> <span class="va-text-highlight">${sanitize(extra.voiceActors)}</span></div>`; } }); 
                     }); 
                 } 
             } catch(e){} 
             if(!query) { 
                 try { 
                     const mFeed = document.getElementById('manga-feed'); const res = await fetch('https://api.jikan.moe/v4/top/manga?limit=6'), data = await res.json(); mFeed.innerHTML = ''; 
-                    data.data.forEach(item => { 
-                        const author = item.authors?.[0]?.name || 'Unknown Architect'; 
-                        mFeed.innerHTML += `<div class="app-card"><div class="card-body-core"><div class="card-media-box"><img src="${item.images.jpg.image_url}"></div><div class="card-meta-pane"><h3>${sanitize(item.title)}</h3><div class="info-row"><b>Architect:</b> ${sanitize(author)}</div></div></div><div class="card-footer-actions"><a class="btn-action-trigger" href="${item.url}" target="_blank" style="border-radius:0 0 16px 16px;">📖 ARCHIVE SPECS</a></div></div>`; 
-                    }); 
+                    data.data.forEach(item => { mFeed.innerHTML += `<div class="app-card"><div class="card-body-core"><div class="card-media-box"><img src="${item.images.jpg.image_url}"></div><div class="card-meta-pane"><h3>${sanitize(item.title)}</h3><div class="info-row"><b>Author:</b> ${sanitize(item.authors?.[0]?.name || 'TBA')}</div></div></div><div class="card-footer-actions"><a class="btn-action-trigger" href="${item.url}" target="_blank" style="border-radius:0 0 16px 16px;">📖 ARCHIVE SPECS</a></div></div>`; }); 
                 } catch(e){} 
             } 
         }
@@ -454,4 +384,3 @@
     </script>
 </body>
 </html>
-        
