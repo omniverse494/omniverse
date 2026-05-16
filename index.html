@@ -7,12 +7,7 @@
     <meta name="google-site-verification" content="s1LpdFQDsO-k3mGLHAsP62N2V955khk8kZsyeon9G1M" />
     <title>OMNIVERSE</title>
 
-    <!-- GOOGLE ADSENSE CODE CONNECTIVITY -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8691102556824057" crossorigin="anonymous"></script>
-    
-    <!-- FIREBASE SDK COMPAT SCRIPTS FOR CORE DATABASE ACTIONS -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
     <style>
         /* CSS VARIABLES FOR SEAMLESS WHITE/BLACK TOGGLE */
@@ -96,19 +91,16 @@
         .nexus { background: var(--panel); border: 1px solid var(--border); height: 400px; display: flex; flex-direction: column; border-radius: 6px; overflow: hidden; }
         #logs { flex: 1; padding: 15px; overflow-y: auto; font-size: 13px; line-height: 1.5; color: var(--text); background: var(--panel); }
         
-        /* Message Layout structure (Avatar + Text details) */
         .chat-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
         .chat-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border); background: #333; }
         .chat-body { flex: 1; }
 
         .ui { padding: 12px; background: var(--input-bg); border-top: 1px solid var(--border); }
         
-        /* Profile Configuration Layout Area */
         .profile-setup { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
         .preview-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1px solid var(--accent); background: #222; }
         .nick-in { flex: 1; padding: 8px 12px; background: var(--panel); border: 1px solid var(--border); color: var(--accent); border-radius: 4px; font-weight: 600; outline: none; font-size: 12px; }
         
-        /* Upload Action Labels */
         .file-label { font-size: 10px; background: var(--panel); border: 1px solid var(--border); padding: 5px 8px; border-radius: 4px; cursor: pointer; color: var(--sub); font-weight: 600; }
         .file-label:hover { border-color: var(--accent); color: var(--text); }
 
@@ -126,7 +118,6 @@
         .news-item b a:hover { color: var(--accent); }
         .news-meta { font-size: 11px; color: var(--accent); margin-top: 4px; display: block; font-weight: 600; }
 
-        /* AUTOMATED MONETIZATION LAYOUT SLOT */
         .ads-slot { display: block; width: 100%; min-height: 10px; margin-bottom: 15px; }
 
         /* RESPONSIVE MOBILE INTERFACE STYLING */
@@ -152,13 +143,12 @@
 <header>
     <h1>OMNI<span>VERSE</span></h1>
     <div class="search-area">
-        <input type="text" id="searchInput" placeholder="Search Anime, Manga, Manhwa..." onkeydown="if(event.key === 'Enter') search()">
-        <button onclick="search()">Search</button>
+        <input type="text" id="searchInput" placeholder="Search Anime, Manga, Manhwa..." onkeydown="if(event.key === 'Enter') window.search()">
+        <button onclick="window.search()">Search</button>
     </div>
     <button class="theme-btn" onclick="document.body.classList.toggle('light-mode')">Theme</button>
 </header>
 
-<!-- BANNER SLIDESHOW OVERVIEW AREA -->
 <div class="banner">
     <div class="banner-track" id="banner-track">
         <div class="slide"><div style="padding:100px; color:white; text-align:center;">Loading Global Spotlight...</div></div>
@@ -171,7 +161,6 @@
 
 <div class="main-grid">
     <div class="content">
-        <!-- Google AdSense Container Advertisement Slot -->
         <div class="ads-slot">
             <ins class="adsbygoogle"
                  style="display:block"
@@ -194,18 +183,16 @@
         <div class="nexus">
             <div id="logs"></div>
             <div class="ui">
-                <!-- User Profile Interaction Controls -->
                 <div class="profile-setup">
-                    <img id="avatarPreview" class="preview-avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>" title="Your Avatar">
-                    <input type="text" id="nick" class="nick-in" placeholder="Set Nickname..." value="User" onchange="saveProfileSettings()">
+                    <img id="avatarPreview" class="preview-avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>">
+                    <input type="text" id="nick" class="nick-in" placeholder="Set Nickname..." value="User" onchange="window.saveProfileSettings()">
                     <label for="fileInput" class="file-label">🖼️ Upload Pic</label>
-                    <!-- Strict restrictions: Accepts images only from system file gallery directories -->
-                    <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+                    <input type="file" id="fileInput" accept="image/*" style="display: none;" id="fileInputListener">
                 </div>
                 
                 <div class="msg-row">
-                    <input type="text" id="msg" placeholder="Type a message and press enter..." onkeydown="if(event.key === 'Enter') send()">
-                    <button class="send-btn" onclick="send()">Send</button>
+                    <input type="text" id="msg" placeholder="Type a message and press enter...">
+                    <button class="send-btn" id="sendBtn">Send</button>
                 </div>
             </div>
         </div>
@@ -219,62 +206,60 @@
     </div>
 </div>
 
-<script>
-    // ─── FIREBASE ECOSYSTEM CONFIGURATION ───
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, push, onChildAdded, limitToLast } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
     const firebaseConfig = {
         databaseURL: "https://studio-8164628274-c414a-default-rtdb.asia-southeast1.firebasedatabase.app/"
     };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database().ref("chat_messages");
 
-    // SVG Embedded placeholder path when avatar asset is null
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const dbRef = ref(database, "chat_messages");
+
     const defaultAvatar = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>";
     let userAvatarBase64 = defaultAvatar;
 
-    // ─── PERSISTENCE CONTROLS: LOCAL STORAGE CACHING ───
-    window.onload = function() {
-        if(localStorage.getItem('omniverse_nick')) {
-            document.getElementById('nick').value = localStorage.getItem('omniverse_nick');
-        }
-        if(localStorage.getItem('omniverse_avatar')) {
-            userAvatarBase64 = localStorage.getItem('omniverse_avatar');
-            document.getElementById('avatarPreview').src = userAvatarBase64;
-        }
-    };
+    // Load Cache Profiles
+    if(localStorage.getItem('omniverse_nick')) {
+        document.getElementById('nick').value = localStorage.getItem('omniverse_nick');
+    }
+    if(localStorage.getItem('omniverse_avatar')) {
+        userAvatarBase64 = localStorage.getItem('omniverse_avatar');
+        document.getElementById('avatarPreview').src = userAvatarBase64;
+    }
 
-    function saveProfileSettings() {
+    window.saveProfileSettings = function() {
         const nickname = document.getElementById('nick').value || "Guest";
         localStorage.setItem('omniverse_nick', nickname);
     }
 
-    // ─── STORAGE STRATEGY: FILE PROCESSING FOR LOCAL AVATAR RESOURCING ───
-    function handleImageUpload(event) {
+    // Attach File Listeners
+    document.getElementById('fileInput').addEventListener('change', function(event) {
         const file = event.target.files[0];
         if (file) {
-            // Memory conservation guard block: limits image payload scale sizes to max 300KB
             if (file.size > 300000) { 
-                alert("The selected image file is too large! Please choose a file under 300KB to ensure smooth chat synchronization.");
+                alert("The selected image file is too large! Max 300KB allowed.");
                 return;
             }
-
             const reader = new FileReader();
             reader.onload = function(e) {
                 userAvatarBase64 = e.target.result;
                 document.getElementById('avatarPreview').src = userAvatarBase64;
-                localStorage.setItem('omniverse_avatar', userAvatarBase64); // Commit to internal storage profile tracking
+                localStorage.setItem('omniverse_avatar', userAvatarBase64);
             };
-            reader.readAsDataURL(file); // Convert raw media directory resource data streams into Base64 format strings
+            reader.readAsDataURL(file);
         }
-    }
+    });
 
-    // ─── CORE REALTIME SYNC ROUTINES ───
-    function send() {
+    // Send Trigger Routine
+    function dispatchMessage() {
         const n = document.getElementById('nick').value || "Guest";
         const m = document.getElementById('msg').value;
         if(m) {
-            saveProfileSettings();
-            // Dispatches full structural nodes containing user identification parameters to remote systems
-            db.push({
+            window.saveProfileSettings();
+            push(dbRef, {
                 nickname: n,
                 avatar: userAvatarBase64,
                 message: m,
@@ -284,13 +269,17 @@
         }
     }
 
-    // Intercepting inbound stream records dynamically to assemble messaging panels across global view screens
-    db.limitToLast(40).on("child_added", (snapshot) => {
+    document.getElementById('sendBtn').addEventListener('click', dispatchMessage);
+    document.getElementById('msg').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') dispatchMessage();
+    });
+
+    // Read Incoming Streams
+    onChildAdded(limitToLast(dbRef, 40), (snapshot) => {
         const data = snapshot.val();
         const l = document.getElementById('logs');
         const imgPic = data.avatar || defaultAvatar;
 
-        // Structured UI execution row mapping matching interface standards
         l.innerHTML += `
             <div class="chat-row">
                 <img class="chat-avatar" src="${imgPic}" alt="avatar">
@@ -299,14 +288,13 @@
                     <span style="font-size:13px;">${data.message}</span>
                 </div>
             </div>`;
-        l.scrollTop = l.scrollHeight; // Auto-focus view tracks to baseline element locations
+        l.scrollTop = l.scrollHeight;
     });
+</script>
 
-
-    // ─── EXTERNAL INTERFACE DATABASE SYSTEM QUERIES (JIKAN SYSTEM API) ───
+<script>
     async function fetchData(q = '') {
         try {
-            // 1. SYNC BANNER FEED COMPONENT IMAGES
             const topAnimeRes = await fetch('https://api.jikan.moe/v4/top/anime?filter=bypopularity');
             const topAnimeData = await topAnimeRes.json();
             if(topAnimeData.data && topAnimeData.data.length >= 4) {
@@ -321,7 +309,6 @@
                 });
             }
 
-            // 2. QUERY PROCESS ENGINE: MAIN SECTION OVERVIEWS & TRAILER SYNC
             const api = q ? `https://api.jikan.moe/v4/anime?q=${q}` : 'https://api.jikan.moe/v4/seasons/upcoming';
             const res = await fetch(api);
             const data = await res.json();
@@ -358,7 +345,30 @@
                     </div>`;
             });
 
-            // 3. GRAPHIC LIT SYNC ROUTINES: MANGA, MANHWA, & MANHUA SECTION 
             if(!q) {
                 const mRes = await fetch('https://api.jikan.moe/v4/top/manga');
- 
+                const mData = await mRes.json();
+                const mFeed = document.getElementById('manga-feed');
+                mFeed.innerHTML = '';
+                
+                mData.data.slice(0, 10).forEach(item => {
+                    const authorName = item.authors && item.authors[0] ? item.authors[0].name : 'N/A';
+                    mFeed.innerHTML += `
+                        <div class="card">
+                            <img src="${item.images.jpg.large_image_url}" alt="Cover">
+                            <div class="details">
+                                <h3>${item.title}</h3>
+                                <div class="meta">
+                                    <b>Author/Artist:</b> ${authorName}<br>
+                                    <b>Type:</b> ${item.type} (Manga/Manhwa/Manhua)<br>
+                                    <b>Rank:</b> #${item.rank} | <b>Chapters:</b> ${item.chapters || 'Ongoing'}<br>
+                                    <b>Score:</b> ⭐ ${item.score}
+                                </div>
+                                <div class="links">
+                                    <a href="${item.url}" target="_blank" class="btn-portal">📖 View Official Info</a>
+                                </div>
+                            </div>
+                        </div>`;
+                });
+
+                const newsRes = await fetch('h
