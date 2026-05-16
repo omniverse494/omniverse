@@ -1,0 +1,17 @@
+{
+  "short_name": "OMNIVERSE",
+  "name": "OMNIVERSE Neural Core Dashboard",
+  "icons": [
+    {
+      "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300E5FF'><path d='M12 2L2 22h20L12 2zm0 3.99L19.53 19H4.47L12 5.99zM13 16h-2v-2h2v2zm0-4h-2V9h2v3z'/></svg>",
+      "type": "image/svg+xml",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#0a0a12",
+  "theme_color": "#00E5FF",
+  "display": "standalone",
+  "orientation": "portrait"
+}
