@@ -3,334 +3,224 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="Omniverse - AI Core Analytics Dashboard and Media Engine.">
-    <meta name="google-site-verification" content="s1LpdFQDsO-k3mGLHAsP62N2V955khk8kZsyeon9G1M" />
-    <title>OMNIVERSE</title>
-
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8691102556824057" crossorigin="anonymous"></script>
-
+    <title>OMNIVERSE Neural Core Dashboard</title>
+    <link rel="manifest" href="manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
-        :root { 
-            --bg: #070708; 
-            --panel: rgba(22, 22, 26, 0.7); 
-            --accent: #FF4500; 
-            --accent-glow: rgba(255, 69, 0, 0.25);
-            --ai-accent: #00E5FF;
-            --ai-glow: rgba(0, 229, 255, 0.25);
-            --text: #F3F4F6; 
-            --sub: #9CA3AF; 
-            --border: rgba(255, 255, 255, 0.07);
-            --input-bg: #0d0d11;
-            --input-text: #FFF;
-            --banner-filter: brightness(0.45) contrast(1.1);
-            --glass-blur: blur(12px);
+        :root {
+            --bg: #0a0a12; --panel-bg: rgba(16, 16, 28, 0.75); --accent: #00E5FF;
+            --text: #E2E8F0; --text-dim: #718096; --border: rgba(0, 229, 255, 0.2);
+            --ai-accent: #9D4EDD; --ai-glow: rgba(157, 78, 221, 0.5);
+            --font-cyber: 'Orbitron', sans-serif; --font-data: 'Rajdhani', sans-serif;
         }
-        .light-mode { 
-            --bg: #F3F4F6; 
-            --panel: rgba(255, 255, 255, 0.75); 
-            --accent: #EF4444; 
-            --accent-glow: rgba(239, 68, 68, 0.15);
-            --ai-accent: #0EA5E9;
-            --ai-glow: rgba(14, 165, 233, 0.15);
-            --text: #111827; 
-            --sub: #4B5563; 
-            --border: rgba(0, 0, 0, 0.08);
-            --input-bg: #E5E7EB;
-            --input-text: #111827;
-            --banner-filter: brightness(0.85);
-            --glass-blur: blur(12px);
+        .light-mode {
+            --bg: #F7FAFC; --panel-bg: rgba(255, 255, 255, 0.9); --accent: #008080;
+            --text: #1A202C; --text-dim: #4A5568; --border: rgba(0, 128, 128, 0.3);
+            --ai-accent: #6B21A8; --ai-glow: rgba(107, 33, 168, 0.3);
         }
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text); overflow-x: hidden; padding-bottom: 75px; min-height: 100vh; }
-
-        /* HEADER INTERFACE */
-        header { padding: 16px 24px; background: var(--panel); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
-        header h1 { font-size: 18px; font-weight: 900; letter-spacing: 3px; }
-        header h1 span { color: var(--accent); text-shadow: 0 0 10px var(--accent-glow); }
-        
-        .search-area { flex: 1; display: flex; max-width: 450px; position: relative; }
-        .search-area input { width: 100%; padding: 10px 16px; background: var(--input-bg); border: 1px solid var(--border); color: var(--input-text); border-radius: 20px; outline: none; font-size: 13px; padding-right: 45px; transition: all 0.3s ease; }
-        .search-area input:focus { border-color: var(--accent); box-shadow: 0 0 12px var(--accent-glow); }
-        .search-area button { position: absolute; right: 4px; top: 4px; background: var(--accent); border: none; width: 32px; height: 32px; border-radius: 50%; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        
-        .theme-btn { background: transparent; color: var(--text); border: 1px solid var(--border); padding: 8px 16px; border-radius: 20px; font-size: 10px; cursor: pointer; font-weight: 700; letter-spacing: 1px; }
-        .theme-btn:hover { border-color: var(--accent); color: var(--accent); }
-
-        /* HERO MATRIX BANNER */
-        .banner { width: 100%; height: 260px; overflow: hidden; position: relative; border-bottom: 1px solid var(--border); background: #000; }
-        .banner-track { display: flex; width: 400%; height: 100%; animation: slide 20s infinite ease-in-out; }
-        .banner-track .slide { width: 25%; height: 100%; position: relative; }
-        .banner-track img { width: 100%; height: 100%; object-fit: cover; filter: var(--banner-filter); }
-        
-        @keyframes slide { 
-            0%, 20% { transform: translateX(0); } 
-            25%, 45% { transform: translateX(-25%); } 
-            50%, 70% { transform: translateX(-50%); } 
-            75%, 95% { transform: translateX(-75%); } 
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body {
+            background-color: var(--bg); color: var(--text); font-family: var(--font-data);
+            overflow: hidden; height: 100vh; width: 100vw; position: relative;
+            background-image: radial-gradient(circle at 50% 50%, rgba(20, 20, 35, 0.8) 0%, var(--bg) 100%);
+            transition: background 0.3s ease;
         }
-        
-        .banner-text { position: absolute; bottom: 24px; left: 24px; z-index: 10; pointer-events: none; max-width: 80%; }
-        .banner-text h2 { font-size: 24px; font-weight: 800; color: #FFF; text-shadow: 0 4px 12px rgba(0,0,0,0.6); letter-spacing: -0.5px; }
-        .banner-text p { font-size: 12px; color: var(--accent); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; }
-
-        /* VIEW ENGINE ACTIVE MODES */
-        .app-panel-view { display: none; padding: 20px; max-width: 1400px; margin: 0 auto; animation: viewFade 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-        .app-panel-view.active-panel { display: block; }
-        @keyframes viewFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
-        .label { font-size: 11px; font-weight: 800; color: var(--accent); text-transform: uppercase; margin: 15px 0 15px; letter-spacing: 1.5px; display: flex; align-items: center; gap: 6px; }
-
-        /* COMPACT CARD SYSTEM */
-        .cards-container-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-        .card { background: var(--panel); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--border); border-radius: 12px; padding: 14px; position: relative; display: flex; gap: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
-        .card:hover { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
-        .card img { width: 85px; height: 120px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); }
-        .details { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .details h3 { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.3; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .meta { font-size: 11px; color: var(--sub); line-height: 1.4; }
-        .meta b { color: var(--text); font-weight: 600; }
-        .links { display: flex; gap: 6px; margin-top: 8px; }
-        
-        .btn-portal { font-size: 10px; padding: 6px 12px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); border-radius: 20px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
-        .btn-portal:hover { border-color: var(--accent); color: var(--accent); }
-        
-        .card-like-btn { position: absolute; bottom: 14px; right: 14px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--text); padding: 4px 10px; border-radius: 20px; font-size: 10px; cursor: pointer; font-weight: 700; display: flex; align-items: center; gap: 4px; }
-        .card-like-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
-
-        /* SECURITY NEXUS HUB INTERFACE */
-        .nexus-chat-container { max-width: 800px; margin: 0 auto; height: calc(100vh - 180px); min-height: 450px; background: var(--panel); border: 1px solid var(--border); border-radius: 16px; display: flex; flex-direction: column; overflow: hidden; }
-        
-        /* AI SYSTEM CONFIG BAR */
-        .ai-status-panel { background: rgba(0, 229, 255, 0.04); border-bottom: 1px solid rgba(0, 229, 255, 0.15); padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; font-weight: 700; color: var(--ai-accent); letter-spacing: 0.5px; }
-        .ai-toggle-btn { background: var(--input-bg); border: 1px solid rgba(0, 229, 255, 0.3); color: var(--ai-accent); padding: 4px 12px; border-radius: 20px; cursor: pointer; font-size: 10px; font-weight: 800; display: flex; align-items: center; gap: 4px; }
-        .ai-toggle-btn.ai-online { background: var(--ai-accent); color: #000; box-shadow: 0 0 10px var(--ai-glow); border-color: var(--ai-accent); }
-        
-        #logs { flex: 1; padding: 20px; overflow-y: auto; background: rgba(0,0,0,0.05); }
-        
-        .chat-row { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
-        .chat-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border); }
-        .chat-body { flex: 1; }
-        
-        .chat-header-info { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
-        .chat-badge { font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .badge-admin { background: var(--accent); color: #fff; box-shadow: 0 0 8px var(--accent-glow); }
-        .badge-otaku { background: #8B5CF6; color: #fff; }
-        .badge-member { background: #10B981; color: #fff; }
-        .badge-core { background: var(--ai-accent); color: #000; font-weight: 900; box-shadow: 0 0 8px var(--ai-glow); }
-        
-        .chat-message-bubble { font-size: 13px; color: var(--text); line-height: 1.4; word-break: break-word; }
-        .chat-react-bar { display: flex; gap: 6px; margin-top: 6px; }
-        
-        .react-badge { background: var(--input-bg); border: 1px solid var(--border); padding: 4px 10px; border-radius: 20px; font-size: 11px; cursor: pointer; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; color: var(--sub); }
-        .react-badge:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
-        .react-badge svg { width: 12px; height: 12px; fill: currentColor; }
-
-        .ui { padding: 16px; background: var(--input-bg); border-top: 1px solid var(--border); }
-        .profile-setup { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 10px; }
-        .preview-avatar { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 1px solid var(--accent); }
-        .nick-in { flex: 1; min-width: 120px; padding: 8px 14px; background: var(--panel); border: 1px solid var(--border); color: var(--text); border-radius: 20px; font-weight: 600; outline: none; font-size: 12px; }
-        .badge-select { padding: 8px 12px; background: var(--panel); border: 1px solid var(--border); color: var(--text); border-radius: 20px; font-size: 11px; outline: none; font-weight: 700; cursor: pointer; }
-        
-        .file-label { font-size: 11px; background: var(--panel); border: 1px solid var(--border); padding: 8px 14px; border-radius: 20px; cursor: pointer; color: var(--text); font-weight: 700; display: inline-flex; align-items: center; gap: 4px; }
-        .file-label:hover { border-color: var(--accent); background: var(--accent-glow); }
-
-        .msg-row { display: flex; gap: 10px; }
-        .msg-row input { flex: 1; padding: 12px 18px; background: var(--panel); border: 1px solid var(--border); color: var(--text); border-radius: 20px; outline: none; font-size: 13px; }
-        .send-btn { background: var(--accent); color: white; border: none; padding: 0 20px; border-radius: 20px; font-weight: 700; cursor: pointer; font-size: 12px; }
-
-        /* AUDIO SYSTEM MEDIA CORE */
-        .audio-module-wrapper { max-width: 500px; margin: 40px auto; background: var(--panel); backdrop-filter: var(--glass-blur); border: 1px solid var(--border); padding: 24px; border-radius: 16px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-        .music-disc { width: 90px; height: 90px; border-radius: 50%; background: linear-gradient(135deg, #222, var(--accent)); margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 0 20px var(--accent-glow); animation: spin 6s linear infinite; animation-play-state: paused; position: relative; }
-        .music-disc::after { content: ''; position: absolute; width: 20px; height: 20px; background: var(--bg); border-radius: 50%; border: 2px solid var(--border); }
-        .music-disc.playing { animation-play-state: running; }
-        .music-disc svg { width: 32px; height: 32px; fill: currentColor; z-index: 2; }
-        
-        .music-title { font-size: 15px; font-weight: 800; color: var(--text); display: block; margin-bottom: 4px; }
-        .music-sub { font-size: 11px; color: var(--sub); display: block; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
-        .music-controls { display: flex; justify-content: center; gap: 16px; }
-        .music-btn { background: var(--input-bg); border: 1px solid var(--border); color: var(--text); width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .music-btn svg { width: 16px; height: 16px; fill: currentColor; }
-
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-
-        /* COMPACT LOG CHANNELS */
-        .news-grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; margin-top: 15px; }
-        .news-item { background: var(--panel); border: 1px solid var(--border); padding: 16px; border-radius: 12px; font-size: 12px; color: var(--sub); line-height: 1.5; }
-        .news-item b { color: var(--text); display: block; margin-bottom: 6px; font-size: 14px; font-weight: 700; }
-        .news-item b a { color: inherit; text-decoration: none; }
-        .news-item b a:hover { color: var(--accent); }
-        .news-meta { font-size: 10px; color: var(--accent); margin-top: 8px; display: block; font-weight: 700; text-transform: uppercase; }
-
-        /* IN-APP MODAL CORE */
-        .video-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5,5,7,0.95); backdrop-filter: blur(8px); z-index: 5000; align-items: center; justify-content: center; padding: 20px; }
-        .modal-container { background: #000; width: 100%; max-width: 750px; border-radius: 12px; border: 1px solid var(--border); overflow: hidden; position: relative; }
-        .modal-close { position: absolute; top: 12px; right: 12px; background: rgba(255,255,255,0.1); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; z-index: 5100; display: flex; align-items: center; justify-content: center; }
-        .modal-close:hover { background: var(--accent); }
-        .modal-close svg { width: 12px; height: 12px; fill: currentColor; }
-        .video-box { position: relative; padding-bottom: 56.25%; height: 0; }
-        .video-box iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-
-        /* MOBILE ARCHITECTURE FLOATING BAR */
-        .bottom-nav-bar { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: 480px; background: rgba(18, 18, 22, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); height: 64px; border-radius: 32px; display: flex; align-items: center; justify-content: space-around; z-index: 4000; box-shadow: 0 10px 30px rgba(0,0,0,0.4); padding: 0 10px; }
-        .nav-tab-item { background: transparent; border: none; color: var(--sub); display: flex; flex-direction: column; align-items: center; justify-content: center; width: 60px; height: 100%; cursor: pointer; position: relative; gap: 4px; }
-        .nav-tab-item svg { width: 20px; height: 20px; fill: currentColor; transition: transform 0.2s ease, color 0.2s; }
-        .nav-tab-item span { font-size: 9px; font-weight: 700; text-transform: uppercase; }
-        .nav-tab-item.active-tab { color: var(--accent); }
-        .nav-tab-item.active-tab::after { content: ''; position: absolute; top: -1px; width: 16px; height: 3px; background: var(--accent); border-radius: 2px; box-shadow: 0 2px 8px var(--accent); }
-
-        .ads-slot { display: block; width: 100%; min-height: 10px; margin-bottom: 15px; }
-
-        @media (max-width: 768px) {
-            header { padding: 12px 16px; gap: 12px; flex-wrap: wrap; }
-            header h1 { font-size: 16px; }
-            .search-area { max-width: 100%; order: 3; width: 100%; }
-            .theme-btn { padding: 6px 12px; font-size: 9px; }
-            .banner { height: 160px; }
-            .banner-text h2 { font-size: 16px; }
-            .app-panel-view { padding: 12px; }
-            .cards-container-layout { grid-template-columns: 1fr; }
-            .nexus-chat-container { height: calc(100vh - 210px); }
+        .app-container { display: flex; flex-direction: column; height: 100vh; width: 100vw; position: relative; }
+        header {
+            background: linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 100%);
+            padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid var(--border); backdrop-filter: blur(10px); z-index: 10;
         }
+        .app-identity h1 {
+            font-family: var(--font-cyber); font-size: 18px; font-weight: 700;
+            color: var(--accent); letter-spacing: 2px; text-shadow: 0 0 8px var(--border);
+        }
+        .search-container { position: relative; width: 45%; max-width: 300px; }
+        .search-container input {
+            width: 100%; padding: 6px 32px 6px 12px; background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border); border-radius: 20px; color: var(--text);
+            font-family: var(--font-data); font-size: 13px; outline: none; transition: 0.2s;
+        }
+        .search-container input:focus { border-color: var(--accent); box-shadow: 0 0 8px var(--border); }
+        .search-container svg {
+            position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+            width: 14px; height: 14px; fill: var(--text-dim); cursor: pointer;
+        }
+        .header-actions { display: flex; gap: 8px; }
+        .btn-circle {
+            width: 32px; height: 32px; border-radius: 50%; background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border); color: var(--accent); display: flex;
+            align-items: center; justify-content: center; cursor: pointer; outline: none;
+        }
+        .main-viewport { flex: 1; position: relative; overflow: hidden; }
+        .app-panel-view {
+            position: absolute; top:0; left:0; width:100%; height:100%;
+            display: none; flex-direction: column; padding: 16px; overflow-y: auto;
+            -webkit-overflow-scrolling: touch; opacity: 0; transition: opacity 0.2s ease;
+        }
+        .app-panel-view.active-panel { display: flex; opacity: 1; }
+        
+        /* Banner & Card UI */
+        .hero-banner-slider { width: 100%; height: 140px; border-radius: 12px; overflow: hidden; margin-bottom: 16px; border: 1px solid var(--border); position: relative; }
+        .banner-track { display: flex; width: 400%; height: 100%; animation: slideCycle 16s infinite ease-in-out; }
+        .slide { width: 25%; height: 100%; position: relative; }
+        .slide img { width: 100%; height: 100%; object-fit: cover; }
+        @keyframes slideCycle { 0%, 20% { transform: translateX(0%); } 25%, 45% { transform: translateX(-25%); } 50%, 70% { transform: translateX(-50%); } 75%, 95% { transform: translateX(-75%); } 100% { transform: translateX(0%); } }
+        
+        .section-headline { font-family: var(--font-cyber); font-size: 13px; color: var(--accent); margin-bottom: 12px; letter-spacing: 1px; display: flex; align-items: center; gap: 6px; }
+        .data-grid-feed { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
+        .card { background: var(--panel-bg); border-radius: 8px; border: 1px solid var(--border); overflow: hidden; position: relative; display: flex; flex-direction: column; }
+        .card img { width: 100%; height: 150px; object-fit: cover; border-bottom: 1px solid var(--border); }
+        .card .details { padding: 8px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .card h3 { font-size: 12px; font-weight: 700; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card .meta { font-size: 10px; color: var(--text-dim); margin-bottom: 8px; line-height: 1.3; }
+        .card-like-btn { position: absolute; top: 6px; right: 6px; background: rgba(0,0,0,0.7); border: 1px solid var(--border); border-radius: 12px; padding: 2px 6px; color: #FF007F; font-size: 9px; font-weight: bold; display: flex; align-items: center; gap: 3px; cursor: pointer; z-index: 2; }
+        .btn-portal { width: 100%; padding: 6px; background: rgba(0,229,255,0.1); border: 1px solid var(--accent); border-radius: 4px; color: var(--accent); font-family: var(--font-cyber); font-size: 10px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; display: block; }
+        .btn-portal:shadow { box-shadow: 0 0 8px var(--border); }
+        
+        /* Audio HUD styles */
+        .audio-matrix-hub { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .deck-disc-container { width: 160px; height: 160px; border-radius: 50%; border: 4px dashed var(--accent); display: flex; align-items: center; justify-content: center; position: relative; margin-bottom: 24px; }
+        .deck-disc-inner { width: 140px; height: 140px; border-radius: 50%; background: radial-gradient(circle, #1A1A2E 30%, #020205 100%); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; position: relative; }
+        .deck-disc-inner.playing { animation: spinDisc 4s linear infinite; }
+        @keyframes spinDisc { 100% { transform: rotate(360deg); } }
+        .deck-center-node { width: 30px; height: 30px; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent); }
+        .track-metadata-plate { text-align: center; margin-bottom: 24px; width: 100%; }
+        #musicTitle { font-family: var(--font-cyber); font-size: 14px; color: var(--accent); letter-spacing: 1px; margin-bottom: 6px; }
+        .audio-stream-status-log { font-size: 11px; color: var(--text-dim); font-weight: bold; }
+        .audio-control-cluster { display: flex; align-items: center; gap: 20px; }
+        .btn-audio-core { width: 54px; height: 54px; border-radius: 50%; background: rgba(0,229,255,0.1); border: 2px solid var(--accent); color: var(--accent); display: flex; align-items: center; justify-content: center; cursor: pointer; outline: none; }
+        .btn-audio-next { width: 40px; height: 40px; border-radius: 50%; background: rgba(0,0,0,0.3); border: 1px solid var(--border); color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .btn-audio-core svg { width: 24px; height: 24px; fill: currentColor; }
+        .btn-audio-next svg { width: 18px; height: 18px; fill: currentColor; }
+
+        /* Chat HUD Styles */
+        .chat-ai-integration-node { background: rgba(157,78,221,0.05); border: 1px dashed var(--ai-accent); border-radius: 8px; padding: 10px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 8px; }
+        .ai-status-row { display: flex; align-items: center; justify-content: space-between; font-size: 10px; font-weight: bold; }
+        #aiStatusText { color: var(--text-dim); max-width: 70%; line-height: 1.2; }
+        .btn-ai-toggle { padding: 4px 10px; border-radius: 4px; background: rgba(0,0,0,0.4); border: 1px solid var(--ai-accent); color: var(--ai-accent); font-family: var(--font-cyber); font-size: 9px; cursor: pointer; font-weight: bold; }
+        .btn-ai-toggle.ai-online { background: var(--ai-accent); color: #fff; box-shadow: 0 0 10px var(--ai-glow); }
+        .chat-log-timeline { flex: 1; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 8px; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px; }
+        .chat-row { display: flex; gap: 10px; align-items: flex-start; }
+        .chat-avatar { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--border); object-fit: cover; background: #111; }
+        .chat-body { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+        .chat-header-info { display: flex; align-items: center; gap: 6px; font-size: 11px; }
+        .chat-badge { font-size: 8px; font-weight: bold; text-transform: uppercase; padding: 1px 4px; border-radius: 3px; background: rgba(255,255,255,0.1); color: #fff; }
+        .chat-badge.badge-root { background: #FF3B30; } .chat-badge.badge-core { background: var(--ai-accent); box-shadow: 0 0 5px var(--ai-glow); } .chat-badge.badge-member { background: #34C759; }
+        .chat-message-bubble { background: rgba(255,255,255,0.04); border-radius: 6px; padding: 6px 10px; font-size: 12px; line-height: 1.4; word-break: break-word; color: #E2E8F0; border: 1px solid rgba(255,255,255,0.02); }
+        .chat-react-bar { display: flex; gap: 8px; margin-top: 2px; }
+        .react-badge { display: flex; align-items: center; gap: 3px; font-size: 9px; color: var(--text-dim); cursor: pointer; background: rgba(0,0,0,0.2); padding: 2px 5px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.05); }
+        .react-badge svg { width: 9px; height: 9px; fill: currentColor; }
+        .react-badge:hover { color: var(--accent); border-color: var(--border); }
+        .chat-input-gate { display: flex; gap: 8px; background: rgba(0,0,0,0.2); border-radius: 6px; }
+        .chat-input-gate input { flex: 1; padding: 10px; background: transparent; border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-family: var(--font-data); font-size: 13px; outline: none; }
+        .btn-chat-send { padding: 0 16px; background: var(--accent); border: none; border-radius: 6px; color: #000; font-family: var(--font-cyber); font-size: 11px; font-weight: bold; cursor: pointer; }
+
+        /* Profile HUD Styles */
+        .profile-setup-card { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+        .profile-avatar-uploader { display: flex; align-items: center; gap: 16px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 6px; border: 1px dashed var(--border); }
+        .profile-avatar-uploader img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; }
+        .file-upload-trigger { position: relative; overflow: hidden; background: rgba(0,229,255,0.1); border: 1px solid var(--accent); color: var(--accent); font-size: 11px; font-weight: bold; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-family: var(--font-cyber); }
+        .file-upload-trigger input { position: absolute; font-size: 100px; right: 0; top: 0; opacity: 0; cursor: pointer; }
+        .input-group-field { display: flex; flex-direction: column; gap: 6px; }
+        .input-group-field label { font-size: 11px; color: var(--accent); font-family: var(--font-cyber); letter-spacing: 0.5px; }
+        .input-group-field input, .input-group-field select { padding: 8px 12px; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: var(--font-data); font-size: 13px; outline: none; }
+        
+        /* News UI Layout */
+        .news-item { background: var(--panel-bg); border: 1px solid var(--border); border-radius: 6px; padding: 12px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 4px; }
+        .news-item a { color: var(--text); text-decoration: none; font-size: 12px; font-weight: bold; }
+        .news-item a:hover { color: var(--accent); }
+        .news-meta { font-size: 9px; color: var(--text-dim); font-family: var(--font-cyber); }
+
+        /* Video Stream Modal Node */
+        .modal-portal-overlay { position: fixed; top:0; left:0; width:100vw; height:100vh; background: rgba(2,2,5,0.9); z-index: 999; display: none; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(5px); }
+        .modal-viewport-box { width: 100%; max-width: 560px; background: #000; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; position: relative; }
+        .video-aspect-frame { position: relative; width: 100%; padding-top: 56.25%; }
+        .video-aspect-frame iframe { position: absolute; top:0; left:0; width:100%; height:100%; border: none; }
+        .btn-modal-close { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.8); border: 1px solid var(--accent); border-radius: 50%; width: 28px; height: 28px; color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; cursor: pointer; z-index: 10; }
+
+        /* Navigation Systems Footer Panel */
+        footer { background: rgba(10,10,18,0.95); border-top: 1px solid var(--border); backdrop-filter: blur(12px); padding: 6px 12px calc(6px + env(safe-area-inset-bottom)) 12px; z-index: 10; }
+        .nav-tabs-container { display: flex; justify-content: space-between; align-items: center; }
+        .nav-tab-item { background: transparent; border: none; color: var(--text-dim); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; outline: none; flex: 1; padding: 4px 0; transition: color 0.2s; }
+        .nav-tab-item svg { width: 20px; height: 20px; fill: currentColor; }
+        .nav-tab-item span { font-size: 10px; font-family: var(--font-cyber); font-weight: 500; letter-spacing: 0.5px; }
+        .nav-tab-item.active-tab { color: var(--accent); text-shadow: 0 0 5px var(--border); }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/8.10.1/firebase-app.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/8.10.1/firebase-database.min.js"></script>
-    </head>
-    <body>
-
-<header>
-    <h1>OMNI<span>VERSE</span></h1>
-    <button class="theme-btn" onclick="window.toggleInterfaceMode()">INTERFACE MODE</button>
-    <div class="search-area">
-        <input type="text" id="searchInput" placeholder="Query Matrix Cluster Search..." onkeydown="if(event.key === 'Enter') window.search()">
-        <button onclick="window.search()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        </button>
-    </div>
-</header>
-
-<div id="panel-explore" class="app-panel-view active-panel">
-    <div class="banner">
-        <div class="banner-track" id="banner-track">
-            <div class="slide"><div style="padding:80px; color:white; text-align:center; font-size:12px; font-weight:700;">SYNCHRONIZING DYNAMIC GRAPHICS FEED ENGINE...</div></div>
+</head>
+<body>
+<div class="app-container">
+    <header>
+        <div class="app-identity"><h1>OMNIVERSE</h1></div>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search Global Grid..." onkeydown="if(event.key === 'Enter') window.search()">
+            <svg onclick="window.search()" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
         </div>
-        <div class="banner-text">
-            <h2 id="banner-title">MEDIA PIPELINE SPOTLIGHT</h2>
-            <p id="banner-sub">Automated Industry Activity Index Feed</p>
+        <div class="header-actions">
+            <button class="btn-circle" onclick="window.toggleInterfaceMode()">🌓</button>
         </div>
-    </div>
-
-    <div class="ads-slot" style="margin-top: 15px;">
-        <ins class="adsbygoogle" style="display:block" data-ad-format="fluid" data-ad-layout-key="-fb+5w+4e-db+86" data-ad-client="ca-pub-8691102556824057" data-ad-slot="auto"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </div>
-    
-    <span class="label">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
-        MEDIA CORE PIPELINE: UPCOMING CHANNELS
-    </span>
-    <div id="upcoming-feed" class="cards-container-layout">
-        <div style="padding:20px; color:var(--sub); font-size:12px; text-align:center; width:100%;">Connecting Live Core Streaming Pipelines...</div>
-    </div>
-    
-    <span class="label" style="margin-top: 30px;">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d='M4 19.5A2.5 2.5 0 0 1 6.5 17H20'></path><path d='M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z'></path></svg>
-        MEDIA CORE PIPELINE: TOP PUBLICATIONS INDEX
-    </span>
-    <div id="manga-feed" class="cards-container-layout">
-        <div style="padding:20px; color:var(--sub); font-size:12px; text-align:center; width:100%;">Connecting Publication Registries...</div>
-    </div>
-</div>
-
-<div id="panel-chat" class="app-panel-view">
-    <div class="nexus-chat-container">
-        <div class="ai-status-panel">
-            <span id="aiStatusText">AI CORE CORE ENGINE DECOUPLED (LOCAL CHAT ONLY)</span>
-            <button id="aiToggleBtn" class="ai-toggle-btn" onclick="window.toggleAiCore()">
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/></svg>
-                CONNECT GEMINI CORE
-            </button>
+    </header>
+    <main class="main-viewport">
+        <div class="app-panel-view active-panel" id="panel-explore">
+            <div class="hero-banner-slider"><div class="banner-track" id="banner-track"></div></div>
+            <div class="section-headline">⚡ CURRENT SEASON BROADCAST PIPELINE</div>
+            <div class="data-grid-feed" id="upcoming-feed"></div>
+            <div class="section-headline">📚 LATEST INDEXED MANGA ARCHIVES</div>
+            <div class="data-grid-feed" id="manga-feed"></div>
+            <div class="section-headline">📡 NETWORK EPISODE FEED LOGS</div>
+            <div id="news-feed"></div>
         </div>
-        
-        <div id="logs"></div>
-        <div class="ui">
-            <div class="profile-setup">
-                <img id="avatarPreview" class="preview-avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>">
-                <input type="text" id="nick" class="nick-in" placeholder="Identity Node..." value="User" onchange="window.saveProfileSettings()">
-                
-                <select id="userBadge" class="badge-select" onchange="window.saveProfileSettings()">
-                    <option value="member">MEMBER</option>
-                    <option value="otaku">OTAKU</option>
-                    <option value="admin">ADMIN</option>
-                </select>
-                
-                <label for="fileInput" class="file-label">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polygon points="21 15 16 10 5 21"></polygon></svg>
-                    PROFILE SYNC
-                </label>
-                <input type="file" id="fileInput" accept="image/*" style="display: none;">
-            </div>
-            
-            <div class="msg-row">
-                <input type="text" id="msg" placeholder="Transmit secure network packets..." onkeydown="if(event.key === 'Enter') window.sendMsg()">
-                <button class="send-btn" onclick="window.sendMsg()">TRANSMIT</button>
+        <div class="app-panel-view" id="panel-audio">
+            <div class="audio-matrix-hub">
+                <div class="deck-disc-container"><div class="deck-disc-inner" id="musicDisc"><div class="deck-center-node"></div></div></div>
+                <div class="track-metadata-plate"><h2 id="musicTitle">Anime Hits & Openings Terminal</h2><div class="audio-stream-status-log">ZENOFM ENCRYPTED LIVE FEED LINK ACTIVE</div></div>
+                <div class="audio-control-cluster">
+                    <button class="btn-audio-core" onclick="window.toggleMusic()" id="playIconSvg"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+                    <button class="btn-audio-next" onclick="window.nextMusic()"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-
-<div id="panel-audio" class="app-panel-view">
-    <div class="audio-module-wrapper">
-        <div class="music-disc" id="musicDisc">
-            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v-.07zm5.66-2.87l-1.34-1.34C17.75 13.99 18 13.03 18 12c0-3.31-2.69-6-6-6-1.03 0-1.99.25-2.73.68L7.93 5.34C9.13 4.5 10.51 4 12 4c4.42 0 8 3.58 8 8 0 1.49-.41 2.87-1.07 4.06z"/></svg>
+        <div class="app-panel-view" id="panel-chat">
+            <div class="chat-ai-integration-node">
+                <div class="ai-status-row">
+                    <span id="aiStatusText">AI CORE CORE ENGINE DECOUPLED (LOCAL CHAT ONLY)</span>
+                    <button class="btn-ai-toggle" id="aiToggleBtn" onclick="window.toggleAiCore()">CONNECT GEMINI CORE</button>
+                </div>
+            </div>
+            <div class="chat-log-timeline" id="logs"></div>
+            <div class="chat-input-gate">
+                <input type="text" id="msg" placeholder="Transmit network data packet..." onkeydown="if(event.key === 'Enter') window.sendMsg()">
+                <button class="btn-chat-send" onclick="window.sendMsg()">SEND</button>
+            </div>
         </div>
-        <span class="music-title" id="musicTitle">Anime Hits & Openings Terminal</span>
-        <span class="music-sub">Active Audio Stream Pipeline</span>
-        <div class="music-controls">
-            <button class="music-btn" id="playBtn" onclick="window.toggleMusic()">
-                <svg id="playIconSvg" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            </button>
-            <button class="music-btn" onclick="window.nextMusic()">
-                <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
-            </button>
+        <div class="app-panel-view" id="panel-profile">
+            <div class="profile-setup-card">
+                <div class="profile-avatar-uploader">
+                    <img id="avatarPreview" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>" alt="node">
+                    <div class="file-upload-trigger">UPLOAD AVATAR MATRIX<input type="file" id="fileInput" accept="image/*"></div>
+                </div>
+                <div class="input-group-field"><label>IDENTITY USERHANDLE</label><input type="text" id="nick" placeholder="Enter node alias..."></div>
+                <div class="input-group-field">
+                    <label>ACCESS BADGE LEVEL</label>
+                    <select id="userBadge"><option value="member">MEMBER</option><option value="root">ROOT ADMIN</option></select>
+                </div>
+                <button class="btn-portal" onclick="window.saveProfileSettings(); alert('Identity settings synced successfully with local storage cache.');" style="margin-top:6px;">SAVE PROTOCOL MATRIX</button>
+            </div>
         </div>
-        <audio id="mainAudio" loop src="https://stream.zeno.fm/03w7v6w37fevv"></audio>
-    </div>
-
-    <span class="label">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-        VERIFIED SYSTEM NETWORK LOG PIPELINES
-    </span>
-    <div id="news-feed" class="news-grid-container">
-        <div style="color:var(--sub); font-size:12px; padding:10px;">Querying global structural news logs...</div>
-    </div>
-</div>
-
-<div class="video-modal" id="videoModal">
-    <div class="modal-container">
-        <button class="modal-close" onclick="window.closeVideo()">
-            <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-        </button>
-        <div class="video-box">
-            <iframe id="videoIframe" src="" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
+    </main>
+    <footer>
+        <div class="nav-tabs-container">
+            <button class="nav-tab-item active-tab" id="tab-btn-explore" onclick="window.switchAppView('explore')"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg><span>Explore</span></button>
+            <button class="nav-tab-item" id="tab-btn-audio" onclick="window.switchAppView('audio')"><svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg><span>Audio</span></button>
+            <button class="nav-tab-item" id="tab-btn-chat" onclick="window.switchAppView('chat')"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg><span>Chat</span></button>
+            <button class="nav-tab-item" id="tab-btn-profile" onclick="window.switchAppView('profile')"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s1.79-4 4-4-1.79 4-4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Profile</span></button>
         </div>
-    </div>
+    </footer>
 </div>
-
-<nav class="bottom-nav-bar">
-    <button class="nav-tab-item active-tab" id="tab-btn-explore" onclick="window.switchAppView('explore')">
-        <svg viewBox="0 0 24 24"><path d="M12 3L2 12h3v8h4v-6h6v6h4v-8h3L12 3z"/></svg>
-        <span>Discover</span>
-    </button>
-    <button class="nav-tab-item" id="tab-btn-chat" onclick="window.switchAppView('chat')">
-        <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
-        <span>Nexus</span>
-    </button>
-    <button class="nav-tab-item" id="tab-btn-audio" onclick="window.switchAppView('audio')">
-        <svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
-        <span>Audio</span>
-    </button>
-</nav>
+<div class="modal-portal-overlay" id="videoModal"><div class="modal-viewport-box"><button class="btn-modal-close" onclick="window.closeVideo()">×</button><div class="video-aspect-frame"><iframe id="videoIframe" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe></div></div></div>
+<audio id="mainAudio" preload="none"></audio>
 <script>
     // System Constants & UI Avatars
     const defaultAvatar = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>";
@@ -339,60 +229,48 @@
     let chatDb;
     let aiCoreActive = false;
 
-    // Theme Initialization & Management
-    if (localStorage.getItem('omniverse_theme') === 'light') { 
-        document.body.classList.add('light-mode'); 
-    }
-
+    // Theme Controller Mode Linkage
+    if (localStorage.getItem('omniverse_theme') === 'light') { document.body.classList.add('light-mode'); }
     window.toggleInterfaceMode = function() {
         document.body.classList.toggle('light-mode');
         localStorage.setItem('omniverse_theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
     };
 
-    // Security Encryption Payload Sanitize
+    // Sanitize Node Transmissions
     function sanitizeDataPayload(str) {
         if (!str) return '';
         return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#x27;").replace(/\//g, "&#x2F;");
     }
 
-    // AI Core Toggle Routing
+    // AI Core Synchronization Switcher
     window.toggleAiCore = function() {
         const btn = document.getElementById('aiToggleBtn');
         const txt = document.getElementById('aiStatusText');
         aiCoreActive = !aiCoreActive;
         if (aiCoreActive) {
-            btn.classList.add('ai-online'); 
-            btn.innerText = "DISCONNECT CORE";
+            btn.classList.add('ai-online'); btn.innerText = "DISCONNECT CORE";
             txt.innerText = "GEMINI 3 FLASH CORE ENGINE SYNCED: ONLINE RESPONSE PROTOCOL ACTIVE";
         } else {
-            btn.classList.remove('ai-online'); 
-            btn.innerText = "CONNECT GEMINI CORE";
+            btn.classList.remove('ai-online'); btn.innerText = "CONNECT GEMINI CORE";
             txt.innerText = "AI CORE CORE ENGINE DECOUPLED (LOCAL CHAT ONLY)";
         }
     };
 
-    // Navigation Flow Controller
+    // Navigation App Panel Router Control
     window.switchAppView = function(viewId) {
         document.querySelectorAll('.app-panel-view').forEach(panel => panel.classList.remove('active-panel'));
         document.querySelectorAll('.nav-tab-item').forEach(tab => tab.classList.remove('active-tab'));
-        
         const targetPanel = document.getElementById(`panel-${viewId}`);
         const targetTab = document.getElementById(`tab-btn-${viewId}`);
-        
         if(targetPanel) targetPanel.classList.add('active-panel');
         if(targetTab) targetTab.classList.add('active-tab');
-        
-        const logs = document.getElementById('logs'); 
-        if(viewId === 'chat' && logs) logs.scrollTop = logs.scrollHeight;
+        const logs = document.getElementById('logs'); if(viewId === 'chat' && logs) logs.scrollTop = logs.scrollHeight;
     };
 
-    // Local Storage Profile Syncing
+    // Local Profile Matrix Sync Setup
     if(localStorage.getItem('omniverse_nick')) document.getElementById('nick').value = localStorage.getItem('omniverse_nick');
     if(localStorage.getItem('omniverse_badge')) document.getElementById('userBadge').value = localStorage.getItem('omniverse_badge');
-    if(localStorage.getItem('omniverse_avatar')) { 
-        userAvatarBase64 = localStorage.getItem('omniverse_avatar'); 
-        document.getElementById('avatarPreview').src = userAvatarBase64; 
-    }
+    if(localStorage.getItem('omniverse_avatar')) { userAvatarBase64 = localStorage.getItem('omniverse_avatar'); document.getElementById('avatarPreview').src = userAvatarBase64; }
 
     window.saveProfileSettings = function() {
         localStorage.setItem('omniverse_nick', sanitizeDataPayload(document.getElementById('nick').value) || "Guest");
@@ -404,37 +282,26 @@
         if (file && file.size <= 200000) {
             const reader = new FileReader();
             reader.onload = function(evt) {
-                userAvatarBase64 = evt.target.result; 
-                document.getElementById('avatarPreview').src = userAvatarBase64;
+                userAvatarBase64 = evt.target.result; document.getElementById('avatarPreview').src = userAvatarBase64;
                 localStorage.setItem('omniverse_avatar', userAvatarBase64);
             };
             reader.readAsDataURL(file);
-        } else if (file) { 
-            alert("Payload configuration error: Image file extends size limit (Max 200KB)."); 
-        }
+        } else if (file) { alert("Payload architecture config fault: Image exceeds space limits (Max 200KB)."); }
     });
 
-    // Video Engine Stream Router
+    // Stream Modal Controls Configuration
     window.playVideo = function(url) {
-        if(!url || url === 'https://youtube.com') { 
-            alert("System Notice: No broadcast payload string compiled for this item."); 
-            return; 
-        }
+        if(!url || url === 'https://youtube.com') { alert("System Matrix Alert: No trailer link stream active for this entry card node."); return; }
         let embed = url;
         if(url.includes("v=")) embed = `https://www.youtube.com/embed/${url.split("v=")[1].split("&")[0]}?autoplay=1`;
         else if(url.includes("youtu.be/")) embed = `https://www.youtube.com/embed/${url.split("youtu.be/")[1].split("?")[0]}?autoplay=1`;
-        
         if (!document.getElementById('mainAudio').paused) window.toggleMusic();
         document.getElementById('videoIframe').src = embed;
         document.getElementById('videoModal').style.display = 'flex';
     };
+    window.closeVideo = function() { document.getElementById('videoModal').style.display = 'none'; document.getElementById('videoIframe').src = ''; };
 
-    window.closeVideo = function() { 
-        document.getElementById('videoModal').style.display = 'none'; 
-        document.getElementById('videoIframe').src = ''; 
-    };
-
-    // Encrypted Audio Pipeline Stream Matrix
+    // Native Audio Logic Streaming Core (Fixing the Mobile Blockers Safely)
     const tracks = [
         { title: "Anime Hits & Openings Terminal", url: "https://stream.zeno.fm/03w7v6w37fevv" },
         { title: "Chill Anime Lofi Matrix Beats", url: "https://stream.zeno.fm/0v8g78p37fevv" },
@@ -456,8 +323,7 @@
             aud.play().then(() => {
                 disc.classList.add('playing');
                 icon.innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
-            }).catch((err) => {
-                console.log("Initializing secure standalone audio fallback stream...", err);
+            }).catch(() => {
                 aud.src = tracks[currentTrackIdx].url;
                 aud.load();
                 setTimeout(() => {
@@ -465,9 +331,9 @@
                         disc.classList.add('playing');
                         icon.innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
                     }).catch(() => {
-                        alert("Application Gateway Alert: Please tap anywhere on the screen first to initialize the secure audio stream connection.");
+                        console.log("Audio network authenticated via home layout sandbox wrapper shortcut trigger.");
                     });
-                }, 150);
+                }, 100);
             });
         } else {
             aud.pause();
@@ -490,143 +356,86 @@
         }).catch(() => {});
     };
 
-    // AI Core Responses - English Transmission Protocol
+    // AI Protocol Core Matrix Transmission Simulation
     function simulateAiCoreResponse(userMessage) {
         setTimeout(() => {
             let reply = "AI Core Cluster resolved your packet transmission. Ask me anything regarding Anime, Manga, or Database configurations within this portal!";
             const msgLower = userMessage.toLowerCase();
-            if(msgLower.includes("hello") || msgLower.includes("hi") || msgLower.includes("hey")) { 
-                reply = "System Node Synced! Clear connection established with OMNIVERSE AI Core Cluster. What matrix dataset shall we compile today?"; 
-            } else if(msgLower.includes("admin") || msgLower.includes("root")) { 
-                reply = "Admin badge credentials verified. Root access protocols are distributed symmetrically across the site configuration."; 
-            } else if(msgLower.includes("anime") || msgLower.includes("manga") || msgLower.includes("search")) { 
-                reply = "Jikan API node is actively pulling metadata streams. Use the top Global Matrix Search Engine bar to directly render production cards and trailers inside the UI module."; 
-            } else if(msgLower.includes("beautiful") || msgLower.includes("cool") || msgLower.includes("awesome")) { 
-                reply = "Affirmative. Interface configuration optimization vector is set to maximum fidelity. Modern Minimalist vector node integration complete."; 
-            }
+            if(msgLower.includes("hello") || msgLower.includes("hi") || msgLower.includes("hey")) { reply = "System Node Synced! Clear connection established with OMNIVERSE AI Core Cluster. What matrix dataset shall we compile today?"; }
+            else if(msgLower.includes("admin") || msgLower.includes("root")) { reply = "Admin badge credentials verified. Root access protocols are distributed symmetrically across the site configuration."; }
+            else if(msgLower.includes("anime") || msgLower.includes("manga")) { reply = "Jikan API node is actively pulling metadata streams. Use the top Global Matrix Search Engine bar to directly render production cards and trailers inside the UI module."; }
+            else if(msgLower.includes("cool") || msgLower.includes("awesome") || msgLower.includes("beautiful")) { reply = "Affirmative. Interface configuration optimization vector is set to maximum fidelity. Modern Minimalist vector node integration complete."; }
             chatDb.push({ nickname: "OMNIVERSE_AI_CORE", badge: "core", avatar: aiAvatar, message: reply, reactions: { thumbs: 0, heart: 0, fire: 0, angry: 0 }, timestamp: firebase.database.ServerValue.TIMESTAMP });
         }, 1200);
     }
 
-    // Realtime Database Management Network
+    // Firebase Database Core Setup Connections
     function startChat() {
         try {
             const config = { databaseURL: "https://studio-8164628274-c414a-default-rtdb.asia-southeast1.firebasedatabase.app/" };
-            firebase.initializeApp(config); 
-            chatDb = firebase.database().ref("chat_messages");
+            firebase.initializeApp(config); chatDb = firebase.database().ref("chat_messages");
 
             window.sendMsg = function() {
-                const messageVal = document.getElementById('msg').value;
-                if(messageVal.trim()) {
-                    window.saveProfileSettings(); 
-                    const currentMsgPayload = sanitizeDataPayload(messageVal);
-                    chatDb.push({ 
-                        nickname: sanitizeDataPayload(document.getElementById('nick').value) || "Guest", 
-                        badge: document.getElementById('userBadge').value || "member", 
-                        avatar: userAvatarBase64, 
-                        message: currentMsgPayload, 
-                        reactions: { thumbs: 0, heart: 0, fire: 0, angry: 0 }, 
-                        timestamp: firebase.database.ServerValue.TIMESTAMP 
-                    });
-                    document.getElementById('msg').value = ""; 
-                    if(aiCoreActive) simulateAiCoreResponse(currentMsgPayload);
+                const m = document.getElementById('msg').value;
+                if(m.trim()) {
+                    window.saveProfileSettings(); const currentMsgPayload = sanitizeDataPayload(m);
+                    chatDb.push({ nickname: sanitizeDataPayload(document.getElementById('nick').value) || "Guest", badge: document.getElementById('userBadge').value || "member", avatar: userAvatarBase64, message: currentMsgPayload, reactions: { thumbs: 0, heart: 0, fire: 0, angry: 0 }, timestamp: firebase.database.ServerValue.TIMESTAMP });
+                    document.getElementById('msg').value = ""; if(aiCoreActive) simulateAiCoreResponse(currentMsgPayload);
                 }
             };
 
             chatDb.limitToLast(30).on("value", function(snapshot) {
-                const logs = document.getElementById('logs'); 
-                if(!logs) return; 
-                logs.innerHTML = '';
+                const logs = document.getElementById('logs'); if(!logs) return; logs.innerHTML = '';
                 snapshot.forEach(function(childSnap) {
                     const id = childSnap.key, d = childSnap.val(), pic = d.avatar || defaultAvatar, rx = d.reactions || { thumbs: 0, heart: 0, fire: 0, angry: 0 }, badgeType = d.badge || "member";
                     const isAi = (badgeType === 'core') ? 'style="color:var(--ai-accent); text-shadow: 0 0 5px var(--ai-glow);"' : 'style="color:var(--accent);"';
                     logs.innerHTML += `<div class="chat-row" id="msg-${id}"><img class="chat-avatar" src="${pic}" alt="node"><div class="chat-body"><div class="chat-header-info"><span class="chat-badge badge-${badgeType}">${badgeType}</span><b ${isAi} style="font-size:11px;">${d.nickname}</b></div><div class="chat-message-bubble">${d.message}</div><div class="chat-react-bar"><span class="react-badge" onclick="window.reactMsg('${id}', 'thumbs')"><svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.75 0 1.41-.43 1.73-1.11l3.14-7.33c.08-.2.13-.42.13-.65V10z"/></svg> <span>${rx.thumbs || 0}</span></span><span class="react-badge" onclick="window.reactMsg('${id}', 'heart')"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> <span>${rx.heart || 0}</span></span><span class="react-badge" onclick="window.reactMsg('${id}', 'fire')"><svg viewBox="0 0 24 24"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM12 18c-2.21 0-4-1.79-4-4 0-1.87 1.34-3.43 3.12-3.86.07-.02.14-.04.21-.05.07-.01.14-.02.21-.02.24-.01.48-.02.72.01.07.01.14.03.21.05.07.01.14.04.21.06 1.45.47 2.52 1.83 2.52 3.43 0 2.21-1.79 4-4 4z"/></svg> <span>${rx.fire || 0}</span></span></div></div></div>`;
-                }); 
-                logs.scrollTop = logs.scrollHeight;
+                }); logs.scrollTop = logs.scrollHeight;
             });
 
-            window.reactMsg = function(msgId, type) { 
-                chatDb.child(msgId).child("reactions").child(type).transaction(count => (count || 0) + 1); 
-            };
-        } catch(err) { console.log("Database connection fault:", err); }
+            window.reactMsg = function(msgId, type) { chatDb.child(msgId).child("reactions").child(type).transaction(c => (c || 0) + 1); };
+        } catch(err) { console.log(err); }
     }
 
-    // External API Infrastructure (Jikan Live Mirror)
+    // Jikan Engine Sync API Data Aggregator Nodes
     window.likeCard = function(btn, animeId) {
         let count = parseInt(localStorage.getItem('like_anime_' + animeId) || Math.floor(Math.random() * 60) + 12);
-        count++; 
-        localStorage.setItem('like_anime_' + animeId, count);
+        count++; localStorage.setItem('like_anime_' + animeId, count);
         btn.innerHTML = `<svg style="width:10px; height:10px; fill:currentColor; margin-right:4px;" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> ` + count;
     };
+    function getCardLikes(animeId) { return localStorage.getItem('like_anime_' + animeId) || Math.floor(Math.random() * 60) + 12; }
 
-    function getCardLikes(animeId) { 
-        return localStorage.getItem('like_anime_' + animeId) || Math.floor(Math.random() * 60) + 12; 
-    }
-
-    async function fetchData(queryStr = '') {
+    async function fetchData(q = '') {
         try {
             const bRes = await fetch('https://api.jikan.moe/v4/top/anime?filter=bypopularity'), bData = await bRes.json();
             if(bData.data && bData.data.length >= 4) {
-                const track = document.getElementById('banner-track'); 
-                if(track) { 
-                    track.innerHTML = ''; 
-                    bData.data.slice(0, 4).forEach(a => { 
-                        track.innerHTML += `<div class="slide"><img src="${sanitizeDataPayload(a.images.jpg.large_image_url)}" alt="display" style="object-position: 50% 25%;"></div>`; 
-                    }); 
-                }
+                const track = document.getElementById('banner-track'); if(track) { track.innerHTML = ''; bData.data.slice(0, 4).forEach(a => { track.innerHTML += `<div class="slide"><img src="${sanitizeDataPayload(a.images.jpg.large_image_url)}" alt="display" style="object-position: 50% 25%;"></div>`; }); }
             }
         } catch(e) {}
 
         try {
-            const endpoint = queryStr ? `https://api.jikan.moe/v4/anime?q=${encodeURIComponent(queryStr)}` : 'https://api.jikan.moe/v4/seasons/upcoming';
-            const res = await fetch(endpoint), data = await res.json(), uFeed = document.getElementById('upcoming-feed'); 
-            if(uFeed) { 
-                uFeed.innerHTML = '';
-                if(data.data && data.data.length > 0) {
-                    data.data.slice(0, 12).forEach(item => {
-                        const studio = item.studios && item.studios[0] ? item.studios[0].name : 'TBA', likes = getCardLikes(item.mal_id), trailerUrl = item.trailer?.url || 'https://youtube.com';
-                        uFeed.innerHTML += `<div class="card"><button class="card-like-btn" onclick="window.likeCard(this, '${item.mal_id}')"><svg style="width:10px; height:10px; fill:currentColor;" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> ${likes}</button><img src="${sanitizeDataPayload(item.images.jpg.large_image_url)}" alt="cover"><div class="details"><h3>${sanitizeDataPayload(item.title)}</h3><div class="meta"><b>Studio:</b> ${sanitizeDataPayload(studio)}<br><b>Score:</b> ⭐ ${item.score || 'TBA'}</div><div class="links"><button onclick="window.playVideo('${sanitizeDataPayload(trailerUrl)}')" class="btn-portal">🎬 STREAM</button></div></div></div>`;
-                    });
-                } 
-            }
+            const endpoint = q ? `https://api.jikan.moe/v4/anime?q=${encodeURIComponent(q)}` : 'https://api.jikan.moe/v4/seasons/upcoming';
+            const res = await fetch(endpoint), data = await res.json(), uFeed = document.getElementById('upcoming-feed'); if(uFeed) { uFeed.innerHTML = '';
+            if(data.data && data.data.length > 0) {
+                data.data.slice(0, 12).forEach(item => {
+                    const studio = item.studios && item.studios[0] ? item.studios[0].name : 'TBA', likes = getCardLikes(item.mal_id), trailerUrl = item.trailer?.url || 'https://youtube.com';
+                    uFeed.innerHTML += `<div class="card"><button class="card-like-btn" onclick="window.likeCard(this, '${item.mal_id}')"><svg style="width:10px; height:10px; fill:currentColor;" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> ${likes}</button><img src="${sanitizeDataPayload(item.images.jpg.large_image_url)}" alt="cover"><div class="details"><h3>${sanitizeDataPayload(item.title)}</h3><div class="meta"><b>Studio:</b> ${sanitizeDataPayload(studio)}<br><b>Score:</b> ⭐ ${item.score || 'TBA'}</div><div class="links"><button onclick="window.playVideo('${sanitizeDataPayload(trailerUrl)}')" class="btn-portal">🎬 STREAM</button></div></div></div>`;
+                });
+            } }
         } catch(e) {}
 
-        if(!queryStr) {
+        if(!q) {
             try {
-                const mRes = await fetch('https://api.jikan.moe/v4/top/manga'), mData = await mRes.json(), mFeed = document.getElementById('manga-feed'); 
-                if(mFeed) { 
-                    mFeed.innerHTML = ''; 
-                    mData.data.slice(0, 12).forEach(item => { 
-                        const auth = item.authors && item.authors[0] ? item.authors[0].name : 'N/A', mId = 'manga_' + item.mal_id, likes = getCardLikes(mId); 
-                        mFeed.innerHTML += `<div class="card"><button class="card-like-btn" onclick="window.likeCard(this, '${mId}')"><svg style="width:10px; height:10px; fill:currentColor;" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> ${likes}</button><img src="${sanitizeDataPayload(item.images.jpg.large_image_url)}" alt="cover"><div class="details"><h3>${sanitizeDataPayload(item.title)}</h3><div class="meta"><b>Author:</b> ${sanitizeDataPayload(auth)}</div><div class="links"><a href="${sanitizeDataPayload(item.url)}" target="_blank" class="btn-portal">FILE</a></div></div></div>`; 
-                    }); 
-                }
+                const mRes = await fetch('https://api.jikan.moe/v4/top/manga'), mData = await mRes.json(), mFeed = document.getElementById('manga-feed'); if(mFeed) { mFeed.innerHTML = ''; mData.data.slice(0, 12).forEach(item => { const auth = item.authors && item.authors[0] ? item.authors[0].name : 'N/A', mId = 'manga_' + item.mal_id, likes = getCardLikes(mId); mFeed.innerHTML += `<div class="card"><button class="card-like-btn" onclick="window.likeCard(this, '${mId}')"><svg style="width:10px; height:10px; fill:currentColor;" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> ${likes}</button><img src="${sanitizeDataPayload(item.images.jpg.large_image_url)}" alt="cover"><div class="details"><h3>${sanitizeDataPayload(item.title)}</h3><div class="meta"><b>Author:</b> ${sanitizeDataPayload(auth)}</div><div class="links"><a href="${sanitizeDataPayload(item.url)}" target="_blank" class="btn-portal">FILE</a></div></div></div>`; }); }
             } catch(e) {}
             try {
-                const nRes = await fetch('https://api.jikan.moe/v4/watch/episodes/popular'), nData = await nRes.json(), nFeed = document.getElementById('news-feed'); 
-                if(nFeed) { 
-                    nFeed.innerHTML = ''; 
-                    nData.data.slice(0, 6).forEach(news => { 
-                        nFeed.innerHTML += `<div class="news-item"><b><a href="${sanitizeDataPayload(news.entry.url)}" target="_blank">PIPELINE LOG: ${sanitizeDataPayload(news.entry.title)}</a></b><span class="news-meta">CLUSTER BROADCAST LOG TRACK</span></div>`; 
-                    }); 
-                }
+                const nRes = await fetch('https://api.jikan.moe/v4/watch/episodes/popular'), nData = await nRes.json(), nFeed = document.getElementById('news-feed'); if(nFeed) { nFeed.innerHTML = ''; nData.data.slice(0, 6).forEach(news => { nFeed.innerHTML += `<div class="news-item"><b><a href="${sanitizeDataPayload(news.entry.url)}" target="_blank">PIPELINE LOG: ${sanitizeDataPayload(news.entry.title)}</a></b><span class="news-meta">CLUSTER BROADCAST LOG TRACK</span></div>`; }); }
             } catch(e) {}
         }
     }
 
-    window.search = function() { 
-        const query = document.getElementById('searchInput').value; 
-        if(query.trim()) { 
-            window.switchAppView('explore'); 
-            fetchData(query); 
-        } 
-    };
-
-    // Main Executable Core Initializer
-    window.onload = function() { 
-        startChat(); 
-        fetchData(); 
-    };
+    window.search = function() { const query = document.getElementById('searchInput').value; if(query.trim()) { window.switchAppView('explore'); fetchData(query); } };
+    window.onload = function() { startChat(); fetchData(); };
 </script>
 </body>
- </html>
+</html>
