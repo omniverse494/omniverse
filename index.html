@@ -7,8 +7,13 @@
     <meta name="google-site-verification" content="s1LpdFQDsO-k3mGLHAsP62N2V955khk8kZsyeon9G1M" />
     <title>OMNIVERSE</title>
 
+    <!-- GOOGLE ADSENSE CODE CONNECTIVITY -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8691102556824057" crossorigin="anonymous"></script>
     
+    <!-- FIREBASE SDK COMPAT SCRIPTS FOR CORE DATABASE ACTIONS -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
     <style>
         /* CSS VARIABLES FOR SEAMLESS WHITE/BLACK TOGGLE */
         :root { 
@@ -50,7 +55,7 @@
         .theme-btn { background: transparent; color: var(--text); border: 1px solid var(--border); padding: 8px 15px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: 600; text-transform: uppercase; }
         .theme-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-        /* DYNAMIC AUTO-SWIPE BANNER */
+        /* DYNAMIC AUTO-SWIPE BANNER SYSTEM */
         .banner { width: 100%; height: 320px; overflow: hidden; position: relative; border-bottom: 1px solid var(--border); background: #111; }
         .banner-track { display: flex; width: 400%; height: 100%; animation: slide 16s infinite; }
         .banner-track .slide { width: 25%; height: 100%; position: relative; background: #111; }
@@ -74,7 +79,7 @@
 
         .label { font-size: 12px; font-weight: 700; color: var(--accent); text-transform: uppercase; margin: 20px 0 12px; letter-spacing: 1px; display: block; border-left: 3px solid var(--accent); padding-left: 8px; }
 
-        /* DATA CARDS WITH INTERACTIVE LINKS */
+        /* DATA CARDS WITH INTERACTIVE PORTAL LINKS */
         .card { display: flex; gap: 15px; background: var(--panel); padding: 15px; border-radius: 6px; margin-bottom: 15px; border: 1px solid var(--border); text-decoration: none; color: inherit; }
         .card:hover { border-color: var(--accent); }
         .card img { width: 95px; height: 135px; object-fit: cover; border-radius: 4px; border: 1px solid var(--border); }
@@ -87,16 +92,31 @@
         .btn-portal { font-size: 11px; padding: 6px 10px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); border-radius: 4px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; cursor: pointer; }
         .btn-portal:hover { border-color: var(--accent); color: var(--accent); }
 
-        /* LIVE CHAT INTERFACE */
-        .nexus { background: var(--panel); border: 1px solid var(--border); height: 350px; display: flex; flex-direction: column; border-radius: 6px; overflow: hidden; }
+        /* LIVE REALTIME CHAT SYSTEM (NEXUS HUB) */
+        .nexus { background: var(--panel); border: 1px solid var(--border); height: 400px; display: flex; flex-direction: column; border-radius: 6px; overflow: hidden; }
         #logs { flex: 1; padding: 15px; overflow-y: auto; font-size: 13px; line-height: 1.5; color: var(--text); background: var(--panel); }
+        
+        /* Message Layout structure (Avatar + Text details) */
+        .chat-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+        .chat-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border); background: #333; }
+        .chat-body { flex: 1; }
+
         .ui { padding: 12px; background: var(--input-bg); border-top: 1px solid var(--border); }
-        .nick-in { width: 100%; padding: 8px 12px; background: var(--panel); border: 1px solid var(--border); color: var(--accent); border-radius: 4px; font-weight: 600; margin-bottom: 8px; outline: none; font-size: 12px; }
+        
+        /* Profile Configuration Layout Area */
+        .profile-setup { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .preview-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1px solid var(--accent); background: #222; }
+        .nick-in { flex: 1; padding: 8px 12px; background: var(--panel); border: 1px solid var(--border); color: var(--accent); border-radius: 4px; font-weight: 600; outline: none; font-size: 12px; }
+        
+        /* Upload Action Labels */
+        .file-label { font-size: 10px; background: var(--panel); border: 1px solid var(--border); padding: 5px 8px; border-radius: 4px; cursor: pointer; color: var(--sub); font-weight: 600; }
+        .file-label:hover { border-color: var(--accent); color: var(--text); }
+
         .msg-row { display: flex; gap: 8px; }
         .msg-row input { flex: 1; padding: 10px; background: var(--panel); border: 1px solid var(--border); color: var(--text); border-radius: 4px; outline: none; font-size: 13px; }
         .send-btn { background: var(--accent); color: white; border: none; padding: 0 15px; border-radius: 4px; font-weight: 600; cursor: pointer; }
 
-        /* LIVE NEWS PANEL */
+        /* LIVE INDUSTRY LOGS & NEWS SECTION */
         .news-section { background: var(--panel); border: 1px solid var(--border); border-radius: 6px; padding: 20px; margin-top: 20px; }
         .news-grid { display: flex; flex-direction: column; gap: 15px; }
         .news-item { border-bottom: 1px dashed var(--border); padding-bottom: 12px; font-size: 13px; color: var(--sub); }
@@ -106,10 +126,10 @@
         .news-item b a:hover { color: var(--accent); }
         .news-meta { font-size: 11px; color: var(--accent); margin-top: 4px; display: block; font-weight: 600; }
 
-        /* AUTOMATED ADS CONTAINER */
+        /* AUTOMATED MONETIZATION LAYOUT SLOT */
         .ads-slot { display: block; width: 100%; min-height: 10px; margin-bottom: 15px; }
 
-        /* MOBILE OPTIMIZATION */
+        /* RESPONSIVE MOBILE INTERFACE STYLING */
         @media (max-width: 768px) {
             header { flex-direction: column; align-items: stretch; padding: 12px; gap: 10px; }
             header h1 { text-align: center; font-size: 18px; }
@@ -123,7 +143,7 @@
             .details h3 { font-size: 14px; }
             .meta { font-size: 11px; }
             .btn-portal { font-size: 10px; padding: 5px 8px; }
-            .nexus { height: 300px; }
+            .nexus { height: 350px; }
         }
     </style>
 </head>
@@ -138,11 +158,10 @@
     <button class="theme-btn" onclick="document.body.classList.toggle('light-mode')">Theme</button>
 </header>
 
-<!-- BANNER SYSTEM GENERATED VIA API -->
+<!-- BANNER SLIDESHOW OVERVIEW AREA -->
 <div class="banner">
     <div class="banner-track" id="banner-track">
-        <!-- Titirahan ng mga dynamic anime images galing sa API -->
-        <div class="slide"><div style="padding:100px; color:white; text-align:center;">Loading Hot Releases...</div></div>
+        <div class="slide"><div style="padding:100px; color:white; text-align:center;">Loading Global Spotlight...</div></div>
     </div>
     <div class="banner-text">
         <h2 id="banner-title">Trending Spotlight</h2>
@@ -152,6 +171,7 @@
 
 <div class="main-grid">
     <div class="content">
+        <!-- Google AdSense Container Advertisement Slot -->
         <div class="ads-slot">
             <ins class="adsbygoogle"
                  style="display:block"
@@ -174,7 +194,15 @@
         <div class="nexus">
             <div id="logs"></div>
             <div class="ui">
-                <input type="text" id="nick" class="nick-in" placeholder="Set Nickname..." value="User">
+                <!-- User Profile Interaction Controls -->
+                <div class="profile-setup">
+                    <img id="avatarPreview" class="preview-avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>" title="Your Avatar">
+                    <input type="text" id="nick" class="nick-in" placeholder="Set Nickname..." value="User" onchange="saveProfileSettings()">
+                    <label for="fileInput" class="file-label">🖼️ Upload Pic</label>
+                    <!-- Strict restrictions: Accepts images only from system file gallery directories -->
+                    <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+                </div>
+                
                 <div class="msg-row">
                     <input type="text" id="msg" placeholder="Type a message and press enter..." onkeydown="if(event.key === 'Enter') send()">
                     <button class="send-btn" onclick="send()">Send</button>
@@ -192,29 +220,99 @@
 </div>
 
 <script>
-    function send() {
-        const n = document.getElementById('nick').value || "Guest";
-        const m = document.getElementById('msg').value;
-        const l = document.getElementById('logs');
-        if(m) {
-            l.innerHTML += `<div><b style="color:var(--accent)">${n}:</b> ${m}</div>`;
-            document.getElementById('msg').value = "";
-            l.scrollTop = l.scrollHeight;
+    // ─── FIREBASE ECOSYSTEM CONFIGURATION ───
+    const firebaseConfig = {
+        databaseURL: "https://studio-8164628274-c414a-default-rtdb.asia-southeast1.firebasedatabase.app/"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database().ref("chat_messages");
+
+    // SVG Embedded placeholder path when avatar asset is null
+    const defaultAvatar = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>";
+    let userAvatarBase64 = defaultAvatar;
+
+    // ─── PERSISTENCE CONTROLS: LOCAL STORAGE CACHING ───
+    window.onload = function() {
+        if(localStorage.getItem('omniverse_nick')) {
+            document.getElementById('nick').value = localStorage.getItem('omniverse_nick');
+        }
+        if(localStorage.getItem('omniverse_avatar')) {
+            userAvatarBase64 = localStorage.getItem('omniverse_avatar');
+            document.getElementById('avatarPreview').src = userAvatarBase64;
+        }
+    };
+
+    function saveProfileSettings() {
+        const nickname = document.getElementById('nick').value || "Guest";
+        localStorage.setItem('omniverse_nick', nickname);
+    }
+
+    // ─── STORAGE STRATEGY: FILE PROCESSING FOR LOCAL AVATAR RESOURCING ───
+    function handleImageUpload(event) {
+        const file = event.target.files[0];
+        if (file) {
+            // Memory conservation guard block: limits image payload scale sizes to max 300KB
+            if (file.size > 300000) { 
+                alert("The selected image file is too large! Please choose a file under 300KB to ensure smooth chat synchronization.");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                userAvatarBase64 = e.target.result;
+                document.getElementById('avatarPreview').src = userAvatarBase64;
+                localStorage.setItem('omniverse_avatar', userAvatarBase64); // Commit to internal storage profile tracking
+            };
+            reader.readAsDataURL(file); // Convert raw media directory resource data streams into Base64 format strings
         }
     }
 
-    // Awtomatikong pag-load ng lahat ng data
+    // ─── CORE REALTIME SYNC ROUTINES ───
+    function send() {
+        const n = document.getElementById('nick').value || "Guest";
+        const m = document.getElementById('msg').value;
+        if(m) {
+            saveProfileSettings();
+            // Dispatches full structural nodes containing user identification parameters to remote systems
+            db.push({
+                nickname: n,
+                avatar: userAvatarBase64,
+                message: m,
+                timestamp: Date.now()
+            });
+            document.getElementById('msg').value = "";
+        }
+    }
+
+    // Intercepting inbound stream records dynamically to assemble messaging panels across global view screens
+    db.limitToLast(40).on("child_added", (snapshot) => {
+        const data = snapshot.val();
+        const l = document.getElementById('logs');
+        const imgPic = data.avatar || defaultAvatar;
+
+        // Structured UI execution row mapping matching interface standards
+        l.innerHTML += `
+            <div class="chat-row">
+                <img class="chat-avatar" src="${imgPic}" alt="avatar">
+                <div class="chat-body">
+                    <b style="color:var(--accent); font-size:12px; display:block;">${data.nickname}</b>
+                    <span style="font-size:13px;">${data.message}</span>
+                </div>
+            </div>`;
+        l.scrollTop = l.scrollHeight; // Auto-focus view tracks to baseline element locations
+    });
+
+
+    // ─── EXTERNAL INTERFACE DATABASE SYSTEM QUERIES (JIKAN SYSTEM API) ───
     async function fetchData(q = '') {
         try {
-            // 1. DYNAMIC BANNER IMAGES (Kukuha ng 4 na kasalukuyang sikat na Anime para sa auto-swipe)
+            // 1. SYNC BANNER FEED COMPONENT IMAGES
             const topAnimeRes = await fetch('https://api.jikan.moe/v4/top/anime?filter=bypopularity');
             const topAnimeData = await topAnimeRes.json();
             if(topAnimeData.data && topAnimeData.data.length >= 4) {
                 const bannerTrack = document.getElementById('banner-track');
                 bannerTrack.innerHTML = '';
-                // Kumuha ng top 4 para sa 4 slider sections mo
                 topAnimeData.data.slice(0, 4).forEach(anime => {
-                    // Ginagamit ang malaking image ng Anime bilang background image ng slide
                     const imgUrl = anime.images.jpg.large_image_url;
                     bannerTrack.innerHTML += `
                         <div class="slide">
@@ -223,7 +321,7 @@
                 });
             }
 
-            // 2. UPCOMING ANIME & SEARCH FEED
+            // 2. QUERY PROCESS ENGINE: MAIN SECTION OVERVIEWS & TRAILER SYNC
             const api = q ? `https://api.jikan.moe/v4/anime?q=${q}` : 'https://api.jikan.moe/v4/seasons/upcoming';
             const res = await fetch(api);
             const data = await res.json();
@@ -260,61 +358,7 @@
                     </div>`;
             });
 
-            // 3. MANGA, MANHWA, MANHUA FEED
+            // 3. GRAPHIC LIT SYNC ROUTINES: MANGA, MANHWA, & MANHUA SECTION 
             if(!q) {
                 const mRes = await fetch('https://api.jikan.moe/v4/top/manga');
-                const mData = await mRes.json();
-                const mFeed = document.getElementById('manga-feed');
-                mFeed.innerHTML = '';
-                
-                mData.data.slice(0, 10).forEach(item => {
-                    const authorName = item.authors && item.authors[0] ? item.authors[0].name : 'N/A';
-                    uFeed.innerHTML ? mFeed.innerHTML += `
-                        <div class="card">
-                            <img src="${item.images.jpg.large_image_url}" alt="Cover">
-                            <div class="details">
-                                <h3>${item.title}</h3>
-                                <div class="meta">
-                                    <b>Author/Artist:</b> ${authorName}<br>
-                                    <b>Type:</b> ${item.type} (Manhwa/Manga/Manhua)<br>
-                                    <b>Rank:</b> #${item.rank} | <b>Chapters:</b> ${item.chapters || 'Ongoing'}<br>
-                                    <b>Score:</b> ⭐ ${item.score}
-                                </div>
-                                <div class="links">
-                                    <a href="${item.url}" target="_blank" class="btn-portal">📖 View Official Info</a>
-                                </div>
-                            </div>
-                        </div>` : '';
-                });
-
-                // 4. AUTOMATED LIVE NEWS (Pinakabagong sikat na episodes na kalalabas lang)
-                const newsRes = await fetch('https://api.jikan.moe/v4/watch/episodes/popular');
-                const newsData = await newsRes.json();
-                const newsFeed = document.getElementById('news-feed');
-                newsFeed.innerHTML = '';
-                
-                newsData.data.slice(0, 5).forEach(news => {
-                    newsFeed.innerHTML += `
-                        <div class="news-item">
-                            <b><a href="${news.entry.url}" target="_blank">📣 New Episode Update: ${news.entry.title}</a></b>
-                            The latest global broadcast logs and licensed streaming tracks have updated.
-                            <span class="news-meta">Click to track full legal source info</span>
-                        </div>`;
-                });
-            }
-        } catch (e) { 
-            console.log("Network sync delay:", e); 
-            document.getElementById('news-feed').innerHTML = '<div style="color:red; font-size:12px;">News network temporarily busy. Reload.</div>';
-        }
-    }
-
-    function search() {
-        const q = document.getElementById('searchInput').value;
-        if(q) fetchData(q);
-    }
-
-    // Unang takbo ng app para kumuha ng live data
-    fetchData();
-</script>
-</body>
-</html>
+ 
