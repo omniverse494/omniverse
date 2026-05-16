@@ -338,18 +338,11 @@
     let chatDb;
     let aiCoreActive = false;
 
-    // PERSISTENT THEME MEMORY SYNC
-    if (localStorage.getItem('omniverse_theme') === 'light') {
-        document.body.classList.add('light-mode');
-    }
+    if (localStorage.getItem('omniverse_theme') === 'light') { document.body.classList.add('light-mode'); }
 
     window.toggleInterfaceMode = function() {
         document.body.classList.toggle('light-mode');
-        if (document.body.classList.contains('light-mode')) {
-            localStorage.setItem('omniverse_theme', 'light');
-        } else {
-            localStorage.setItem('omniverse_theme', 'dark');
-        }
+        localStorage.setItem('omniverse_theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
     };
 
     function sanitizeDataPayload(str) {
@@ -357,19 +350,15 @@
         return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#x27;").replace(/\//g, "&#x2F;");
     }
 
-    // AI TOGGLE CONTROLLER MODULE
     window.toggleAiCore = function() {
         const btn = document.getElementById('aiToggleBtn');
         const txt = document.getElementById('aiStatusText');
         aiCoreActive = !aiCoreActive;
-
         if (aiCoreActive) {
-            btn.classList.add('ai-online');
-            btn.innerText = "DISCONNECT CORE";
+            btn.classList.add('ai-online'); btn.innerText = "DISCONNECT CORE";
             txt.innerText = "GEMINI 3 FLASH CORE ENGINE SYNCED: ONLINE RESPONSE PROTOCOL ACTIVE";
         } else {
-            btn.classList.remove('ai-online');
-            btn.innerText = "CONNECT GEMINI CORE";
+            btn.classList.remove('ai-online'); btn.innerText = "CONNECT GEMINI CORE";
             txt.innerText = "AI CORE CORE ENGINE DECOUPLED (LOCAL CHAT ONLY)";
         }
     };
@@ -379,15 +368,12 @@
         document.querySelectorAll('.nav-tab-item').forEach(t => t.classList.remove('active-tab'));
         document.getElementById(`panel-${v}`).classList.add('active-panel');
         document.getElementById(`tab-btn-${v}`).classList.add('active-tab');
-        if(v === 'chat' && logs) logs.scrollTop = logs.scrollHeight;
+        const logs = document.getElementById('logs'); if(v === 'chat' && logs) logs.scrollTop = logs.scrollHeight;
     };
 
     if(localStorage.getItem('omniverse_nick')) document.getElementById('nick').value = localStorage.getItem('omniverse_nick');
     if(localStorage.getItem('omniverse_badge')) document.getElementById('userBadge').value = localStorage.getItem('omniverse_badge');
-    if(localStorage.getItem('omniverse_avatar')) {
-        userAvatarBase64 = localStorage.getItem('omniverse_avatar');
-        document.getElementById('avatarPreview').src = userAvatarBase64;
-    }
+    if(localStorage.getItem('omniverse_avatar')) { userAvatarBase64 = localStorage.getItem('omniverse_avatar'); document.getElementById('avatarPreview').src = userAvatarBase64; }
 
     window.saveProfileSettings = function() {
         localStorage.setItem('omniverse_nick', sanitizeDataPayload(document.getElementById('nick').value) || "Guest");
@@ -399,14 +385,11 @@
         if (file && file.size <= 200000) {
             const reader = new FileReader();
             reader.onload = function(evt) {
-                userAvatarBase64 = evt.target.result;
-                document.getElementById('avatarPreview').src = userAvatarBase64;
+                userAvatarBase64 = evt.target.result; document.getElementById('avatarPreview').src = userAvatarBase64;
                 localStorage.setItem('omniverse_avatar', userAvatarBase64);
             };
             reader.readAsDataURL(file);
-        } else if (file) {
-            alert("Payload signature size extends limit (Max 200KB).");
-        }
+        } else if (file) { alert("Payload signature size extends limit (Max 200KB)."); }
     });
 
     window.playVideo = function(url) {
@@ -419,12 +402,9 @@
         document.getElementById('videoModal').style.display = 'flex';
     };
 
-    window.closeVideo = function() {
-        document.getElementById('videoModal').style.display = 'none';
-        document.getElementById('videoIframe').src = '';
-    };
+    window.closeVideo = function() { document.getElementById('videoModal').style.display = 'none'; document.getElementById('videoIframe').src = ''; };
 
-    // AUDIO ENGINE
+    // AUDIO ENGINE - SECURE SSL PROTOCOL INTEGRATED
     const tracks = [
         { title: "Anime Hits & Openings Terminal", url: "https://stream.zeno.fm/03w7v6w37fevv" },
         { title: "Chill Anime Lofi Matrix Beats", url: "https://stream.zeno.fm/0v8g78p37fevv" },
@@ -436,15 +416,33 @@
         const aud = document.getElementById('mainAudio');
         const disc = document.getElementById('musicDisc');
         const icon = document.getElementById('playIconSvg');
+        
+        if (!aud.src || aud.src === "" || aud.src.includes(window.location.hostname)) {
+            aud.src = tracks[currentTrackIdx].url; 
+            aud.load();
+        }
+        
         if (aud.paused) {
             aud.play().then(() => {
-                disc.classList.add('playing');
-                icon.innerHTML = `<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>`;
-            }).catch(() => {});
-        } else {
-            aud.pause();
-            disc.classList.remove('playing');
-            icon.innerHTML = `<path d="M8 5v14l11-7z"/>`;
+                disc.classList.add('playing'); 
+                icon.innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
+            }).catch((err) => {
+                console.log("Bypassing secure terminal handshake restriction...", err);
+                aud.src = tracks[currentTrackIdx].url; 
+                aud.load();
+                setTimeout(() => {
+                    aud.play().then(() => {
+                        disc.classList.add('playing'); 
+                        icon.innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
+                    }).catch(() => {
+                        alert("Security Handshake Needed: Paki-tap muna ang kahit anong bahagi ng screen bago i-play ang live stream!");
+                    });
+                }, 100);
+            });
+        } else { 
+            aud.pause(); 
+            disc.classList.remove('playing'); 
+            icon.innerHTML = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`; 
         }
     };
 
@@ -452,109 +450,52 @@
         currentTrackIdx = (currentTrackIdx + 1) % tracks.length;
         const aud = document.getElementById('mainAudio');
         document.getElementById('musicTitle').innerText = tracks[currentTrackIdx].title;
-        aud.src = tracks[currentTrackIdx].url;
+        aud.src = tracks[currentTrackIdx].url; 
         aud.load();
-        const disc = document.getElementById('musicDisc');
+        const disc = document.getElementById('musicDisc'); 
         const icon = document.getElementById('playIconSvg');
-        aud.play().then(() => {
-            disc.classList.add('playing');
-            icon.innerHTML = `<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>`;
+        aud.play().then(() => { 
+            disc.classList.add('playing'); 
+            icon.innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`; 
         }).catch(() => {});
     };
 
-    // AI CHAT RESPONDER LOCAL MODULE
     function simulateAiCoreResponse(userMessage) {
         setTimeout(() => {
             let reply = "AI Core Cluster resolved your packet transmission. Ask me anything regarding Anime, Manga, or Database configurations within this portal!";
             const msgLower = userMessage.toLowerCase();
-            
-            if(msgLower.includes("hello") || msgLower.includes("hi") || msgLower.includes("kamusta")) {
-                reply = "System Node Synced! Clear connection established with OMNIVERSE AI Core Cluster. What matrix dataset shall we compile today?";
-            } else if(msgLower.includes("admin")) {
-                reply = "Admin badge credentials verified. Root access protocols are distributed symmetrically across the site configuration.";
-            } else if(msgLower.includes("frieren") || msgLower.includes("anime")) {
-                reply = "Jikan API node is actively pulling metadata streams. Use the top Global Matrix Search Engine bar to directly render production cards and trailers inside the UI module.";
-            } else if(msgLower.includes("ganda") || msgLower.includes("angas")) {
-                reply = "Affirmative. Interface configuration optimization vector is set to maximum fidelity. Modern Minimalist vector node integration complete.";
-            }
-            
-            chatDb.push({
-                nickname: "OMNIVERSE_AI_CORE",
-                badge: "core",
-                avatar: aiAvatar,
-                message: reply,
-                reactions: { thumbs: 0, heart: 0, fire: 0, angry: 0 },
-                timestamp: firebase.database.ServerValue.TIMESTAMP
-            });
+            if(msgLower.includes("hello") || msgLower.includes("hi") || msgLower.includes("kamusta")) { reply = "System Node Synced! Clear connection established with OMNIVERSE AI Core Cluster. What matrix dataset shall we compile today?"; }
+            else if(msgLower.includes("admin")) { reply = "Admin badge credentials verified. Root access protocols are distributed symmetrically across the site configuration."; }
+            else if(msgLower.includes("frieren") || msgLower.includes("anime")) { reply = "Jikan API node is actively pulling metadata streams. Use the top Global Matrix Search Engine bar to directly render production cards and trailers inside the UI module."; }
+            else if(msgLower.includes("ganda") || msgLower.includes("angas")) { reply = "Affirmative. Interface configuration optimization vector is set to maximum fidelity. Modern Minimalist vector node integration complete."; }
+            chatDb.push({ nickname: "OMNIVERSE_AI_CORE", badge: "core", avatar: aiAvatar, message: reply, reactions: { thumbs: 0, heart: 0, fire: 0, angry: 0 }, timestamp: firebase.database.ServerValue.TIMESTAMP });
         }, 1200);
     }
 
-    // FIREBASE PIPELINE SETUP
     function startChat() {
         try {
             const config = { databaseURL: "https://studio-8164628274-c414a-default-rtdb.asia-southeast1.firebasedatabase.app/" };
-            firebase.initializeApp(config);
-            chatDb = firebase.database().ref("chat_messages");
+            firebase.initializeApp(config); chatDb = firebase.database().ref("chat_messages");
 
             window.sendMsg = function() {
                 const m = document.getElementById('msg').value;
                 if(m.trim()) {
-                    window.saveProfileSettings();
-                    const currentMsgPayload = sanitizeDataPayload(m);
-                    
-                    chatDb.push({
-                        nickname: sanitizeDataPayload(document.getElementById('nick').value) || "Guest",
-                        badge: document.getElementById('userBadge').value || "member",
-                        avatar: userAvatarBase64,
-                        message: currentMsgPayload,
-                        reactions: { thumbs: 0, heart: 0, fire: 0, angry: 0 },
-                        timestamp: firebase.database.ServerValue.TIMESTAMP
-                    });
-                    
-                    document.getElementById('msg').value = "";
-                    
-                    // Trigger Simulated AI Response if Toggle is Enabled
-                    if(aiCoreActive) {
-                        simulateAiCoreResponse(currentMsgPayload);
-                    }
+                    window.saveProfileSettings(); const currentMsgPayload = sanitizeDataPayload(m);
+                    chatDb.push({ nickname: sanitizeDataPayload(document.getElementById('nick').value) || "Guest", badge: document.getElementById('userBadge').value || "member", avatar: userAvatarBase64, message: currentMsgPayload, reactions: { thumbs: 0, heart: 0, fire: 0, angry: 0 }, timestamp: firebase.database.ServerValue.TIMESTAMP });
+                    document.getElementById('msg').value = ""; if(aiCoreActive) simulateAiCoreResponse(currentMsgPayload);
                 }
             };
 
             chatDb.limitToLast(30).on("value", function(snapshot) {
-                const logs = document.getElementById('logs');
-                logs.innerHTML = '';
+                const logs = document.getElementById('logs'); if(!logs) return; logs.innerHTML = '';
                 snapshot.forEach(function(childSnap) {
-                    const id = childSnap.key;
-                    const d = childSnap.val();
-                    const pic = d.avatar || defaultAvatar;
-                    const rx = d.reactions || { thumbs: 0, heart: 0, fire: 0, angry: 0 };
-                    const badgeType = d.badge || "member";
+                    const id = childSnap.key, d = childSnap.val(), pic = d.avatar || defaultAvatar, rx = d.reactions || { thumbs: 0, heart: 0, fire: 0, angry: 0 }, badgeType = d.badge || "member";
                     const isAi = (badgeType === 'core') ? 'style="color:var(--ai-accent); text-shadow: 0 0 5px var(--ai-glow);"' : 'style="color:var(--accent);"';
-                    
-                    logs.innerHTML += `
-                        <div class="chat-row" id="msg-${id}">
-                            <img class="chat-avatar" src="${pic}" alt="node">
-                            <div class="chat-body">
-                                <div class="chat-header-info">
-                                    <span class="chat-badge badge-${badgeType}">${badgeType}</span>
-                                    <b ${isAi} style="font-size:11px;">${d.nickname}</b>
-                                </div>
-                                <div class="chat-message-bubble">${d.message}</div>
-                                <div class="chat-react-bar">
-                                    <span class="react-badge" onclick="window.reactMsg('${id}', 'thumbs')"><svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.75 0 1.41-.43 1.73-1.11l3.14-7.33c.08-.2.13-.42.13-.65V10z"/></svg> <span>${rx.thumbs || 0}</span></span>
-                                    <span class="react-badge" onclick="window.reactMsg('${id}', 'heart')"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> <span>${rx.heart || 0}</span></span>
-                                    <span class="react-badge" onclick="window.reactMsg('${id}', 'fire')"><svg viewBox="0 0 24 24"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM12 18c-2.21 0-4-1.79-4-4 0-1.87 1.34-3.43 3.12-3.86.07-.02.14-.04.21-.05.07-.01.14-.02.21-.02.24-.01.48-.02.72.01.07.01.14.03.21.05.07.01.14.04.21.06 1.45.47 2.52 1.83 2.52 3.43 0 2.21-1.79 4-4 4z"/></svg> <span>${rx.fire || 0}</span></span>
-                                </div>
-                            </div>
-                        </div>`;
-                });
-                logs.scrollTop = logs.scrollHeight;
+                    logs.innerHTML += `<div class="chat-row" id="msg-${id}"><img class="chat-avatar" src="${pic}" alt="node"><div class="chat-body"><div class="chat-header-info"><span class="chat-badge badge-${badgeType}">${badgeType}</span><b ${isAi} style="font-size:11px;">${d.nickname}</b></div><div class="chat-message-bubble">${d.message}</div><div class="chat-react-bar"><span class="react-badge" onclick="window.reactMsg('${id}', 'thumbs')"><svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.75 0 1.41-.43 1.73-1.11l3.14-7.33c.08-.2.13-.42.13-.65V10z"/></svg> <span>${rx.thumbs || 0}</span></span><span class="react-badge" onclick="window.reactMsg('${id}', 'heart')"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> <span>${rx.heart || 0}</span></span><span class="react-badge" onclick="window.reactMsg('${id}', 'fire')"><svg viewBox="0 0 24 24"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM12 18c-2.21 0-4-1.79-4-4 0-1.87 1.34-3.43 3.12-3.86.07-.02.14-.04.21-.05.07-.01.14-.02.21-.02.24-.01.48-.02.72.01.07.01.14.03.21.05.07.01.14.04.21.06 1.45.47 2.52 1.83 2.52 3.43 0 2.21-1.79 4-4 4z"/></svg> <span>${rx.fire || 0}</span></span></div></div></div>`;
+                }); logs.scrollTop = logs.scrollHeight;
             });
 
-            window.reactMsg = function(msgId, type) {
-                chatDb.child(msgId).child("reactions").child(type).transaction(c => (c || 0) + 1);
-            };
-
+            window.reactMsg = function(msgId, type) { chatDb.child(msgId).child("reactions").child(type).transaction(c => (c || 0) + 1); };
         } catch(err) { console.log(err); }
     }
 
@@ -566,83 +507,36 @@
 
     function getCardLikes(animeId) { return localStorage.getItem('like_anime_' + animeId) || Math.floor(Math.random() * 60) + 12; }
 
-    // DATA MATRIX PIPELINE ENGINE
     async function fetchData(q = '') {
         try {
-            const bRes = await fetch('https://api.jikan.moe/v4/top/anime?filter=bypopularity');
-            const bData = await bRes.json();
+            const bRes = await fetch('https://api.jikan.moe/v4/top/anime?filter=bypopularity'), bData = await bRes.json();
             if(bData.data && bData.data.length >= 4) {
-                const track = document.getElementById('banner-track'); track.innerHTML = '';
-                bData.data.slice(0, 4).forEach(a => {
-                    track.innerHTML += `<div class="slide"><img src="${sanitizeDataPayload(a.images.jpg.large_image_url)}" alt="display" style="object-position: 50% 25%;"></div>`;
-                });
+                const track = document.getElementById('banner-track'); if(track) { track.innerHTML = ''; bData.data.slice(0, 4).forEach(a => { track.innerHTML += `<div class="slide"><img src="${sanitizeDataPayload(a.images.jpg.large_image_url)}" alt="display" style="object-position: 50% 25%;"></div>`; }); }
             }
         } catch(e) {}
 
         try {
             const endpoint = q ? `https://api.jikan.moe/v4/anime?q=${encodeURIComponent(q)}` : 'https://api.jikan.moe/v4/seasons/upcoming';
-            const res = await fetch(endpoint); const data = await res.json();
-            const uFeed = document.getElementById('upcoming-feed'); uFeed.innerHTML = '';
-
+            const res = await fetch(endpoint), data = await res.json(), uFeed = document.getElementById('upcoming-feed'); if(uFeed) { uFeed.innerHTML = '';
             if(data.data && data.data.length > 0) {
                 data.data.slice(0, 12).forEach(item => {
-                    const studio = item.studios && item.studios[0] ? item.studios[0].name : 'TBA';
-                    const likes = getCardLikes(item.mal_id);
-                    const trailerUrl = item.trailer?.url || 'https://youtube.com';
-                    uFeed.innerHTML += `
-                        <div class="card">
-                            <button class="card-like-btn" onclick="window.likeCard(this, '${item.mal_id}')"><svg style="width:10px; height:10px; fill:currentColor;" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> ${likes}</button>
-                            <img src="${sanitizeDataPayload(item.images.jpg.large_image_url)}" alt="cover">
-                            <div class="details">
-                                <h3>${sanitizeDataPayload(item.title)}</h3>
-                                <div class="meta">
-                                    <b>Studio:</b> ${sanitizeDataPayload(studio)}<br>
-                                    <b>Score:</b> ⭐ ${item.score || 'TBA'}
-                                </div>
-                                <div class="links">
-                                    <button onclick="window.playVideo('${sanitizeDataPayload(trailerUrl)}')" class="btn-portal">🎬 STREAM</button>
-                                </div>
-                            </div>
-                        </div>`;
+                    const studio = item.studios && item.studios[0] ? item.studios[0].name : 'TBA', likes = getCardLikes(item.mal_id), trailerUrl = item.trailer?.url || 'https://youtube.com';
+                    uFeed.innerHTML += `<div class="card"><button class="card-like-btn" onclick="window.likeCard(this, '${item.mal_id}')"><svg style="width:10px; height:10px; fill:currentColor;" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> ${likes}</button><img src="${sanitizeDataPayload(item.images.jpg.large_image_url)}" alt="cover"><div class="details"><h3>${sanitizeDataPayload(item.title)}</h3><div class="meta"><b>Studio:</b> ${sanitizeDataPayload(studio)}<br><b>Score:</b> ⭐ ${item.score || 'TBA'}</div><div class="links"><button onclick="window.playVideo('${sanitizeDataPayload(trailerUrl)}')" class="btn-portal">🎬 STREAM</button></div></div></div>`;
                 });
-            }
+            } }
         } catch(e) {}
 
         if(!q) {
             try {
-                const mRes = await fetch('https://api.jikan.moe/v4/top/manga'); const mData = await mRes.json();
-                const mFeed = document.getElementById('manga-feed'); mFeed.innerHTML = '';
-                mData.data.slice(0, 12).forEach(item => {
-                    const auth = item.authors && item.authors[0] ? item.authors[0].name : 'N/A';
-                    const mId = 'manga_' + item.mal_id; const likes = getCardLikes(mId);
-                    mFeed.innerHTML += `
-                        <div class="card">
-                            <button class="card-like-btn" onclick="window.likeCard(this, '${mId}')"><svg style="width:10px; height:10px; fill:currentColor;" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> ${likes}</button>
-                            <img src="${sanitizeDataPayload(item.images.jpg.large_image_url)}" alt="cover">
-                            <div class="details">
-                                <h3>${sanitizeDataPayload(item.title)}</h3>
-                                <div class="meta"><b>Author:</b> ${sanitizeDataPayload(auth)}</div>
-                                <div class="links"><a href="${sanitizeDataPayload(item.url)}" target="_blank" class="btn-portal">FILE</a></div>
-                            </div>
-                        </div>`;
-                });
+                const mRes = await fetch('https://api.jikan.moe/v4/top/manga'), mData = await mRes.json(), mFeed = document.getElementById('manga-feed'); if(mFeed) { mFeed.innerHTML = ''; mData.data.slice(0, 12).forEach(item => { const auth = item.authors && item.authors[0] ? item.authors[0].name : 'N/A', mId = 'manga_' + item.mal_id, likes = getCardLikes(mId); mFeed.innerHTML += `<div class="card"><button class="card-like-btn" onclick="window.likeCard(this, '${mId}')"><svg style="width:10px; height:10px; fill:currentColor;" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> ${likes}</button><img src="${sanitizeDataPayload(item.images.jpg.large_image_url)}" alt="cover"><div class="details"><h3>${sanitizeDataPayload(item.title)}</h3><div class="meta"><b>Author:</b> ${sanitizeDataPayload(auth)}</div><div class="links"><a href="${sanitizeDataPayload(item.url)}" target="_blank" class="btn-portal">FILE</a></div></div></div>`; }); }
             } catch(e) {}
-
             try {
-                const nRes = await fetch('https://api.jikan.moe/v4/watch/episodes/popular'); const nData = await nRes.json();
-                const nFeed = document.getElementById('news-feed'); nFeed.innerHTML = '';
-                nData.data.slice(0, 6).forEach(news => {
-                    nFeed.innerHTML += `<div class="news-item"><b><a href="${sanitizeDataPayload(news.entry.url)}" target="_blank">PIPELINE LOG: ${sanitizeDataPayload(news.entry.title)}</a></b><span class="news-meta">CLUSTER BROADCAST LOG TRACK</span></div>`;
-                });
+                const nRes = await fetch('https://api.jikan.moe/v4/watch/episodes/popular'), nData = await nRes.json(), nFeed = document.getElementById('news-feed'); if(nFeed) { nFeed.innerHTML = ''; nData.data.slice(0, 6).forEach(news => { nFeed.innerHTML += `<div class="news-item"><b><a href="${sanitizeDataPayload(news.entry.url)}" target="_blank">PIPELINE LOG: ${sanitizeDataPayload(news.entry.title)}</a></b><span class="news-meta">CLUSTER BROADCAST LOG TRACK</span></div>`; }); }
             } catch(e) {}
         }
     }
 
-    window.search = function() {
-        const query = document.getElementById('searchInput').value;
-        if(query.trim()) { window.switchAppView('explore'); fetchData(query); }
-    };
-
+    window.search = function() { const query = document.getElementById('searchInput').value; if(query.trim()) { window.switchAppView('explore'); fetchData(query); } };
     window.onload = function() { startChat(); fetchData(); };
 </script>
 </body>
