@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OMNIVERSE</title>
+    <title>OMNIVERSE TERMINAL</title>
+    
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8691102556824057" crossorigin="anonymous"></script>
+
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
@@ -13,11 +16,12 @@
             --text: #ffffff;
             --text-dim: #76768a;
             --accent: #ff0055;
-            --accent-glow: rgba(255, 0, 85, 0.35);
+            --accent-glow: rgba(255, 0, 85, 0.2);
             --border: #12121f;
             --card-bg: #07070d;
             --chat-user: #121225;
             --chat-target: #0f1c18;
+            --max-width: 1200px;
         }
         body.light-mode {
             --bg: #f4f5fa;
@@ -25,7 +29,7 @@
             --text: #111116;
             --text-dim: #5c5c6b;
             --accent: #e6004c;
-            --accent-glow: rgba(230, 0, 76, 0.15);
+            --accent-glow: rgba(230, 0, 76, 0.1);
             --border: #e2e2ec;
             --card-bg: #fafafc;
             --chat-user: #eae2f5;
@@ -34,86 +38,127 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; padding-bottom: 90px; overflow-x: hidden; }
         
-        .app-container { max-width: 600px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; background: var(--bg); position: relative; }
+        .app-container { max-width: var(--max-width); margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; background: var(--bg); position: relative; }
         
-        /* THE ULTIMATE NAVIGATION DOCK FIXED FIX */
+        .live-ticker-banner {
+            background: #0d0d1a;
+            border-bottom: 1px solid var(--border);
+            color: #fff;
+            padding: 8px 16px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+            z-index: 1001;
+        }
+        .ticker-badge {
+            background: var(--accent);
+            color: white;
+            font-size: 10px;
+            font-weight: 900;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            letter-spacing: 0.5px;
+        }
+        .ticker-scroll-wrapper {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marqueeEffect 25s linear infinite;
+        }
+        .ticker-scroll-wrapper:hover { animation-play-state: paused; }
+        @keyframes marqueeEffect {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
+
         .navigation-dock-bar { 
-            position: fixed; 
-            bottom: 0; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            width: 100%; 
-            max-width: 600px; 
-            background: var(--surface); 
-            border-top: 1px solid var(--border); 
-            display: flex; 
-            justify-content: space-around; 
-            align-items: center; 
-            padding: 10px 0 calc(10px + env(safe-area-inset-bottom)); 
-            z-index: 9999; 
-            box-shadow: 0 -8px 24px rgba(0,0,0,0.4);
+            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: var(--max-width); background: var(--surface); border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; padding: 12px 0 calc(12px + env(safe-area-inset-bottom)); z-index: 9999; box-shadow: 0 -8px 24px rgba(0,0,0,0.4);
         }
+        @media (min-width: 768px) {
+            body { padding-bottom: 0; padding-top: 106px; }
+            .live-ticker-banner { position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: var(--max-width); height: 36px; }
+            .navigation-dock-bar { top: 36px; bottom: auto; border-top: none; border-bottom: 1px solid var(--border); height: 70px; padding: 0 40px; justify-content: flex-end; gap: 30px; }
+            .app-header-node { position: fixed; top: 36px; left: 50%; transform: translateX(-50%); width: 100%; max-width: var(--max-width); height: 70px; border-bottom: 1px solid var(--border); z-index: 10000; background: transparent; pointer-events: none; }
+            .brand-cluster, .header-actions { pointer-events: auto; }
+            .viewport-canvas { padding: 40px 20px; }
+        }
+
         .nav-item-node { 
-            background: none; 
-            border: none; 
-            color: var(--text-dim); 
-            cursor: pointer; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            gap: 5px; 
-            font-size: 11px; 
-            font-weight: 600; 
-            transition: color 0.2s, transform 0.2s;
-            flex: 1;
-            text-decoration: none;
+            background: none; border: none; color: var(--text-dim); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; transition: color 0.2s, transform 0.2s; flex: 1; text-decoration: none;
         }
-        .nav-item-node svg { width: 22px; height: 22px; stroke: currentColor; stroke-width: 2.5; fill: none; transition: stroke 0.2s; }
+        @media (min-width: 768px) { .nav-item-node { flex: none; flex-direction: row; gap: 8px; font-size: 14px; } }
+        .nav-item-node svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2.2; fill: none; transition: stroke 0.2s; }
         .nav-item-node.tab-active { color: var(--accent); transform: translateY(-2px); }
         .nav-item-node.tab-active svg { stroke: var(--accent); fill: var(--accent-glow); }
 
-        /* HEADER DOCK STYLE */
-        .app-header-node { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .app-header-node { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
         .brand-cluster { display: flex; align-items: center; gap: 10px; }
         .glow-dot { width: 10px; height: 10px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 14px var(--accent); }
         .brand-cluster h1 { font-size: 18px; font-weight: 900; letter-spacing: 2.5px; text-transform: uppercase; background: linear-gradient(45deg, var(--text), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .icon-btn-node { background: none; border: none; cursor: pointer; color: var(--text); display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 50%; transition: background 0.2s; }
+        .icon-btn-node { background: none; border: none; cursor: pointer; color: var(--text); display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 50%; }
         .icon-btn-node:hover { background: rgba(255,255,255,0.06); }
 
-        /* HERO BANNER CORE */
-        .hero-banner-slider { width: 100%; height: 215px; overflow: hidden; position: relative; background: #000; border-bottom: 1px solid var(--border); border-radius: 16px; margin-bottom: 15px; }
-        .slider-track { display: flex; width: 400%; height: 100%; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
-        .slide-frame { width: 25%; height: 100%; position: relative; flex-shrink: 0; }
+        .hero-banner-slider { width: 100%; height: 240px; overflow: hidden; position: relative; background: #000; border-radius: 20px; margin-bottom: 25px; border: 1px solid var(--border); }
+        @media (min-width: 992px) { .hero-banner-slider { height: 380px; } }
+        .slide-frame { width: 100%; height: 100%; position: relative; display: none; }
+        .slide-frame.active-slide { display: block; animation: fadeEffect 0.6s ease-in-out; }
         .slide-frame img { width: 100%; height: 100%; object-fit: cover; }
-        .slide-gradient { position: absolute; bottom: 0; left: 0; width: 100%; padding: 45px 15px 15px; background: linear-gradient(to top, rgba(0,0,0,0.95), transparent); color: #fff; font-size: 14px; font-weight: bold; }
+        .slide-gradient { position: absolute; bottom: 0; left: 0; width: 100%; padding: 60px 20px 20px; background: linear-gradient(to top, rgba(0,0,0,0.95), transparent); color: #fff; font-size: 16px; font-weight: bold; }
 
-        /* PANELS AND FEED VIEWPORTS */
         .viewport-canvas { padding: 16px; flex: 1; overflow-y: auto; }
         .view-panel { display: none; }
         .view-panel.active-panel { display: block; animation: fadeUp 0.3s ease-out; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .section-title-bar { margin: 18px 0 12px; font-size: 12px; letter-spacing: 1.5px; color: var(--accent); font-weight: 900; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
+        
+        .section-title-bar { margin: 25px 0 14px; font-size: 13px; letter-spacing: 1.5px; color: var(--accent); font-weight: 900; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
+        
+        .grid-feed-layout { display: grid; grid-template-columns: 1fr; gap: 16px; }
+        @media (min-width: 768px) { .grid-feed-layout { grid-template-columns: repeat(2, 1fr); } }
 
-        /* CARDS RE-ENGINEERED */
-        .grid-feed-layout { display: flex; flex-direction: column; gap: 14px; }
-        .app-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; }
-        .card-body-core { display: flex; padding: 14px; gap: 14px; }
-        .card-media-box { width: 85px; height: 120px; border-radius: 10px; overflow: hidden; flex-shrink: 0; background: #111; border: 1px solid var(--border); }
+        .trending-row-layout { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 25px; }
+        @media (min-width: 992px) { .trending-row-layout { grid-template-columns: repeat(2, 1fr); } }
+        
+        .app-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
+        .card-body-core { display: flex; padding: 16px; gap: 16px; }
+        .card-media-box { width: 90px; height: 130px; border-radius: 12px; overflow: hidden; flex-shrink: 0; background: #111; border: 1px solid var(--border); }
         .card-media-box img { width: 100%; height: 100%; object-fit: cover; }
-        .card-meta-pane { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-        .card-meta-pane h3 { font-size: 14px; font-weight: bold; line-height: 1.35; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .info-row { font-size: 11px; color: var(--text-dim); line-height: 1.4; }
-        .deep-details-drawer { background: rgba(0,0,0,0.15); padding: 10px 12px; border-top: 1px dashed var(--border); border-radius: 6px; margin-top: 4px; }
-        body.light-mode .deep-details-drawer { background: rgba(0,0,0,0.02); }
-        .va-text-highlight { color: var(--text); font-weight: 600; }
+        .card-meta-pane { flex: 1; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+        .card-meta-pane h3 { font-size: 15px; font-weight: bold; line-height: 1.35; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .info-row { font-size: 12px; color: var(--text-dim); line-height: 1.4; }
         .card-footer-actions { display: flex; border-top: 1px solid var(--border); background: rgba(0,0,0,0.08); }
-        .btn-action-trigger { flex: 1; padding: 12px; background: none; border: none; text-align: center; color: var(--text); font-size: 11px; font-weight: bold; text-decoration: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
-        .btn-action-trigger:first-child { border-right: 1px solid var(--border); }
+        .btn-action-trigger { flex: 1; padding: 14px; background: none; border: none; text-align: center; color: var(--text); font-size: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
         .btn-action-trigger:hover { background: rgba(255,255,255,0.04); }
+        .btn-action-trigger svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+        
+        .trending-card-item { display: flex; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 12px 16px; gap: 16px; }
+        .trending-rank-badge { font-size: 24px; font-weight: 900; color: var(--accent); width: 35px; text-align: center; font-style: italic; opacity: 0.8; }
+        .trending-thumb { width: 45px; height: 60px; border-radius: 8px; overflow: hidden; background: #111; flex-shrink: 0; }
+        .trending-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .rotating-vinyl { animation: spin 4s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        .volume-container { display: flex; align-items: center; gap: 10px; justify-content: center; margin-top: 15px; background: rgba(0,0,0,0.1); padding: 8px 16px; border-radius: 12px; border: 1px solid var(--border); }
+        .volume-slider { flex: 1; accent-color: var(--accent); cursor: pointer; height: 6px; border-radius: 3px; outline: none; }
     </style>
 </head>
 <body>
     <div class="app-container">
+        <div class="live-ticker-banner">
+            <div class="ticker-badge">
+                <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" stroke-width="3" fill="none"><path d="M23 7a5 5 0 0 0-7.75-4.19L2 12h7l-1 9 11-13h-7L23 7z"/></svg>
+                <span>Live Feed</span>
+            </div>
+            <div class="ticker-scroll-wrapper" id="systemLiveTicker">Connecting to secure terminal chat node stream arrays...</div>
+        </div>
+
         <header class="app-header-node">
             <div class="brand-cluster">
                 <div class="glow-dot"></div>
@@ -124,13 +169,28 @@
                     <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
                 </button>
             </div>
-        </header>
-
-        <main class="viewport-canvas">
-            
+            </header>
+            <main class="viewport-canvas">
             <div id="panel-home" class="view-panel active-panel">
                 <div class="hero-banner-slider">
-                    <div class="slider-track" id="slider-track"></div>
+                    <div class="slider-track">
+                        <div class="slide-frame active-slide">
+                            <img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=1200" alt="Banner 1">
+                            <div class="slide-gradient">Omniverse Cyber Anime Broadcast Station</div>
+                        </div>
+                        <div class="slide-frame">
+                            <img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=1200" alt="Banner 2">
+                            <div class="slide-gradient">Database Synchronization Active</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title-bar">
+                    <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <span>Global Top Trending Countdown</span>
+                </div>
+                <div class="trending-row-layout" id="trending-countdown-feed">
+                    <div style="color:var(--text-dim); font-size:13px; padding:10px;">Compiling trending matrix array data nodes...</div>
                 </div>
                 
                 <div class="section-title-bar">
@@ -139,80 +199,92 @@
                 </div>
                 <div class="grid-feed-layout" id="upcoming-feed"></div>
                 
-                <div class="section-title-bar" style="margin-top: 25px;">
+                <div class="section-title-bar" style="margin-top: 30px;">
                     <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="3" fill="none"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5z"/></svg>
-                    <span>Manga, Manhwa & Manhua Chronicles</span>
+                    <span>Manga & Light Novel Archives</span>
                 </div>
                 <div class="grid-feed-layout" id="manga-feed"></div>
             </div>
 
             <div id="panel-explore" class="view-panel">
-                <div style="display:flex; gap:8px; background:var(--surface); padding:6px; border-radius:14px; border:1px solid var(--border);">
-                    <input type="text" id="searchInput" placeholder="Scan system for titles..." style="flex:1; padding:12px; border:none; background:transparent; color:var(--text); font-size:13px; outline:none;">
-                    <button onclick="window.search()" style="padding:10px 18px; border-radius:10px; background:var(--accent); border:none; color:white; cursor:pointer; font-weight:bold; font-size:12px;">Search</button>
+                <div style="display:flex; gap:8px; background:var(--surface); padding:8px; border-radius:14px; border:1px solid var(--border); max-width:600px; margin:0 auto 20px;">
+                    <input type="text" id="searchInput" placeholder="Scan database for titles..." style="flex:1; padding:12px; border:none; background:transparent; color:var(--text); font-size:14px; outline:none;">
+                    <button onclick="window.search()" style="padding:10px 20px; border-radius:10px; background:var(--accent); border:none; color:white; cursor:pointer; font-weight:bold;">Search</button>
                 </div>
-                <div class="grid-feed-layout" id="explore-feed" style="margin-top:20px;"></div>
+                <div class="grid-feed-layout" id="explore-feed"></div>
             </div>
 
             <div id="panel-chat" class="view-panel">
-                <div style="background:var(--surface); border:1px solid var(--border); border-radius:20px; height:calc(100vh - 210px); min-height:450px; display:flex; flex-direction:column; overflow:hidden;">
+                <div style="background:var(--surface); border:1px solid var(--border); border-radius:24px; height:calc(100vh - 220px); min-height:500px; display:flex; flex-direction:column; overflow:hidden; max-width:800px; margin:0 auto;">
                     <div style="display:flex; border-bottom:1px solid var(--border); background:rgba(0,0,0,0.15);">
-                        <button id="chat-tab-global" style="flex:1; padding:12px; background:none; border:none; color:var(--text); font-size:12px; font-weight:bold; cursor:pointer;" onclick="window.switchChatMode('global')">Global Stream</button>
-                        <button id="chat-tab-pm" style="flex:1; padding:12px; background:none; border:none; color:var(--text-dim); font-size:12px; font-weight:bold; cursor:pointer;" onclick="window.switchChatMode('pm')">Private Node</button>
+                        <button id="chat-tab-global" style="flex:1; padding:14px; background:none; border:none; color:var(--text); font-size:13px; font-weight:bold; cursor:pointer;">Global Stream Node</button>
                     </div>
-                    <div id="logs" style="flex:1; padding:16px; overflow-y:auto; display:flex; flex-direction:column; gap:14px;"></div>
-                    <div style="padding:12px; display:flex; gap:8px; border-top:1px solid var(--border); background:var(--surface);">
-                        <input type="text" id="msg" placeholder="Transmit secure data..." onkeydown="if(event.key==='Enter') window.sendMsg()" style="flex:1; padding:12px; border-radius:10px; border:1px solid var(--border); background:var(--bg); color:var(--text); font-size:13px; outline:none;">
-                        <button onclick="window.sendMsg()" style="padding:0 16px; border-radius:10px; background:var(--accent); border:none; color:white; cursor:pointer;">Send</button>
+                    <div id="logs" style="flex:1; padding:20px; overflow-y:auto; display:flex; flex-direction:column; gap:14px;"></div>
+                    <div style="padding:16px; display:flex; gap:10px; border-top:1px solid var(--border); background:var(--surface);">
+                        <input type="text" id="msg" placeholder="Type secure message..." onkeydown="if(event.key==='Enter') window.sendMsg()" style="flex:1; padding:14px; border-radius:12px; border:1px solid var(--border); background:var(--bg); color:var(--text); outline:none;">
+                        <button onclick="window.sendMsg()" style="padding:0 24px; border-radius:12px; background:var(--accent); border:none; color:white; font-weight:bold; cursor:pointer;">Send</button>
                     </div>
                 </div>
             </div>
 
             <div id="panel-audio" class="view-panel">
-                <div style="background: var(--surface); padding: 24px 20px; border-radius: 24px; border: 1px solid var(--border); text-align: center;">
-                    <div style="margin-bottom: 18px; display: flex; justify-content: center;">
-                        <div id="musicDisc" style="width:140px; height:140px; border-radius:50%; background:#111; border:4px solid var(--border); display:flex; align-items:center; justify-content:center; position:relative; box-shadow:0 0 20px rgba(0,0,0,0.5);">
-                            <div style="width:35px; height:35px; background:var(--bg); border-radius:50%; border:2px solid var(--border);"></div>
+                <div style="background: var(--surface); padding: 35px 25px; border-radius: 24px; border: 1px solid var(--border); text-align: center; max-width: 500px; margin: 0 auto;">
+                    <div style="margin-bottom: 20px; display: flex; justify-content: center;">
+                        <div id="musicDisc" style="width:160px; height:160px; border-radius:50%; background:#111; border:4px solid var(--border); display:flex; align-items:center; justify-content:center; box-shadow:0 0 25px rgba(0,0,0,0.5);">
+                            <div style="width:40px; height:40px; background:var(--bg); border-radius:50%; border:2px solid var(--border);"></div>
                         </div>
                     </div>
-                    <div style="margin-bottom: 18px;">
-                        <h2 id="musicTitle" style="font-size:14px; color:var(--text); font-weight:800; line-height:1.4;">🎵 Initializing Channels...</h2>
-                        <p style="font-size:11px; color:var(--text-dim); margin-top:4px;">Live Auto-Updated Streaming Deck</p>
+                    <div style="margin-bottom: 20px;">
+                        <h2 id="musicTitle" style="font-size:16px; color:var(--text); font-weight:800; display:flex; align-items:center; justify-content:center; gap:6px;">
+                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none"><path d="M9 18V5l12-2v13"/></svg>
+                            <span id="musicTitleTxt">Initializing Core Channels...</span>
+                        </h2>
+                        <p style="font-size:12px; color:var(--text-dim); margin-top:6px;">Live Audio Synthesizer Interface</p>
                     </div>
-                    <div style="display:flex; justify-content:center; gap:16px; align-items:center; margin-bottom:18px;">
-                        <button onclick="window.toggleMusic()" id="playIconSvg" style="width:50px; height:50px; border-radius:50%; background:var(--accent); border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; color:#fff;">▶</button>
-                        <button onclick="window.nextMusic()" style="width:40px; height:40px; border-radius:50%; background:var(--bg); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--text);">▶|</button>
+                    <div style="display:flex; justify-content:center; gap:20px; align-items:center;">
+                        <button onclick="window.toggleMusic()" id="playIconSvg" style="width:55px; height:55px; border-radius:50%; background:var(--accent); border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; color:#fff; font-weight:bold; font-size:18px;">PLAY</button>
+                        <button onclick="window.nextMusic()" style="width:45px; height:45px; border-radius:50%; background:var(--bg); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--text); font-size:12px; font-weight:bold;">NEXT</button>
                     </div>
-                    <hr style="border:0; border-top:1px solid var(--border); margin:15px 0;">
+
+                    <div class="volume-container">
+                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="var(--text-dim)" stroke-width="2.5" fill="none"><path d="M11 5L6 9H2v6h4l5 4V5zM15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                        <input type="range" class="volume-slider" id="audioVolumeControl" min="0" max="1" step="0.05" value="0.8" oninput="window.adjustSystemVolume(this.value)">
+                    </div>
+
+                    <hr style="border:0; border-top:1px solid var(--border); margin:20px 0;">
                     <div>
                         <div style="display:flex; gap:8px; margin-bottom:12px;">
-                            <input type="text" id="musicSearchInput" placeholder="Search J-Pop, Phonk, OPM hits..." style="flex:1; padding:10px; border-radius:10px; border:1px solid var(--border); background:var(--bg); color:var(--text); font-size:12px; outline:none;">
-                            <button onclick="window.searchMusicDatabase()" style="padding:10px 14px; border-radius:10px; background:var(--accent); border:none; color:white; font-size:12px; cursor:pointer;">Search</button>
+                            <input type="text" id="musicSearchInput" placeholder="Search J-Pop, Phonk, OPM hits..." style="flex:1; padding:12px; border-radius:10px; border:1px solid var(--border); background:var(--bg); color:var(--text); font-size:13px; outline:none;">
+                            <button onclick="window.searchMusicDatabase()" style="padding:12px 18px; border-radius:10px; background:var(--accent); border:none; color:white; font-size:13px; font-weight:bold; cursor:pointer;">Search</button>
                         </div>
-                        <div id="musicSearchResultsPane" style="max-height:160px; overflow-y:auto; background:rgba(0,0,0,0.2); border-radius:14px; padding:4px;"></div>
+                        <div id="musicSearchResultsPane" style="max-height:180px; overflow-y:auto; background:rgba(0,0,0,0.2); border-radius:14px; padding:4px;">
+                            <div style="color:var(--text-dim); font-size:12px; padding:12px;">Enter track title above to populate stream.</div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div id="panel-settings" class="view-panel">
-                <div style="background:var(--surface); border:1px solid var(--border); border-radius:24px; padding:20px;">
-                    <div style="display:flex; flex-direction:column; align-items:center; gap:12px; margin-bottom:20px;">
-                        <img id="avatarPreview" src="" style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:3px solid var(--accent);">
+                <div style="background:var(--surface); border:1px solid var(--border); border-radius:24px; padding:30px; max-width:500px; margin: 0 auto;">
+                    <div style="display:flex; flex-direction:column; align-items:center; gap:14px; margin-bottom:25px;">
+                        <div style="width:90px; height:90px; border-radius:50%; background:var(--border); display:flex; align-items:center; justify-content:center; border:3px solid var(--accent); color:var(--accent);">
+                            <svg viewBox="0 0 24 24" width="32" height="32" stroke="currentColor" stroke-width="2" fill="none"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        </div>
+                        <h4 style="color:var(--text-dim); font-size:13px; text-transform:uppercase; letter-spacing:1px;">Identity Config</h4>
                     </div>
-                    <div style="display:flex; flex-direction:column; gap:12px;">
-                        <input type="text" id="nick" value="Guest Node" onchange="window.saveProfileSettings()" style="padding:12px; border-radius:10px; border:1px solid var(--border); background:var(--bg); color:var(--text); font-size:13px; outline:none;">
-                        <select id="userBadge" onchange="window.saveProfileSettings()" style="padding:12px; border-radius:10px; border:1px solid var(--border); background:var(--bg); color:var(--text); font-size:13px; outline:none;">
-                            <option value="member">REGULAR MEMBER</option>
-                            <option value="otaku">OTAKU COMMANDER</option>
-                            <option value="vip">ELITE VIP</option>
-                        </select>
-                        <input type="file" id="fileInput" accept="image/*" style="font-size:12px; color:var(--text-dim);">
+                    <div style="display:flex; flex-direction:column; gap:14px;">
+                        <label style="font-size:11px; font-weight:bold; color:var(--accent); text-transform:uppercase;">User Alias Identification</label>
+                        <input type="text" id="nick" value="Guest Node" onchange="window.saveProfileSettings()" style="padding:14px; border-radius:12px; border:1px solid var(--border); background:var(--bg); color:var(--text); font-size:14px; outline:none; margin-bottom:10px;">
+                        
+                        <button onclick="window.downloadSystemConfigProfile()" class="btn-action-trigger" style="background:var(--accent); border-radius:12px; padding:14px; color:white; width:100%;">
+                            <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                            <span>Download Config Profile</span>
+                        </button>
                     </div>
                 </div>
             </div>
-        </main>
-
-        <nav class="navigation-dock-bar">
+    </main>
+    <nav class="navigation-dock-bar">
             <button id="tab-btn-home" class="nav-item-node tab-active" onclick="window.switchAppView('home')">
                 <svg viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
                 <span>Home</span>
@@ -230,28 +302,25 @@
                 <span>Audio</span>
             </button>
             <button id="tab-btn-settings" class="nav-item-node" onclick="window.switchAppView('settings')">
-                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33"/></svg>
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
                 <span>Config</span>
             </button>
         </nav>
     </div>
 
     <audio id="mainAudio" crossorigin="anonymous"></audio>
-    <div id="videoModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:10000; justify-content:center; align-items:center;" onclick="window.closeVideo()">
-        <div style="width:90%; max-width:560px; aspect-ratio:16/9; background:#000; position:relative;">
-            <iframe id="videoIframe" src="" style="width:100%; height:100%; border:none;" allow="autoplay; autoplay" allowfullscreen></iframe>
+    <div id="videoModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:10000; justify-content:center; align-items:center;" onclick="window.closeVideo()">
+        <div style="width:90%; max-width:640px; aspect-ratio:16/9; background:#000; position:relative; border-radius:12px; overflow:hidden;">
+            <iframe id="videoIframe" src="" style="width:100%; height:100%; border:none;" allow="autoplay" allowfullscreen></iframe>
         </div>
-     </div>
+    </div>
+
     <script>
-        const defaultAvatar = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'><circle cx='12' cy='12' r='10'/></svg>";
-        let userAvatarBase64 = defaultAvatar; let currentSlide = 0; let slideInterval;
-        let globalChatRef, privateChatRef, currentChatMode = 'global', activePmTargetNode = '';
-        
+        let currentSlide = 0; let globalChatRef;
         const tracks = [
-            { title: "🔊 Phonk: Metamorphosis Edit Track", url: "https://stream.zeno.fm/0v8g78p37fevv" },
-            { title: "🔥 TikTok Hit: Cupid x Aesthetic Loop", url: "https://stream.zeno.fm/v34w75p37fevv" },
-            { title: "🎐 J-Pop: Yoasobi - Idol (Oshi No Ko)", url: "https://stream.zeno.fm/03w7v6w37fevv" },
-            { title: "🇵🇭 OPM Viral: Pasilyo - SunKissed Lola", url: "https://stream.zeno.fm/46v7c5p37fevv" }
+            { title: "Phonk Hit Mix Channel", url: "https://stream.zeno.fm/0v8g78p37fevv" },
+            { title: "TikTok Aesthetic Vibe", url: "https://stream.zeno.fm/v34w75p37fevv" },
+            { title: "J-Pop: Anime Core Stream", url: "https://stream.zeno.fm/03w7v6w37fevv" }
         ];
         let currentTrackIdx = 0;
 
@@ -260,6 +329,7 @@
             document.body.classList.toggle('light-mode'); 
             localStorage.setItem('omniverse_theme', document.body.classList.contains('light-mode') ? 'light' : 'dark'); 
         };
+        
         function sanitize(str) { return str ? str.replace(/</g, "&lt;").replace(/>/g, "&gt;") : ''; }
         
         window.switchAppView = function(viewId) {
@@ -270,13 +340,21 @@
             if(viewId === 'chat') { setTimeout(scrollChat, 50); }
         };
 
+        function runSlider() {
+            const slides = document.querySelectorAll('.slide-frame');
+            if(slides.length === 0) return;
+            slides[currentSlide].classList.remove('active-slide');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active-slide');
+        }
+
         window.toggleMusic = function() {
-            const aud = document.getElementById('mainAudio'), icon = document.getElementById('playIconSvg');
+            const aud = document.getElementById('mainAudio'), icon = document.getElementById('playIconSvg'), disc = document.getElementById('musicDisc');
             if (!aud.src || aud.src === "" || aud.src.includes(window.location.hostname)) { aud.src = tracks[currentTrackIdx].url; }
             if (aud.paused) { 
                 aud.load();
-                aud.play().then(() => { icon.innerText = "⏸"; }).catch(() => { setTimeout(() => { aud.play(); }, 300); });
-            } else { aud.pause(); icon.innerText = "▶"; }
+                aud.play().then(() => { icon.innerText = "PAUSE"; disc.classList.add('rotating-vinyl'); }).catch(() => {});
+            } else { aud.pause(); icon.innerText = "PLAY"; disc.classList.remove('rotating-vinyl'); }
         };
 
         window.nextMusic = function() { 
@@ -285,101 +363,148 @@
         };
 
         window.searchMusicDatabase = async function() {
-            const query = document.getElementById('musicSearchInput')?.value || "phonk";
+            const query = document.getElementById('musicSearchInput').value;
             const resultsBox = document.getElementById('musicSearchResultsPane');
-            if(!resultsBox) return;
-            resultsBox.innerHTML = '<div style="color:var(--accent); font-size:11px; padding:10px;">SEARCHING...</div>';
+            if(!query.trim()) return;
+            resultsBox.innerHTML = '<div style="color:var(--accent); font-size:12px; padding:12px;">STREAMING MATRIX SEARCH...</div>';
             try {
                 const response = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&media=music&limit=10`);
+                if(!response.ok) throw new Error("High network load");
                 const data = await response.json(); resultsBox.innerHTML = '';
                 if (data.results && data.results.length > 0) {
                     data.results.forEach(song => {
                         resultsBox.innerHTML += `
-                            <div onclick="window.playSelectedTrack('${sanitize(song.trackName)}', '${song.previewUrl}')" style="display:flex; justify-content:between; padding:8px; border-bottom:1px solid var(--border); cursor:pointer; font-size:12px;">
-                                <span style="color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:200px;">${sanitize(song.trackName)}</span>
-                                <span style="color:var(--accent); font-weight:bold;">▶ PLAY</span>
+                            <div onclick="window.playSelectedTrack('${sanitize(song.trackName)} - ${sanitize(song.artistName)}', '${song.previewUrl}')" style="display:flex; justify-content:space-between; padding:12px; border-bottom:1px solid var(--border); cursor:pointer; font-size:13px;">
+                                <span style="color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:70%;">${sanitize(song.trackName)}</span>
+                                <span style="color:var(--accent); font-weight:bold;">PLAY</span>
                             </div>`;
                     });
-                } else { resultsBox.innerHTML = '<div style="color:var(--text-dim); font-size:11px;">No tracks.</div>'; }
-            } catch(e) { resultsBox.innerHTML = '<div style="color:var(--text-dim); font-size:11px;">Timeout.</div>'; }
+                } else { resultsBox.innerHTML = '<div style="color:var(--text-dim); font-size:12px; padding:12px;">No channels found.</div>'; }
+            } catch(e) { 
+                resultsBox.innerHTML = '<div style="color:var(--accent); font-size:12px; padding:12px;">Network busy. Automatically retrying search...</div>';
+                setTimeout(window.searchMusicDatabase, 3000);
+            }
         };
 
         window.playSelectedTrack = function(title, streamUrl) {
-            const aud = document.getElementById('mainAudio'); document.getElementById('musicTitle').innerText = title;
+            const aud = document.getElementById('mainAudio'), disc = document.getElementById('musicDisc'); 
+            document.getElementById('musicTitleTxt').innerText = title;
             aud.src = streamUrl; aud.load();
-            aud.play().then(() => { document.getElementById('playIconSvg').innerText = "⏸"; }).catch(() => {});
+            aud.play().then(() => { document.getElementById('playIconSvg').innerText = "PAUSE"; disc.classList.add('rotating-vinyl'); }).catch(() => {});
+        };
+
+        window.adjustSystemVolume = function(volValue) {
+            const aud = document.getElementById('mainAudio');
+            if(aud) { aud.volume = volValue; }
         };
 
         function getMyName() { return localStorage.getItem('omniverse_nick') || "Guest Node"; }
         function scrollChat() { const l = document.getElementById('logs'); if(l) l.scrollTop = l.scrollHeight; }
-        
-        window.switchChatMode = function(mode) { 
-            currentChatMode = mode; 
-            document.getElementById('chat-tab-global').style.color = mode==='global'?'var(--text)':'var(--text-dim)';
-            document.getElementById('chat-tab-pm').style.color = mode==='pm'?'var(--text)':'var(--text-dim)';
-            loadChatStream(); 
-        };
-
-        function loadChatStream() { 
-            const logs = document.getElementById('logs'); if(!logs) return; 
-            if(currentChatMode === 'global') { globalChatRef?.off(); globalChatRef?.limitToLast(30).on("value", function(snap) { renderPackets(snap, logs); }); } 
-        }
-        
-        function renderPackets(snap, targetElement) { 
-            targetElement.innerHTML = ''; 
-            snap.forEach(function(child) { 
-                const d = child.val(); const isMe = d.nickname === getMyName();
-                targetElement.innerHTML += `
-                    <div style="display:flex; gap:10px; ${isMe?'flex-direction:row-reverse;':''}">
-                        <div style="background:${isMe?'var(--chat-user)':'var(--chat-target)'}; border:1px solid var(--border); padding:8px 12px; border-radius:12px; font-size:13px;">
-                            <b style="font-size:10px; display:block; color:var(--accent);">${d.nickname}</b>
-                            <div>${d.message}</div>
-                        </div>
-                    </div>`; 
-            }); 
-            scrollChat(); 
-        }
+        window.saveProfileSettings = function() { localStorage.setItem('omniverse_nick', sanitize(document.getElementById('nick').value)); };
 
         window.sendMsg = function() {
-            const m = document.getElementById('msg').value; if(!m.trim()) return;
+            const m = document.getElementById('msg').value; if(!m.trim() || !globalChatRef) return;
             globalChatRef.push({ nickname: getMyName(), message: sanitize(m), timestamp: firebase.database.ServerValue.TIMESTAMP });
             document.getElementById('msg').value = "";
         };
 
-        async function fetchData(query = '') {
+        window.downloadSystemConfigProfile = function() {
+            const profileData = {
+                stationName: "OMNIVERSE TERMINAL CORE",
+                userAliasId: getMyName(),
+                timestampExported: new Date().toISOString(),
+                statusAdsense: "Pending Validation",
+                buildVersion: "2.5.0-Stabilized"
+            };
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(profileData, null, 4));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `omniverse_config_${getMyName()}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        };
+
+        async function fetchData() {
             try {
-                const uFeed = document.getElementById(query ? 'explore-feed' : 'upcoming-feed');
-                const url = query ? `https://api.jikan.moe/v4/anime?q=${encodeURIComponent(query)}` : 'https://api.jikan.moe/v4/seasons/upcoming';
-                const res = await fetch(url), data = await res.json(); if(!uFeed) return; uFeed.innerHTML = '';
-                if(data.data) {
-                    data.data.slice(0, 4).forEach(item => {
-                        uFeed.innerHTML += `<div class="app-card"><div class="card-body-core"><div class="card-media-box"><img src="${item.images.jpg.image_url}"></div><div class="card-meta-pane"><h3>${sanitize(item.title)}</h3><div class="info-row"><b>Studio:</b> ${sanitize(item.studios?.[0]?.name || 'TBA')}</div></div></div><div class="card-footer-actions"><button class="btn-action-trigger" onclick="window.playVideo('${item.trailer?.url || ''}')">TRAILER</button></div></div>`;
+                const trendFeed = document.getElementById('trending-countdown-feed');
+                const res = await fetch('https://api.jikan.moe/v4/top/anime?filter=bypopularity&limit=10'), data = await res.json();
+                if(trendFeed && data.data) {
+                    trendFeed.innerHTML = '';
+                    data.data.forEach((item, index) => {
+                        trendFeed.innerHTML += `
+                            <div class="trending-card-item">
+                                <div class="trending-rank-badge">#${index + 1}</div>
+                                <div class="trending-thumb"><img src="${item.images.jpg.image_url}"></div>
+                                <div style="flex:1; min-width:0;">
+                                    <h3 style="font-size:14px; font-weight:bold; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${sanitize(item.title)}</h3>
+                                    <div style="font-size:11px; color:var(--text-dim); margin-top:3px;">Score: ${item.score || 'N/A'} | Episodes: ${item.episodes || 'TBA'}</div>
+                                </div>
+                            </div>`;
                     });
                 }
             } catch(e){}
-            if(!query) {
-                try {
-                    const mFeed = document.getElementById('manga-feed'); if(!mFeed) return; mFeed.innerHTML = '';
-                    const res = await fetch('https://api.jikan.moe/v4/top/manga?limit=5'), data = await res.json();
-                    data.data.forEach(item => {
-                        mFeed.innerHTML += `<div class="app-card"><div class="card-body-core"><div class="card-media-box"><img src="${item.images.jpg.image_url}"></div><div class="card-meta-pane"><span style="font-size:9px; color:var(--accent);">[${item.type || 'Manga'}]</span><h3>${sanitize(item.title)}</h3></div></div></div>`;
+
+            try {
+                const uFeed = document.getElementById('upcoming-feed');
+                const res = await fetch('https://api.jikan.moe/v4/seasons/upcoming'), data = await res.json(); 
+                if(uFeed && data.data) {
+                    uFeed.innerHTML = '';
+                    data.data.slice(0, 6).forEach(item => {
+                        uFeed.innerHTML += `<div class="app-card"><div class="card-body-core"><div class="card-media-box"><img src="${item.images.jpg.image_url}"></div><div class="card-meta-pane"><h3>${sanitize(item.title)}</h3><div class="info-row"><b>Studio:</b> ${sanitize(item.studios?.[0]?.name || 'TBA')}</div></div></div><div class="card-footer-actions"><button class="btn-action-trigger" onclick="window.playVideo('${item.trailer?.url || ''}')"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg><span>WATCH TRAILER</span></button></div></div>`;
                     });
-                } catch(e){}
-            }
+                }
+            } catch(e){}
+
+            try {
+                const mFeed = document.getElementById('manga-feed'); 
+                const res = await fetch('https://api.jikan.moe/v4/top/manga?limit=6'), data = await res.json();
+                if(mFeed && data.data) {
+                    mFeed.innerHTML = '';
+                    data.data.forEach(item => {
+                        mFeed.innerHTML += `<div class="app-card"><div class="card-body-core"><div class="card-media-box"><img src="${item.images.jpg.image_url}"></div><div class="card-meta-pane"><span style="font-size:10px; color:var(--accent); font-weight:bold;">[${item.type || 'Manga'}]</span><h3>${sanitize(item.title)}</h3><div class="info-row"><b>Author:</b> ${sanitize(item.authors?.[0]?.name || 'Unknown')}</div></div></div></div>`;
+                    });
+                }
+            } catch(e){}
         }
+
+        window.search = async function() {
+            const q = document.getElementById('searchInput').value; const ef = document.getElementById('explore-feed');
+            if(!q.trim() || !ef) return; ef.innerHTML = '<div style="color:var(--accent); font-size:14px; padding:20px; text-align:center;">SCANNING MATRIX NODE...</div>';
+            try {
+                const res = await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(q)}`), data = await res.json(); ef.innerHTML = '';
+                if(data.data && data.data.length > 0) {
+                    data.data.slice(0, 6).forEach(item => {
+                        ef.innerHTML += `<div class="app-card"><div class="card-body-core"><div class="card-media-box"><img src="${item.images.jpg.image_url}"></div><div class="card-meta-pane"><h3>${sanitize(item.title)}</h3><div class="info-row"><b>Score:</b> ${item.score || 'N/A'}</div></div></div><div class="card-footer-actions"><button class="btn-action-trigger" onclick="window.playVideo('${item.trailer?.url || ''}')"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg><span>WATCH TRAILER</span></button></div></div>`;
+                    });
+                } else { ef.innerHTML = '<div style="color:var(--text-dim); font-size:14px; padding:20px; text-align:center;">No title found in active node.</div>'; }
+            } catch(e){ ef.innerHTML = '<div style="color:var(--text-dim); font-size:14px; padding:20px; text-align:center;">Matrix connection timed out.</div>'; }
+        };
 
         window.playVideo = function(url) { if(!url) return; let embed = url; if(url.includes("v=")) embed = `https://www.youtube.com/embed/${url.split("v=")[1].split("&")[0]}?autoplay=1`; document.getElementById('videoIframe').src = embed; document.getElementById('videoModal').style.display = 'flex'; }; 
         window.closeVideo = function() { document.getElementById('videoModal').style.display = 'none'; document.getElementById('videoIframe').src = ''; };
-        window.saveProfileSettings = function() { localStorage.setItem('omniverse_nick', sanitize(document.getElementById('nick').value)); };
 
         window.onload = function() {
             try {
                 firebase.initializeApp({ databaseURL: "https://studio-8164628274-c414a-default-rtdb.asia-southeast1.firebasedatabase.app/" });
-                globalChatRef = firebase.database().ref("chat_messages"); loadChatStream();
+                globalChatRef = firebase.database().ref("chat_messages");
+                globalChatRef.limitToLast(30).on("value", function(snap) {
+                    const logs = document.getElementById('logs'); if(!logs) return; logs.innerHTML = '';
+                    let lastUser = "System", lastMsg = "Database synchronized securely.";
+                    snap.forEach(function(child) {
+                        const d = child.val(); const isMe = d.nickname === getMyName();
+                        lastUser = d.nickname; lastMsg = d.message;
+                        logs.innerHTML += `<div style="display:flex; gap:10px; ${isMe?'flex-direction:row-reverse;':''}"><div style="background:${isMe?'var(--chat-user)':'var(--chat-target)'}; border:1px solid var(--border); padding:10px 14px; border-radius:14px; font-size:13px; max-width:80%;"><b style="font-size:10px; display:block; color:var(--accent);">${d.nickname}</b><div>${d.message}</div></div></div>`;
+                    });
+                    scrollChat();
+                    document.getElementById('systemLiveTicker').innerHTML = `<b>${sanitize(lastUser)}:</b> "${sanitize(lastMsg)}" &nbsp;&nbsp;&bull;&nbsp;&nbsp; Join the chat node terminal room for real-time secure discussions!`;
+                });
             } catch(e){}
-            fetchData(); document.getElementById('musicTitle').innerText = tracks[0].title;
+            fetchData(); document.getElementById('musicTitleTxt').innerText = tracks[0].title;
+            setInterval(runSlider, 4000);
+            const defaultVol = document.getElementById('audioVolumeControl').value;
+            window.adjustSystemVolume(defaultVol);
         };
     </script>
 </body>
-</html>
-     
+    </html>
