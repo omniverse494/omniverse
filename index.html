@@ -20,7 +20,7 @@
             --border: #262626;
             --input-bg: #000;
             --input-text: #FFF;
-            --banner-filter: brightness(0.65);
+            --banner-filter: brightness(0.5);
         }
         .light-mode { 
             --bg: #F5F5F5; 
@@ -31,7 +31,7 @@
             --border: #DDD;
             --input-bg: #EAEAEA;
             --input-text: #111;
-            --banner-filter: brightness(0.85);
+            --banner-filter: brightness(0.75);
         }
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; transition: background 0.2s, color 0.2s, border-color 0.2s; }
@@ -50,8 +50,8 @@
         .theme-btn { background: transparent; color: var(--text); border: 1px solid var(--border); padding: 8px 15px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: 600; text-transform: uppercase; }
         .theme-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-        /* MULTI-IMAGE AUTO-SWIPE BANNER SYSTEM WITH HARDENED OVERLAY */
-        .banner { width: 100%; height: 260px; overflow: hidden; position: relative; border-bottom: 1px solid var(--border); background: #111; }
+        /* DYNAMIC AUTO-SWIPE BANNER */
+        .banner { width: 100%; height: 320px; overflow: hidden; position: relative; border-bottom: 1px solid var(--border); background: #111; }
         .banner-track { display: flex; width: 400%; height: 100%; animation: slide 16s infinite; }
         .banner-track .slide { width: 25%; height: 100%; position: relative; background: #111; }
         .banner-track img { width: 100%; height: 100%; object-fit: cover; filter: var(--banner-filter); display: block; }
@@ -63,10 +63,11 @@
             75%, 95% { transform: translateX(-75%); } 
         }
         
-        .banner-text { position: absolute; bottom: 20px; left: 20px; z-index: 10; pointer-events: none; }
-        .banner-text h2 { font-size: 24px; font-weight: 800; color: #FFF; text-shadow: 0 2px 8px rgba(0,0,0,0.9); }
+        .banner-text { position: absolute; bottom: 20px; left: 20px; z-index: 10; pointer-events: none; max-width: 80%; }
+        .banner-text h2 { font-size: 28px; font-weight: 800; color: #FFF; text-shadow: 0 2px 10px rgba(0,0,0,0.9); }
+        .banner-text p { font-size: 14px; color: #FF4500; font-weight: bold; text-shadow: 0 1px 5px rgba(0,0,0,0.9); margin-top: 5px; }
 
-        /* RESPONSIVE LAYOUT DESIGN (CP FRIENDLY) */
+        /* RESPONSIVE LAYOUT DESIGN */
         .main-grid { display: flex; flex-direction: row; flex-wrap: wrap; padding: 20px; gap: 20px; max-width: 1600px; margin: 0 auto; }
         .content { flex: 2.5; min-width: 320px; }
         .side { flex: 1; min-width: 300px; }
@@ -106,20 +107,15 @@
         .news-meta { font-size: 11px; color: var(--accent); margin-top: 4px; display: block; font-weight: 600; }
 
         /* AUTOMATED ADS CONTAINER */
-        .ads-slot { 
-            display: block;
-            width: 100%;
-            min-height: 10px;
-            margin-bottom: 15px; 
-        }
+        .ads-slot { display: block; width: 100%; min-height: 10px; margin-bottom: 15px; }
 
-        /* MOBILE OPTIMIZATION (CP STYLING) */
+        /* MOBILE OPTIMIZATION */
         @media (max-width: 768px) {
             header { flex-direction: column; align-items: stretch; padding: 12px; gap: 10px; }
             header h1 { text-align: center; font-size: 18px; }
             .search-area { max-width: 100%; }
             .theme-btn { width: 100%; text-align: center; }
-            .banner { height: 160px; }
+            .banner { height: 180px; }
             .banner-text h2 { font-size: 18px; bottom: 10px; left: 10px; }
             .main-grid { flex-direction: column; padding: 10px; gap: 15px; }
             .card { padding: 12px; gap: 12px; }
@@ -136,21 +132,21 @@
 <header>
     <h1>OMNI<span>VERSE</span></h1>
     <div class="search-area">
-        <input type="text" id="searchInput" placeholder="Search Anime or Manga..." onkeydown="if(event.key === 'Enter') search()">
+        <input type="text" id="searchInput" placeholder="Search Anime, Manga, Manhwa..." onkeydown="if(event.key === 'Enter') search()">
         <button onclick="search()">Search</button>
     </div>
     <button class="theme-btn" onclick="document.body.classList.toggle('light-mode')">Theme</button>
 </header>
 
+<!-- BANNER SYSTEM GENERATED VIA API -->
 <div class="banner">
-    <div class="banner-track">
-        <div class="slide"><img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=1200&auto=format&fit=crop" style="object-position: 50% 30%;"></div>
-        <div class="slide"><img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=1200&auto=format&fit=crop" style="object-position: 50% 20%;"></div>
-        <div class="slide"><img src="https://images.unsplash.com/photo-1560169897-fc0cdbdfa4d5?q=80&w=1200&auto=format&fit=crop" style="object-position: 50% 40%;"></div>
-        <div class="slide"><img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1200&auto=format&fit=crop" style="object-position: 50% 25%;"></div>
+    <div class="banner-track" id="banner-track">
+        <!-- Titirahan ng mga dynamic anime images galing sa API -->
+        <div class="slide"><div style="padding:100px; color:white; text-align:center;">Loading Hot Releases...</div></div>
     </div>
     <div class="banner-text">
-        <h2>Dashboard Feed</h2>
+        <h2 id="banner-title">Trending Spotlight</h2>
+        <p id="banner-sub">Auto-Updating Global Feed</p>
     </div>
 </div>
 
@@ -166,10 +162,10 @@
             <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         </div>
         
-        <span class="label">Upcoming Releases</span>
+        <span class="label" id="feed-label-1">Upcoming Anime & Trailers</span>
         <div id="upcoming-feed"></div>
         
-        <span class="label">Top Manga & Manhwa</span>
+        <span class="label" id="feed-label-2">Top Manga, Manhwa, & Manhua</span>
         <div id="manga-feed"></div>
     </div>
 
@@ -186,7 +182,7 @@
             </div>
         </div>
         
-        <span class="label">Live Industry News Updates</span>
+        <span class="label">Live Industry Logs & Episode Updates</span>
         <div class="news-section">
             <div id="news-feed" class="news-grid">
                 <div style="color:var(--sub); font-size:12px;">Fetching latest industry logs...</div>
@@ -207,77 +203,107 @@
         }
     }
 
+    // Awtomatikong pag-load ng lahat ng data
     async function fetchData(q = '') {
         try {
+            // 1. DYNAMIC BANNER IMAGES (Kukuha ng 4 na kasalukuyang sikat na Anime para sa auto-swipe)
+            const topAnimeRes = await fetch('https://api.jikan.moe/v4/top/anime?filter=bypopularity');
+            const topAnimeData = await topAnimeRes.json();
+            if(topAnimeData.data && topAnimeData.data.length >= 4) {
+                const bannerTrack = document.getElementById('banner-track');
+                bannerTrack.innerHTML = '';
+                // Kumuha ng top 4 para sa 4 slider sections mo
+                topAnimeData.data.slice(0, 4).forEach(anime => {
+                    // Ginagamit ang malaking image ng Anime bilang background image ng slide
+                    const imgUrl = anime.images.jpg.large_image_url;
+                    bannerTrack.innerHTML += `
+                        <div class="slide">
+                            <img src="${imgUrl}" alt="${anime.title}" style="object-position: 50% 20%;">
+                        </div>`;
+                });
+            }
+
+            // 2. UPCOMING ANIME & SEARCH FEED
             const api = q ? `https://api.jikan.moe/v4/anime?q=${q}` : 'https://api.jikan.moe/v4/seasons/upcoming';
             const res = await fetch(api);
             const data = await res.json();
             const uFeed = document.getElementById('upcoming-feed');
             uFeed.innerHTML = '';
 
+            if(q) {
+                document.getElementById('feed-label-1').innerText = `Search Results for: ${q}`;
+            } else {
+                document.getElementById('feed-label-1').innerText = "Upcoming Anime & Trailers";
+            }
+
             data.data.slice(0, 10).forEach(item => {
-                const streamLink = item.url; 
+                const infoLink = item.url; 
                 const trailerLink = item.trailer?.url || "https://www.youtube.com";
+                const studioName = item.studios && item.studios[0] ? item.studios[0].name : 'TBA';
 
                 uFeed.innerHTML += `
                     <div class="card">
-                        <img src="${item.images.jpg.large_image_url}">
+                        <img src="${item.images.jpg.large_image_url}" alt="Cover">
                         <div class="details">
                             <h3>${item.title}</h3>
                             <div class="meta">
-                                <b>Studio:</b> ${item.studios[0]?.name || 'TBA'}<br>
-                                <b>Source:</b> ${item.source} | <b>Score:</b> ${item.score || 'N/A'}<br>
+                                <b>Studio:</b> ${studioName}<br>
+                                <b>Source:</b> ${item.source || 'N/A'} | <b>Score:</b> ⭐ ${item.score || 'TBA'}<br>
                                 <b>Type:</b> ${item.type || 'TV'} | <b>Episodes:</b> ${item.episodes || 'TBA'}<br>
                                 <b>Status:</b> ${item.status}
                             </div>
                             <div class="links">
-                                <a href="${streamLink}" target="_blank" class="btn-portal">📺 Official License Info</a>
+                                <a href="${infoLink}" target="_blank" class="btn-portal">📺 Official Database Info</a>
                                 <a href="${trailerLink}" target="_blank" class="btn-portal">🎬 Play Trailer</a>
                             </div>
                         </div>
                     </div>`;
             });
 
+            // 3. MANGA, MANHWA, MANHUA FEED
             if(!q) {
                 const mRes = await fetch('https://api.jikan.moe/v4/top/manga');
                 const mData = await mRes.json();
                 const mFeed = document.getElementById('manga-feed');
                 mFeed.innerHTML = '';
+                
                 mData.data.slice(0, 10).forEach(item => {
-                    mFeed.innerHTML += `
+                    const authorName = item.authors && item.authors[0] ? item.authors[0].name : 'N/A';
+                    uFeed.innerHTML ? mFeed.innerHTML += `
                         <div class="card">
-                            <img src="${item.images.jpg.large_image_url}">
+                            <img src="${item.images.jpg.large_image_url}" alt="Cover">
                             <div class="details">
                                 <h3>${item.title}</h3>
                                 <div class="meta">
-                                    <b>Author:</b> ${item.authors[0]?.name || 'N/A'}<br>
-                                    <b>Type:</b> ${item.type} | <b>Rank:</b> #${item.rank}<br>
-                                    <b>Chapters:</b> ${item.chapters || 'Ongoing'} | <b>Score:</b> ⭐ ${item.score}
+                                    <b>Author/Artist:</b> ${authorName}<br>
+                                    <b>Type:</b> ${item.type} (Manhwa/Manga/Manhua)<br>
+                                    <b>Rank:</b> #${item.rank} | <b>Chapters:</b> ${item.chapters || 'Ongoing'}<br>
+                                    <b>Score:</b> ⭐ ${item.score}
                                 </div>
                                 <div class="links">
                                     <a href="${item.url}" target="_blank" class="btn-portal">📖 View Official Info</a>
                                 </div>
                             </div>
-                        </div>`;
+                        </div>` : '';
                 });
 
-                // FETCH LIVE NEWS
+                // 4. AUTOMATED LIVE NEWS (Pinakabagong sikat na episodes na kalalabas lang)
                 const newsRes = await fetch('https://api.jikan.moe/v4/watch/episodes/popular');
                 const newsData = await newsRes.json();
                 const newsFeed = document.getElementById('news-feed');
                 newsFeed.innerHTML = '';
                 
-                newsData.data.slice(0, 4).forEach(news => {
+                newsData.data.slice(0, 5).forEach(news => {
                     newsFeed.innerHTML += `
                         <div class="news-item">
-                            <b><a href="${news.entry.url}" target="_blank">📣 Fresh Release: ${news.entry.title}</a></b>
-                            Latest official episode/content update has been logged on global networks.
-                            <span class="news-meta">Click headline to view verified license info</span>
+                            <b><a href="${news.entry.url}" target="_blank">📣 New Episode Update: ${news.entry.title}</a></b>
+                            The latest global broadcast logs and licensed streaming tracks have updated.
+                            <span class="news-meta">Click to track full legal source info</span>
                         </div>`;
                 });
             }
         } catch (e) { 
-            console.log("Error syncing server logs."); 
+            console.log("Network sync delay:", e); 
             document.getElementById('news-feed').innerHTML = '<div style="color:red; font-size:12px;">News network temporarily busy. Reload.</div>';
         }
     }
@@ -287,7 +313,8 @@
         if(q) fetchData(q);
     }
 
+    // Unang takbo ng app para kumuha ng live data
     fetchData();
 </script>
 </body>
-                    </html>
+</html>
