@@ -187,7 +187,7 @@
                     <img id="avatarPreview" class="preview-avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>">
                     <input type="text" id="nick" class="nick-in" placeholder="Set Nickname..." value="User" onchange="window.saveProfileSettings()">
                     <label for="fileInput" class="file-label">🖼️ Upload Pic</label>
-                    <input type="file" id="fileInput" accept="image/*" style="display: none;" id="fileInputListener">
+                    <input type="file" id="fileInput" accept="image/*" style="display: none;">
                 </div>
                 
                 <div class="msg-row">
@@ -221,7 +221,6 @@
     const defaultAvatar = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>";
     let userAvatarBase64 = defaultAvatar;
 
-    // Load Cache Profiles
     if(localStorage.getItem('omniverse_nick')) {
         document.getElementById('nick').value = localStorage.getItem('omniverse_nick');
     }
@@ -235,7 +234,6 @@
         localStorage.setItem('omniverse_nick', nickname);
     }
 
-    // Attach File Listeners
     document.getElementById('fileInput').addEventListener('change', function(event) {
         const file = event.target.files[0];
         if (file) {
@@ -253,11 +251,10 @@
         }
     });
 
-    // Send Trigger Routine
     function dispatchMessage() {
         const n = document.getElementById('nick').value || "Guest";
         const m = document.getElementById('msg').value;
-        if(m) {
+        if(m.trim()) {
             window.saveProfileSettings();
             push(dbRef, {
                 nickname: n,
@@ -274,7 +271,6 @@
         if (e.key === 'Enter') dispatchMessage();
     });
 
-    // Read Incoming Streams
     onChildAdded(limitToLast(dbRef, 40), (snapshot) => {
         const data = snapshot.val();
         const l = document.getElementById('logs');
@@ -371,4 +367,6 @@
                         </div>`;
                 });
 
-                const newsRes = await fetch('h
+                const newsRes = await fetch('https://api.jikan.moe/v4/watch/episodes/popular');
+                const newsData = await newsRes.json();
+                const ne
