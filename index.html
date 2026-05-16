@@ -189,7 +189,7 @@
 <div class="portal-modal-overlay" id="videoModal"><div class="portal-modal-viewport"><button class="btn-portal-close" onclick="window.closeVideo()">×</button><div class="iframe-aspect-box"><iframe id="videoIframe" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe></div></div></div>
 <audio id="mainAudio" preload="none" crossorigin="anonymous"></audio>
 <script>
-    const defaultAvatar = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>";
+    const defaultAvatar = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm0-4h-2V7h2v8z'/></svg>";
     let userAvatarBase64 = defaultAvatar; let currentSlide = 0; let slideInterval;
     let globalChatRef, privateChatRef, currentChatMode = 'global', activePmTargetNode = '';
     
@@ -216,22 +216,15 @@
     // PINALAKAS NA AUDIO TRIGGER LOGIC
     window.toggleMusic = function() {
         const aud = document.getElementById('mainAudio'), disc = document.getElementById('musicDisc'), icon = document.getElementById('playIconSvg');
-        
-        if (!aud.src || aud.src === "" || aud.src.includes(window.location.hostname)) { 
-            aud.src = tracks[currentTrackIdx].url; 
-        }
-        
+        if (!aud.src || aud.src === "" || aud.src.includes(window.location.hostname)) { aud.src = tracks[currentTrackIdx].url; }
         if (aud.paused) { 
-            // Pinupwersa ang stream connection bago patakbuhin ang kanta
             aud.load();
             var playPromise = aud.play();
-            
             if (playPromise !== undefined) {
                 playPromise.then(() => { 
                     disc.classList.add('is-spinning'); 
                     icon.innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`; 
                 }).catch((err) => {
-                    console.log("Autoplay blocked. Re-triggering loading cycle...");
                     aud.load();
                     setTimeout(function() {
                         aud.play();
@@ -240,33 +233,45 @@
                     }, 300);
                 });
             }
-        } else { 
-            aud.pause(); 
-            disc.classList.remove('is-spinning'); 
-            icon.innerHTML = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`; 
-        }
+        } else { aud.pause(); disc.classList.remove('is-spinning'); icon.innerHTML = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`; }
     };
 
-    window.nextMusic = function() { 
-        currentTrackIdx = (currentTrackIdx + 1) % tracks.length; 
-        document.getElementById('musicTitle').innerText = tracks[currentTrackIdx].title; 
-        const aud = document.getElementById('mainAudio'); 
-        aud.src = tracks[currentTrackIdx].url; 
-        aud.load(); 
-        aud.play().then(() => { 
-            document.getElementById('musicDisc').classList.add('is-spinning'); 
-            document.getElementById('playIconSvg').innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
-        }).catch(() => {}); 
-    };
-
+    window.nextMusic = function() { currentTrackIdx = (currentTrackIdx + 1) % tracks.length; document.getElementById('musicTitle').innerText = tracks[currentTrackIdx].title; const aud = document.getElementById('mainAudio'); aud.src = tracks[currentTrackIdx].url; aud.load(); aud.play().then(() => { document.getElementById('musicDisc').classList.add('is-spinning'); document.getElementById('playIconSvg').innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`; }).catch(() => {}); };
     function getMyName() { return localStorage.getItem('omniverse_nick') || "Guest Node"; }
     function scrollChat() { const l = document.getElementById('logs'); if(l) l.scrollTop = l.scrollHeight; }
     window.switchChatMode = function(mode) { currentChatMode = mode; document.querySelectorAll('.chat-tab-btn').forEach(b => b.classList.remove('active-chat-tab')); document.getElementById(`chat-tab-${mode}`).classList.add('active-chat-tab'); if(mode === 'pm' && !activePmTargetNode) { document.getElementById('logs').innerHTML = '<div style="padding:20px; text-align:center; color:var(--text-dim);">Tap a user avatar or name in Global Matrix to start a Private PM.</div>'; return; } loadChatStream(); };
     window.startPmWithUser = function(targetUser) { if(targetUser === getMyName()) { alert("You cannot launch a PM matrix channel with yourself."); return; } activePmTargetNode = targetUser; document.getElementById('chat-tab-pm').innerText = `🔒 PM: ${targetUser}`; window.switchChatMode('pm'); };
-
     function loadChatStream() { const logs = document.getElementById('logs'); if(!logs) return; logs.innerHTML = '<div style="padding:10px; color:var(--accent);">Connecting streams...</div>'; if(currentChatMode === 'global') { globalChatRef.off(); globalChatRef.limitToLast(40).on("value", function(snap) { renderPackets(snap, logs); }); } else { if(!activePmTargetNode) return; privateChatRef.off(); privateChatRef.limitToLast(40).on("value", function(snap) { renderPackets(snap, logs, true); }); } }
     function renderPackets(snap, targetElement, filterPm = false) { targetElement.innerHTML = ''; snap.forEach(function(child) { const d = child.val(); if(filterPm) { const combinedKey = [getMyName(), activePmTargetNode].sort().join("___"); if(d.pmKey !== combinedKey) return; } targetElement.innerHTML += `<div class="chat-bubble-row" onclick="window.startPmWithUser('${d.nickname}')"><img class="chat-user-avatar" src="${d.avatar || defaultAvatar}"><div class="chat-msg-container"><div class="chat-meta-header"><span class="badge-system badge-${d.badge}">${d.badge}</span><b>${d.nickname}</b></div><div class="chat-bubble-payload">${d.message}</div></div></div>`; }); scrollChat(); }
-    window.sendMsg = function() { const m = document.getElementById('msg').value; if(!m.trim()) return; window.saveProfileSettings(); const packet = { nickname: getMyName(), badge: localStorage.getItem('omniverse_badge') || "member", avatar: userAvatarBase64, message: sanitize(m), timestamp: firebase.database.ServerValue.TIMESTAMP }; if(currentChatMode === 'global') { globalChatRef.push(packet); } else { if(!activePmTargetNode) return; packet.pmKey = [getMyName(), activePmTargetNode].sort().join("___"); privateChatRef.push(packet); } document.getElementById('msg').value = ""; };
+
+    // APPROPRIATE CHAT NETWORK FILTER (TAGALOG, ENGLISH & USER REQ)
+    const BANNED_WORDS = [
+        "junrey teves", "junrey", "teves",
+        "gago", "tanga", "bobo", "putangina", "puta", "pota", "pakyu", 
+        "p0ta", "salsal", "kantot", "ulol", "buraot",
+        "pepe", "puke", "tite", "titi", "kupal", "hudas", "hayop ka",
+        "fuck", "shit", "bitch", "asshole", "b@stard", "dick", "pussy", 
+        "cunt", "faggot", "motherfucker", "whore", "slut", "bastard"
+    ];
+
+    function filterAppropriateContent(text) {
+        let filteredText = text;
+        BANNED_WORDS.forEach(word => {
+            let regex = new RegExp("\\b" + word + "\\b", "gi");
+            let stars = "*".repeat(word.length);
+            filteredText = filteredText.replace(regex, stars);
+        });
+        return filteredText;
+    }
+
+    window.sendMsg = function() {
+        const m = document.getElementById('msg').value; if(!m.trim()) return; 
+        window.saveProfileSettings();
+        const cleanMessage = filterAppropriateContent(sanitize(m));
+        const packet = { nickname: getMyName(), badge: localStorage.getItem('omniverse_badge') || "member", avatar: userAvatarBase64, message: cleanMessage, timestamp: firebase.database.ServerValue.TIMESTAMP }; 
+        if(currentChatMode === 'global') { globalChatRef.push(packet); } else { if(!activePmTargetNode) return; packet.pmKey = [getMyName(), activePmTargetNode].sort().join("___"); privateChatRef.push(packet); }
+        document.getElementById('msg').value = "";
+    };
 
     function initBannerSlider() { clearInterval(slideInterval); const track = document.getElementById('slider-track'); slideInterval = setInterval(() => { if (track && track.children.length > 0) { currentSlide = (currentSlide + 1) % track.children.length; track.style.transform = `translateX(-${currentSlide * 25}%)`; } }, 4000); }
     async function fetchDeepAnimeMetadata(animeId, delayTime) { try { await new Promise(r => setTimeout(r, delayTime)); const staffRes = await fetch(`https://api.jikan.moe/v4/anime/${animeId}/staff`), staffData = await staffRes.json(); let director = "N/A"; if(staffData.data) { const dObj = staffData.data.find(s => s.positions.some(p => p.toLowerCase().includes('director'))); if(dObj) director = dObj.person.name; } const charRes = await fetch(`https://api.jikan.moe/v4/anime/${animeId}/characters`), charData = await charRes.json(); let vaList = []; if(charData.data) { let count = 0; for(let c of charData.data) { const jaVa = c.voice_actors.find(va => va.language === 'Japanese'); if(jaVa) { vaList.push(jaVa.person.name); count++; } if(count >= 3) break; } } return { director, voiceActors: vaList.join(', ') || "TBA Cast" }; } catch(e) { return { director: "Production Committee", voiceActors: "TBA" }; } }
