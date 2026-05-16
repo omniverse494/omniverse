@@ -23,8 +23,14 @@
             --border: rgba(225, 29, 72, 0.3); --ai-color: #7C3AED; --search-bg: #E2E8F0;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg); color: var(--text); font-family: var(--font-body); overflow: hidden; height: 100vh; width: 100vw; position: relative; transition: background 0.25s ease, color 0.25s ease; }
-        .app-shell { display: flex; flex-direction: column; height: 100vh; width: 100vw; justify-content: space-between; }
+        
+        /* FIX: Dynamic Viewport Height para hindi sumabay ang buttons sa keyboard */
+        body { 
+            background-color: var(--bg); color: var(--text); font-family: var(--font-body); 
+            overflow: hidden; height: 100vh; height: 100dvh; width: 100vw; position: relative; 
+            transition: background 0.25s ease, color 0.25s ease; 
+        }
+        .app-shell { display: flex; flex-direction: column; height: 100vh; height: 100dvh; width: 100vw; justify-content: space-between; }
         header { background: rgba(4, 4, 8, 0.85); padding: 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); backdrop-filter: blur(20px); z-index: 1000; }
         .light-mode header { background: rgba(255, 255, 255, 0.85); }
         .brand-node h1 { font-family: var(--font-head); font-size: 20px; font-weight: 900; color: var(--accent); letter-spacing: 1.5px; text-shadow: 0 0 10px var(--accent-glow); }
@@ -71,7 +77,7 @@
         .btn-track-skip { width: 44px; height: 44px; border-radius: 50%; background: var(--panel); border: 1px solid var(--border); color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .btn-play-toggle svg, .btn-track-skip svg { width: 22px; height: 22px; fill: currentColor; }
         
-        #panel-chat { height: 100%; display: none; flex-direction: column; padding-bottom: 95px; background: var(--bg); }
+        #panel-chat { height: 100%; display: none; flex-direction: column; padding-bottom: 115px; background: var(--bg); }
         #panel-chat.active-panel { display: flex; }
         .chat-room-tabs { display: flex; gap: 8px; margin-bottom: 10px; }
         .chat-tab-btn { flex: 1; padding: 10px; background: var(--panel); border: 1px solid var(--border); color: var(--text-dim); border-radius: 8px; font-family: var(--font-head); font-size: 11px; font-weight: 700; cursor: pointer; }
@@ -86,7 +92,8 @@
         .badge-system { font-size: 8px; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; color: #fff; font-family: var(--font-head); }
         .badge-system.badge-root { background: #FF3B30; } .badge-system.badge-member { background: #22C55E; }
         .chat-bubble-payload { background: var(--bg); border-radius: 0 14px 14px 14px; padding: 11px 14px; font-size: 13.5px; word-break: break-word; color: var(--text); border: 1px solid var(--border); }
-        .chat-input-toolbar { display: flex; gap: 8px; margin-top: 12px; background: var(--panel); padding: 6px; border-radius: 24px; border: 1px solid var(--border); }
+        
+        .chat-input-toolbar { display: flex; gap: 8px; margin-top: 12px; background: var(--panel); padding: 6px; border-radius: 24px; border: 1px solid var(--border); z-index: 10; }
         .chat-input-toolbar input { flex: 1; padding: 10px 16px; background: transparent; border: none; color: var(--text) !important; font-size: 14.5px; outline: none; }
         .btn-msg-send { padding: 0 24px; background: var(--accent); border: none; color: #fff; border-radius: 20px; font-family: var(--font-head); font-size: 11px; cursor: pointer; }
         
@@ -98,12 +105,15 @@
         .field-group { display: flex; flex-direction: column; gap: 6px; }
         .field-group label { font-size: 11px; color: var(--accent); font-family: var(--font-head); }
         .field-group input, .field-group select { padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); outline: none; }
+        
         .portal-modal-overlay { position: fixed; top:0; left:0; width:100vw; height:100vh; background: rgba(2,2,5,0.97); z-index: 99999; display: none; align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(10px); }
         .portal-modal-viewport { width: 100%; max-width: 640px; background: #000; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; position: relative; }
         .iframe-aspect-box { position: relative; width: 100%; padding-top: 56.25%; }
         .iframe-aspect-box iframe { position: absolute; top:0; left:0; width:100%; height:100%; border: none; }
         .btn-portal-close { position: absolute; top: -46px; right: 0; background: transparent; border: none; color: #fff; font-size: 34px; cursor: pointer; }
-        footer { position: fixed; bottom: 0; left: 0; width: 100vw; background: rgba(4, 4, 8, 0.95); border-top: 1px solid var(--border); padding: 10px 16px calc(10px + env(safe-area-inset-bottom)) 16px; z-index: 900; backdrop-filter: blur(20px); }
+        
+        /* FIX: Footer fixed positioning to prevent keyboard override */
+        footer { position: fixed; bottom: 0; left: 0; width: 100vw; background: rgba(4, 4, 8, 0.98); border-top: 1px solid var(--border); padding: 10px 16px calc(10px + env(safe-area-inset-bottom)) 16px; z-index: 900; backdrop-filter: blur(20px); }
         .bottom-nav-container { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 600px; margin: 0 auto; }
         .nav-item-node { background: transparent; border: none; color: var(--text-dim); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; flex: 1; }
         .nav-item-node svg { width: 22px; height: 22px; fill: currentColor; }
@@ -182,7 +192,6 @@
     const defaultAvatar = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>";
     let userAvatarBase64 = defaultAvatar; let currentSlide = 0; let slideInterval;
     let globalChatRef, privateChatRef, currentChatMode = 'global', activePmTargetNode = '';
-    
     const tracks = [
         { title: "Official Anime Radio Terminal", url: "https://stream.zeno.fm/03w7v6w37fevv" },
         { title: "Anison Hits Live Archive", url: "https://stream.zeno.fm/3r08w9p37fevv" },
@@ -204,133 +213,31 @@
 
     window.toggleMusic = function() {
         const aud = document.getElementById('mainAudio'), disc = document.getElementById('musicDisc'), icon = document.getElementById('playIconSvg');
-        if (!aud.src || aud.src.includes(window.location.hostname)) { aud.src = tracks[currentTrackIdx].url; aud.load(); }
-        if (aud.paused) { aud.play().then(() => { disc.classList.add('is-spinning'); icon.innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`; }).catch(() => {}); }
-        else { aud.pause(); disc.classList.remove('is-spinning'); icon.innerHTML = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`; }
+        if (!aud.src || aud.src === "" || aud.src.includes(window.location.hostname)) { aud.src = tracks[currentTrackIdx].url; aud.load(); }
+        if (aud.paused) { 
+            aud.play().then(() => { disc.classList.add('is-spinning'); icon.innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`; })
+            .catch(() => { aud.load(); aud.play().then(() => { disc.classList.add('is-spinning'); icon.innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`; }); }); 
+        } else { aud.pause(); disc.classList.remove('is-spinning'); icon.innerHTML = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`; }
     };
-    window.nextMusic = function() { currentTrackIdx = (currentTrackIdx + 1) % tracks.length; document.getElementById('musicTitle').innerText = tracks[currentTrackIdx].title; const aud = document.getElementById('mainAudio'); aud.src = tracks[currentTrackIdx].url; aud.load(); aud.play().then(() => { document.getElementById('musicDisc').classList.add('is-spinning'); }).catch(() => {}); };
+    window.nextMusic = function() { currentTrackIdx = (currentTrackIdx + 1) % tracks.length; document.getElementById('musicTitle').innerText = tracks[currentTrackIdx].title; const aud = document.getElementById('mainAudio'); aud.src = tracks[currentTrackIdx].url; aud.load(); aud.play().then(() => { document.getElementById('musicDisc').classList.add('is-spinning'); document.getElementById('playIconSvg').innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`; }).catch(() => {}); };
 
     function getMyName() { return localStorage.getItem('omniverse_nick') || "Guest Node"; }
     function scrollChat() { const l = document.getElementById('logs'); if(l) l.scrollTop = l.scrollHeight; }
+    window.switchChatMode = function(mode) { currentChatMode = mode; document.querySelectorAll('.chat-tab-btn').forEach(b => b.classList.remove('active-chat-tab')); document.getElementById(`chat-tab-${mode}`).classList.add('active-chat-tab'); if(mode === 'pm' && !activePmTargetNode) { document.getElementById('logs').innerHTML = '<div style="padding:20px; text-align:center; color:var(--text-dim);">Tap a user avatar or name in Global Matrix to start a Private PM.</div>'; return; } loadChatStream(); };
+    window.startPmWithUser = function(targetUser) { if(targetUser === getMyName()) { alert("You cannot launch a PM matrix channel with yourself."); return; } activePmTargetNode = targetUser; document.getElementById('chat-tab-pm').innerText = `🔒 PM: ${targetUser}`; window.switchChatMode('pm'); };
 
-    window.switchChatMode = function(mode) {
-        currentChatMode = mode;
-        document.querySelectorAll('.chat-tab-btn').forEach(b => b.classList.remove('active-chat-tab'));
-        document.getElementById(`chat-tab-${mode}`).classList.add('active-chat-tab');
-        if(mode === 'pm' && !activePmTargetNode) { document.getElementById('logs').innerHTML = '<div style="padding:20px; text-align:center; color:var(--text-dim);">Tap a user avatar or name in Global Matrix to start a Private PM.</div>'; return; }
-        loadChatStream();
-    };
-
-    window.startPmWithUser = function(targetUser) {
-        if(targetUser === getMyName()) { alert("You cannot launch a PM matrix channel with yourself."); return; }
-        activePmTargetNode = targetUser;
-        document.getElementById('chat-tab-pm').innerText = `🔒 PM: ${targetUser}`;
-        window.switchChatMode('pm');
-    };
-
-    function loadChatStream() {
-        const logs = document.getElementById('logs'); if(!logs) return;
-        logs.innerHTML = '<div style="padding:10px; color:var(--accent);">Connecting streams...</div>';
-        if(currentChatMode === 'global') {
-            globalChatRef.off();
-            globalChatRef.limitToLast(40).on("value", function(snap) { renderPackets(snap, logs); });
-        } else {
-            if(!activePmTargetNode) return;
-            privateChatRef.off();
-            privateChatRef.limitToLast(40).on("value", function(snap) { renderPackets(snap, logs, true); });
-        }
-    }
-
-    function renderPackets(snap, targetElement, filterPm = false) {
-        targetElement.innerHTML = '';
-        snap.forEach(function(child) {
-            const d = child.val();
-            if(filterPm) {
-                const combinedKey = [getMyName(), activePmTargetNode].sort().join("___");
-                if(d.pmKey !== combinedKey) return;
-            }
-            targetElement.innerHTML += `
-                <div class="chat-bubble-row" onclick="window.startPmWithUser('${d.nickname}')">
-                    <img class="chat-user-avatar" src="${d.avatar || defaultAvatar}">
-                    <div class="chat-msg-container">
-                        <div class="chat-meta-header"><span class="badge-system badge-${d.badge}">${d.badge}</span><b>${d.nickname}</b></div>
-                        <div class="chat-bubble-payload">${d.message}</div>
-                    </div>
-                </div>`;
-        });
-        scrollChat();
-    }
-
-    window.sendMsg = function() {
-        const m = document.getElementById('msg').value; if(!m.trim()) return;
-        window.saveProfileSettings();
-        const packet = { nickname: getMyName(), badge: localStorage.getItem('omniverse_badge') || "member", avatar: userAvatarBase64, message: sanitize(m), timestamp: firebase.database.ServerValue.TIMESTAMP };
-        if(currentChatMode === 'global') { globalChatRef.push(packet); }
-        else {
-            if(!activePmTargetNode) return;
-            packet.pmKey = [getMyName(), activePmTargetNode].sort().join("___");
-            privateChatRef.push(packet);
-        }
-        document.getElementById('msg').value = "";
-    };
+    function loadChatStream() { const logs = document.getElementById('logs'); if(!logs) return; logs.innerHTML = '<div style="padding:10px; color:var(--accent);">Connecting streams...</div>'; if(currentChatMode === 'global') { globalChatRef.off(); globalChatRef.limitToLast(40).on("value", function(snap) { renderPackets(snap, logs); }); } else { if(!activePmTargetNode) return; privateChatRef.off(); privateChatRef.limitToLast(40).on("value", function(snap) { renderPackets(snap, logs, true); }); } }
+    function renderPackets(snap, targetElement, filterPm = false) { targetElement.innerHTML = ''; snap.forEach(function(child) { const d = child.val(); if(filterPm) { const combinedKey = [getMyName(), activePmTargetNode].sort().join("___"); if(d.pmKey !== combinedKey) return; } targetElement.innerHTML += `<div class="chat-bubble-row" onclick="window.startPmWithUser('${d.nickname}')"><img class="chat-user-avatar" src="${d.avatar || defaultAvatar}"><div class="chat-msg-container"><div class="chat-meta-header"><span class="badge-system badge-${d.badge}">${d.badge}</span><b>${d.nickname}</b></div><div class="chat-bubble-payload">${d.message}</div></div></div>`; }); scrollChat(); }
+    window.sendMsg = function() { const m = document.getElementById('msg').value; if(!m.trim()) return; window.saveProfileSettings(); const packet = { nickname: getMyName(), badge: localStorage.getItem('omniverse_badge') || "member", avatar: userAvatarBase64, message: sanitize(m), timestamp: firebase.database.ServerValue.TIMESTAMP }; if(currentChatMode === 'global') { globalChatRef.push(packet); } else { if(!activePmTargetNode) return; packet.pmKey = [getMyName(), activePmTargetNode].sort().join("___"); privateChatRef.push(packet); } document.getElementById('msg').value = ""; };
 
     function initBannerSlider() { clearInterval(slideInterval); const track = document.getElementById('slider-track'); slideInterval = setInterval(() => { if (track && track.children.length > 0) { currentSlide = (currentSlide + 1) % track.children.length; track.style.transform = `translateX(-${currentSlide * 25}%)`; } }, 4000); }
-    async function fetchDeepAnimeMetadata(animeId, delayTime) {
-        try {
-            await new Promise(r => setTimeout(r, delayTime));
-            const staffRes = await fetch(`https://api.jikan.moe/v4/anime/${animeId}/staff`), staffData = await staffRes.json();
-            let director = "N/A"; if(staffData.data) { const dObj = staffData.data.find(s => s.positions.some(p => p.toLowerCase().includes('director'))); if(dObj) director = dObj.person.name; }
-            const charRes = await fetch(`https://api.jikan.moe/v4/anime/${animeId}/characters`), charData = await charRes.json();
-            let vaList = []; if(charData.data) { let count = 0; for(let c of charData.data) { const jaVa = c.voice_actors.find(va => va.language === 'Japanese'); if(jaVa) { vaList.push(jaVa.person.name); count++; } if(count >= 3) break; } }
-            return { director, voiceActors: vaList.join(', ') || "TBA Cast" };
-        } catch(e) { return { director: "Production Committee", voiceActors: "TBA" }; }
-    }
-    async function fetchData(query = '') {
-        try {
-            const topRes = await fetch('https://api.jikan.moe/v4/top/anime?limit=4'), topData = await topRes.json();
-            const track = document.getElementById('slider-track');
-            if(track && topData.data) { track.innerHTML = ''; topData.data.forEach(a => { track.innerHTML += `<div class="slide-frame"><img src="${a.images.jpg.large_image_url}"><div class="slide-gradient">${sanitize(a.title)}</div></div>`; }); initBannerSlider(); }
-        } catch(e){}
-        try {
-            const uFeed = document.getElementById('upcoming-feed'); uFeed.innerHTML = '<div style="padding:20px; color:var(--accent);">Synchronizing Pipeline Nodes...</div>';
-            const url = query ? `https://api.jikan.moe/v4/anime?q=${encodeURIComponent(query)}` : 'https://api.jikan.moe/v4/seasons/upcoming';
-            const res = await fetch(url), data = await res.json(); uFeed.innerHTML = '';
-            if(data.data) {
-                let items = data.data.slice(0, 6); let dAcc = 0;
-                items.forEach((item) => {
-                    const studio = item.studios?.[0]?.name || 'TBA Production'; const cardId = `deep-${item.mal_id}`;
-                    uFeed.innerHTML += `<div class="app-card"><div class="card-body-core"><div class="card-media-box"><img src="${item.images.jpg.image_url}"></div><div class="card-meta-pane"><h3>${sanitize(item.title)}</h3><div class="info-row"><b>Studio:</b> ${sanitize(studio)}</div><div class="info-row"><b>Origin:</b> ${sanitize(item.source || 'Original')}</div></div></div><div class="deep-details-drawer" id="${cardId}"><div class="info-row"><b>Director:</b> Compiling cluster...</div></div><div class="card-footer-actions"><button class="btn-action-trigger" onclick="window.playVideo('${item.trailer?.url || ''}')">🎬 TRAILER</button><a class="btn-action-trigger" href="${item.url || '#'}" target="_blank">🔗 LINK</a></div></div>`;
-                    dAcc += 400; fetchDeepAnimeMetadata(item.mal_id, dAcc).then(extra => { const box = document.getElementById(cardId); if(box) { box.innerHTML = `<div class="info-row"><b>Director:</b> ${sanitize(extra.director)}</div><div class="info-row"><b>Main Cast:</b> <span class="va-text-highlight">${sanitize(extra.voiceActors)}</span></div>`; } });
-                });
-            }
-        } catch(e){}
-        if(!query) {
-            try {
-                const mFeed = document.getElementById('manga-feed'); const res = await fetch('https://api.jikan.moe/v4/top/manga?limit=6'), data = await res.json(); mFeed.innerHTML = '';
-                data.data.forEach(item => { const author = item.authors?.[0]?.name || 'Unknown Architect'; mFeed.innerHTML += `<div class="app-card"><div class="card-body-core"><div class="card-media-box"><img src="${item.images.jpg.image_url}"></div><div class="card-meta-pane"><h3>${sanitize(item.title)}</h3><div class="info-row"><b>Architect:</b> ${sanitize(author)}</div></div></div><div class="card-footer-actions"><a class="btn-action-trigger" href="${item.url}" target="_blank" style="border-radius:0 0 16px 16px;">📖 ARCHIVE SPECS</a></div></div>`; });
-            } catch(e){}
-        }
-    }
-    window.playVideo = function(url) { if(!url) { alert("No official trailer found."); return; } let embed = url; if(url.includes("v=")) embed = `https://www.youtube.com/embed/${url.split("v=")[1].split("&")[0]}?autoplay=1`; else if(url.includes("youtu.be/")) embed = `https://www.youtube.com/embed/${url.split("youtu.be/")[1].split("?")[0]}?autoplay=1`; document.getElementById('videoIframe').src = embed; document.getElementById('videoModal').style.display = 'flex'; };
-    window.closeVideo = function() { document.getElementById('videoModal').style.display = 'none'; document.getElementById('videoIframe').src = ''; };
-    
-    if(localStorage.getItem('omniverse_nick')) document.getElementById('nick').value = localStorage.getItem('omniverse_nick');
-    if(localStorage.getItem('omniverse_badge')) document.getElementById('userBadge').value = localStorage.getItem('omniverse_badge');
-    if(localStorage.getItem('omniverse_avatar')) { userAvatarBase64 = localStorage.getItem('omniverse_avatar'); document.getElementById('avatarPreview').src = userAvatarBase64; }
-    window.saveProfileSettings = function() { localStorage.setItem('omniverse_nick', sanitize(document.getElementById('nick').value) || "Guest Node"); localStorage.setItem('omniverse_badge', document.getElementById('userBadge').value || "member"); };
-    document.getElementById('fileInput').addEventListener('change', function(e) { const file = e.target.files[0]; if (file && file.size <= 300000) { const reader = new FileReader(); reader.onload = function(evt) { userAvatarBase64 = evt.target.result; document.getElementById('avatarPreview').src = userAvatarBase64; localStorage.setItem('omniverse_avatar', userAvatarBase64); }; reader.readAsDataURL(file); } });
-    
+    async function fetchDeepAnimeMetadata(animeId, delayTime) { try { await new Promise(r => setTimeout(r, delayTime)); const staffRes = await fetch(`https://api.jikan.moe/v4/anime/${animeId}/staff`), staffData = await staffRes.json(); let director = "N/A"; if(staffData.data) { const dObj = staffData.data.find(s => s.positions.some(p => p.toLowerCase().includes('director'))); if(dObj) director = dObj.person.name; } const charRes = await fetch(`https://api.jikan.moe/v4/anime/${animeId}/characters`), charData = await charRes.json(); let vaList = []; if(charData.data) { let count = 0; for(let c of charData.data) { const jaVa = c.voice_actors.find(va => va.language === 'Japanese'); if(jaVa) { vaList.push(jaVa.person.name); count++; } if(count >= 3) break; } } return { director, voiceActors: vaList.join(', ') || "TBA Cast" }; } catch(e) { return { director: "Production Committee", voiceActors: "TBA" }; } }
+    async function fetchData(query = '') { try { const topRes = await fetch('https://api.jikan.moe/v4/top/anime?limit=4'), topData = await topRes.json(); const track = document.getElementById('slider-track'); if(track && topData.data) { track.innerHTML = ''; topData.data.forEach(a => { track.innerHTML += `<div class="slide-frame"><img src="${a.images.jpg.large_image_url}"><div class="slide-gradient">${sanitize(a.title)}</div></div>`; }); initBannerSlider(); } } catch(e){} try { const uFeed = document.getElementById('upcoming-feed'); uFeed.innerHTML = '<div style="padding:20px; color:var(--accent);">Synchronizing Pipeline Nodes...</div>'; const url = query ? `https://api.jikan.moe/v4/anime?q=${encodeURIComponent(query)}` : 'https://api.jikan.moe/v4/seasons/upcoming'; const res = await fetch(url), data = await res.json(); uFeed.innerHTML = ''; if(data.data) { let items = data.data.slice(0, 6); let dAcc = 0; items.forEach((item) => { const studio = item.studios?.[0]?.name || 'TBA Production'; const cardId = `deep-${item.mal_id}`; uFeed.innerHTML += `<div class="app-card"><div class="card-body-core"><div class="card-media-box"><img src="${item.images.jpg.image_url}"></div><div class="card-meta-pane"><h3>${sanitize(item.title)}</h3><div class="info-row"><b>Studio:</b> ${sanitize(studio)}</div><div class="info-row"><b>Origin:</b> ${sanitize(item.source || 'Original')}</div></div></div><div class="deep-details-drawer" id="${cardId}"><div class="info-row"><b>Director:</b> Compiling cluster...</div></div><div class="card-footer-actions"><button class="btn-action-trigger" onclick="window.playVideo('${item.trailer?.url || ''}')">🎬 TRAILER</button><a class="btn-action-trigger" href="${item.url || '#'}" target="_blank">🔗 LINK</a></div></div>`; dAcc += 400; fetchDeepAnimeMetadata(item.mal_id, dAcc).then(extra => { const box = document.getElementById(cardId); if(box) { box.innerHTML = `<div class="info-row"><b>Director:</b> ${sanitize(extra.director)}</div><div class="info-row"><b>Main Cast:</b> <span class="va-text-highlight">${sanitize(extra.voiceActors)}</span></div>`; } }); }); } } catch(e){} if(!query) { try { const mFeed = document.getElementById('manga-feed'); const res = await fetch('https://api.jikan.moe/v4/top/manga?limit=6'), data = await res.json(); mFeed.innerHTML = ''; data.data.forEach(item => { const author = item.authors?.[0]?.name || 'Unknown Architect'; mFeed.innerHTML += `<div class="app-card"><div class="card-body-core"><div class="card-media-box"><img src="${item.images.jpg.image_url}"></div><div class="card-meta-pane"><h3>${sanitize(item.title)}</h3><div class="info-row"><b>Architect:</b> ${sanitize(author)}</div></div></div><div class="card-footer-actions"><a class="btn-action-trigger" href="${item.url}" target="_blank" style="border-radius:0 0 16px 16px;">📖 ARCHIVE SPECS</a></div></div>`; }); } catch(e){} } }
+    window.playVideo = function(url) { if(!url) { alert("No official trailer found."); return; } let embed = url; if(url.includes("v=")) embed = `https://www.youtube.com/embed/${url.split("v=")[1].split("&")[0]}?autoplay=1`; else if(url.includes("youtu.be/")) embed = `https://www.youtube.com/embed/${url.split("youtu.be/")[1].split("?")[0]}?autoplay=1`; document.getElementById('videoIframe').src = embed; document.getElementById('videoModal').style.display = 'flex'; }; window.closeVideo = function() { document.getElementById('videoModal').style.display = 'none'; document.getElementById('videoIframe').src = ''; };
+    if(localStorage.getItem('omniverse_nick')) document.getElementById('nick').value = localStorage.getItem('omniverse_nick'); if(localStorage.getItem('omniverse_badge')) document.getElementById('userBadge').value = localStorage.getItem('omniverse_badge'); if(localStorage.getItem('omniverse_avatar')) { userAvatarBase64 = localStorage.getItem('omniverse_avatar'); document.getElementById('avatarPreview').src = userAvatarBase64; }
+    window.saveProfileSettings = function() { localStorage.setItem('omniverse_nick', sanitize(document.getElementById('nick').value) || "Guest Node"); localStorage.setItem('omniverse_badge', document.getElementById('userBadge').value || "member"); }; document.getElementById('fileInput').addEventListener('change', function(e) { const file = e.target.files[0]; if (file && file.size <= 300000) { const reader = new FileReader(); reader.onload = function(evt) { userAvatarBase64 = evt.target.result; document.getElementById('avatarPreview').src = userAvatarBase64; localStorage.setItem('omniverse_avatar', userAvatarBase64); }; reader.readAsDataURL(file); } });
     window.search = function() { const q = document.getElementById('searchInput').value; if(q.trim()) { window.switchAppView('explore'); fetchData(q); } };
-    window.onload = function() {
-        try {
-            const config = { databaseURL: "https://studio-8164628274-c414a-default-rtdb.asia-southeast1.firebasedatabase.app/" };
-            firebase.initializeApp(config);
-            globalChatRef = firebase.database().ref("chat_messages");
-            privateChatRef = firebase.database().ref("private_messages");
-            loadChatStream();
-        } catch(e){}
-        fetchData();
-    };
+    window.onload = function() { try { const config = { databaseURL: "https://studio-8164628274-c414a-default-rtdb.asia-southeast1.firebasedatabase.app/" }; firebase.initializeApp(config); globalChatRef = firebase.database().ref("chat_messages"); privateChatRef = firebase.database().ref("private_messages"); loadChatStream(); } catch(e){} fetchData(); };
 </script>
 </body>
-</html>
+    </html>
