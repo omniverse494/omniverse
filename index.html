@@ -8,107 +8,79 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
         :root {
-            --bg: #040408;
-            --surface: #0c0c12;
+            --bg: #030307;
+            --surface: #0a0a10;
             --text: #ffffff;
-            --text-dim: #707080;
+            --text-dim: #76768a;
             --accent: #ff0055;
-            --border: #141420;
-            --card-bg: #09090e;
+            --accent-glow: rgba(255, 0, 85, 0.35);
+            --border: #12121f;
+            --card-bg: #07070d;
+            --chat-user: #121225;
+            --chat-target: #0f1c18;
         }
         body.light-mode {
-            --bg: #f4f4f9;
+            --bg: #f4f5fa;
             --surface: #ffffff;
-            --text: #121214;
-            --text-dim: #606070;
+            --text: #111116;
+            --text-dim: #5c5c6b;
             --accent: #e6004c;
-            --border: #e0e0ea;
-            --card-bg: #fcfcfd;
+            --accent-glow: rgba(230, 0, 76, 0.15);
+            --border: #e2e2ec;
+            --card-bg: #fafafc;
+            --chat-user: #eaea2f5;
+            --chat-target: #e6f4f0;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-        body { background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; padding-bottom: 70px; }
-        .app-container { max-width: 600px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; padding-bottom: 80px; overflow-x: hidden; }
         
-        /* HEADER BAR */
-        .app-header-node { background: var(--surface); border-bottom: 1px solid var(--border); padding: 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .brand-cluster { display: flex; align-items: center; gap: 8px; }
-        .glow-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 10px var(--accent); }
-        .brand-cluster h1 { font-size: 18px; font-weight: 900; letter-spacing: 1.5px; }
-        .icon-btn-node { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text); }
+        /* CROSS-PLATFORM SYSTEM ENGINE */
+        .app-container { max-width: 600px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; background: var(--bg); }
+        @media (min-width: 992px) {
+            body { background: #010103; padding-bottom: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+            .app-container { width: 460px; height: 88vh; min-height: 780px; border-radius: 28px; box-shadow: 0 25px 60px rgba(0,0,0,0.6); border: 1px solid var(--border); overflow: hidden; position: relative; }
+            .navigation-dock-bar { position: absolute !important; bottom: 0 !important; left: 0 !important; transform: none !important; width: 100% !important; max-width: 100% !important; }
+            .chat-interface-box { height: calc(88vh - 190px) !important; min-height: 590px !important; }
+        }
 
-        /* HERO BANNER */
-        .hero-banner-slider { width: 100%; height: 230px; overflow: hidden; position: relative; background: #000; border-bottom: 1px solid var(--border); }
-        .slider-track { display: flex; width: 400%; height: 100%; transition: transform 0.6s ease-in-out; }
+        /* PREMIUM APP HEADER */
+        .app-header-node { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .brand-cluster { display: flex; align-items: center; gap: 10px; }
+        .glow-dot { width: 10px; height: 10px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 14px var(--accent); }
+        .brand-cluster h1 { font-size: 17px; font-weight: 900; letter-spacing: 2.5px; text-transform: uppercase; background: linear-gradient(45deg, var(--text), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .icon-btn-node { background: none; border: none; cursor: pointer; color: var(--text); display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 50%; transition: background 0.2s; }
+        .icon-btn-node:hover { background: rgba(255,255,255,0.06); }
+
+        /* HERO MATRIX SLIDER */
+        .hero-banner-slider { width: 100%; height: 215px; overflow: hidden; position: relative; background: #000; border-bottom: 1px solid var(--border); }
+        .slider-track { display: flex; width: 400%; height: 100%; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
         .slide-frame { width: 25%; height: 100%; position: relative; flex-shrink: 0; }
         .slide-frame img { width: 100%; height: 100%; object-fit: cover; }
-        .slide-gradient { position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px 15px 15px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); color: #fff; font-size: 16px; font-weight: bold; }
+        .slide-gradient { position: absolute; bottom: 0; left: 0; width: 100%; padding: 45px 15px 15px; background: linear-gradient(to top, rgba(0,0,0,0.95), transparent); color: #fff; font-size: 14px; font-weight: bold; }
 
-        /* VIEWPORT CONFIG */
-        .viewport-canvas { padding: 15px; flex: 1; }
+        /* VIEWPORT SCREEN SYSTEM */
+        .viewport-canvas { padding: 16px; flex: 1; overflow-y: auto; }
         .view-panel { display: none; }
-        .view-panel.active-panel { display: block; }
-        .section-title-bar { margin: 15px 0 10px; font-size: 14px; letter-spacing: 0.5px; color: var(--text); font-weight: bold; }
+        .view-panel.active-panel { display: block; animation: fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .section-title-bar { margin: 18px 0 12px; font-size: 11px; letter-spacing: 1.5px; color: var(--accent); font-weight: 900; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
 
-        /* CARD ARCHITECTURE */
-        .grid-feed-layout { display: flex; flex-direction: column; gap: 15px; }
-        .app-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; }
-        .card-body-core { display: flex; padding: 12px; gap: 12px; }
-        .card-media-box { width: 85px; height: 120px; border-radius: 8px; overflow: hidden; flex-shrink: 0; background: #111; }
+        /* PREMIUM CONTENT CARDS */
+        .grid-feed-layout { display: flex; flex-direction: column; gap: 14px; }
+        .app-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s, box-shadow 0.2s; }
+        .app-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+        .card-body-core { display: flex; padding: 14px; gap: 14px; }
+        .card-media-box { width: 85px; height: 120px; border-radius: 10px; overflow: hidden; flex-shrink: 0; background: #111; border: 1px solid var(--border); }
         .card-media-box img { width: 100%; height: 100%; object-fit: cover; }
-        .card-meta-pane { flex: 1; display: flex; flex-direction: column; gap: 4px; }
-        .card-meta-pane h3 { font-size: 14px; font-weight: bold; line-height: 1.3; color: var(--text); }
+        .card-meta-pane { flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+        .card-meta-pane h3 { font-size: 14px; font-weight: bold; line-height: 1.35; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .info-row { font-size: 11px; color: var(--text-dim); line-height: 1.4; }
-        .deep-details-drawer { background: rgba(0,0,0,0.15); padding: 8px 12px; border-top: 1px dashed var(--border); border-radius: 4px; margin-top: 4px; }
-        body.light-mode .deep-details-drawer { background: rgba(0,0,0,0.04); }
-        .va-text-highlight { color: var(--text); font-weight: 500; }
-        .card-footer-actions { display: flex; border-top: 1px solid var(--border); background: rgba(0,0,0,0.1); }
-        .btn-action-trigger { flex: 1; padding: 10px; background: none; border: none; text-align: center; color: var(--text); font-size: 11px; font-weight: bold; text-decoration: none; cursor: pointer; transition: background 0.2s; }
+        .deep-details-drawer { background: rgba(0,0,0,0.15); padding: 10px 12px; border-top: 1px dashed var(--border); border-radius: 6px; margin-top: 4px; }
+        body.light-mode .deep-details-drawer { background: rgba(0,0,0,0.02); }
+        .va-text-highlight { color: var(--text); font-weight: 600; }
+        .card-footer-actions { display: flex; border-top: 1px solid var(--border); background: rgba(0,0,0,0.08); }
+        .btn-action-trigger { flex: 1; padding: 12px; background: none; border: none; text-align: center; color: var(--text); font-size: 11px; font-weight: bold; text-decoration: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.2s; }
         .btn-action-trigger:first-child { border-right: 1px solid var(--border); }
-        .btn-action-trigger:hover { background: rgba(255,255,255,0.05); }
-
-        /* SEARCH INTERFACE */
-        .search-wrapper-node { display: flex; gap: 8px; }
-        .search-wrapper-node input, .music-search-box input { flex: 1; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: 14px; outline: none; transition: background 0.2s, color 0.2s; }
-        .search-wrapper-node button { padding: 0 15px; border-radius: 10px; background: var(--accent); border: none; color: white; cursor: pointer; }
-
-        /* NAVIGATION SYSTEM */
-        .navigation-dock-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 600px; height: 60px; background: var(--surface); border-top: 1px solid var(--border); display: flex; z-index: 100; }
-        .nav-item-node { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: none; border: none; color: var(--text-dim); font-size: 16px; cursor: pointer; gap: 2px; }
-        .nav-item-node span { font-size: 10px; font-weight: bold; }
-        .nav-item-node.tab-active { color: var(--accent); }
-
-        /* CHAT SYSTEMS */
-        .chat-interface-box { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; height: calc(100vh - 170px); display: flex; flex-direction: column; overflow: hidden; }
-        .chat-tab-row { display: flex; border-bottom: 1px solid var(--border); }
-        .chat-tab-btn { flex: 1; padding: 12px; background: none; border: none; color: var(--text-dim); font-size: 12px; font-weight: bold; cursor: pointer; }
-        .chat-tab-btn.active-chat-tab { color: var(--accent); border-bottom: 2px solid var(--accent); background: rgba(255,255,255,0.01); }
-        .chat-logs-viewport { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background: rgba(0,0,0,0.1); }
-        .chat-bubble-row { display: flex; gap: 10px; align-items: flex-start; animation: fadeUp 0.3s ease; }
-        .chat-user-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border); background: #222; flex-shrink: 0; }
-        .chat-msg-container { flex: 1; background: var(--card-bg); border: 1px solid var(--border); padding: 10px; border-radius: 12px; min-width: 0; }
-        .chat-meta-header { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; font-size: 11px; }
-        .chat-meta-header b { color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 120px; }
-        .badge-system { padding: 1px 5px; font-size: 8px; font-weight: 900; border-radius: 4px; color: #fff; text-transform: uppercase; }
-        .badge-member { background: #555; } .badge-otaku { background: #0088cc; } .badge-hacker { background: #00cc66; } .badge-vip { background: #cc00cc; }
-        .chat-bubble-payload { font-size: 13px; color: var(--text); line-height: 1.4; word-break: break-word; }
-        .chat-input-dock { padding: 10px; display: flex; gap: 8px; border-top: 1px solid var(--border); background: var(--surface); }
-        .chat-input-dock input { flex: 1; padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 13px; outline: none; }
-        .chat-input-dock button { width: 45px; background: var(--accent); border: none; border-radius: 10px; color: white; cursor: pointer; font-weight: bold; }
-
-        /* CONFIG SETTINGS */
-        .settings-card-box { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
-        .control-group-node { display: flex; flex-direction: column; gap: 5px; }
-        .control-group-node label { font-size: 11px; color: var(--text-dim); font-weight: bold; }
-        .control-group-node input, .control-group-node select { padding: 12px; border-radius: 8px; background: var(--bg); border: 1px solid var(--border); color: var(--text); outline: none; font-size: 13px; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .is-spinning { animation: spin 4s linear infinite; }
-
-        /* MODALS */
-        .video-modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); display:none; align-items:center; justify-content:center; z-index:500; padding:15px; }
-        .video-modal-container { width:100%; max-width:500px; background:#000; border-radius:12px; overflow:hidden; position:relative; aspect-ratio:16/9; }
-        .video-modal-container iframe { width:100%; height:100%; border:none; }
-        .close-modal-trigger { position:absolute; top:8px; right:12px; color:#fff; font-size:24px; font-weight:bold; cursor:pointer; z-index:10; text-shadow:0 2px 4px #000; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .btn-action-trigger:hover { background: rgba(255,255,255,0.04); }
     </style>
 </head>
 <body>
@@ -116,10 +88,12 @@
         <header class="app-header-node">
             <div class="brand-cluster">
                 <div class="glow-dot"></div>
-                <h1>OMNIVERSE</h1>
+                <h1>Omniverse</h1>
             </div>
             <div class="header-actions">
-                <button class="icon-btn-node" onclick="window.toggleInterfaceMode()">🌓</button>
+                <button class="icon-btn-node" onclick="window.toggleInterfaceMode()">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                </button>
             </div>
         </header>
 
@@ -129,104 +103,126 @@
                 <div class="hero-banner-slider">
                     <div class="slider-track" id="slider-track"></div>
                 </div>
+                
                 <div class="section-title-bar">
-                    <h2>🔥 UPCOMING SEASONS</h2>
+                    <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="3" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                    <span>Anime Broadcast Updates</span>
                 </div>
                 <div class="grid-feed-layout" id="upcoming-feed"></div>
+                
                 <div class="section-title-bar" style="margin-top: 25px;">
-                    <h2>📖 TOP MANGA ARCHIVES</h2>
+                    <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="3" fill="none"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5z"/></svg>
+                    <span>Manga, Manhwa & Manhua Chronicles</span>
                 </div>
                 <div class="grid-feed-layout" id="manga-feed"></div>
             </div>
 
             <div id="panel-explore" class="view-panel">
-                <div class="search-wrapper-node">
-                    <input type="text" id="searchInput" placeholder="Search anime title matrix...">
-                    <button onclick="window.search()">🔍</button>
+                <div class="search-wrapper-node" style="display:flex; gap:8px; background:var(--surface); padding:6px; border-radius:14px; border:1px solid var(--border);">
+                    <input type="text" id="searchInput" placeholder="Scan system for titles..." style="flex:1; padding:12px; border:none; background:transparent; color:var(--text); font-size:13px; outline:none;">
+                    <button onclick="window.search()" style="padding:10px 18px; border-radius:10px; background:var(--accent); border:none; color:white; cursor:pointer; font-weight:bold; font-size:12px; display:flex; align-items:center; gap:6px;">Search</button>
                 </div>
                 <div class="grid-feed-layout" id="explore-feed" style="margin-top:20px;"></div>
             </div>
 
             <div id="panel-chat" class="view-panel">
-                <div class="chat-interface-box">
-                    <div class="chat-tab-row">
-                        <button id="chat-tab-global" class="chat-tab-btn active-chat-tab" onclick="window.switchChatMode('global')">🌐 Global Matrix</button>
-                        <button id="chat-tab-pm" class="chat-tab-btn" onclick="window.switchChatMode('pm')">🔒 PM: Secure Node</button>
+                <div class="chat-interface-box" style="background:var(--surface); border:1px solid var(--border); border-radius:20px; height:calc(100vh - 180px); display:flex; flex-direction:column; overflow:hidden;">
+                    <div class="chat-tab-row" style="display:flex; border-bottom:1px solid var(--border); background:rgba(0,0,0,0.15);">
+                        <button id="chat-tab-global" class="chat-tab-btn active-chat-tab" onclick="window.switchChatMode('global')">Global Stream</button>
+                        <button id="chat-tab-pm" class="chat-tab-btn" onclick="window.switchChatMode('pm')">Private Node</button>
                     </div>
-                    <div class="chat-logs-viewport" id="logs"></div>
-                    <div class="chat-input-dock">
-                        <input type="text" id="msg" placeholder="Transmit encrypted payload..." onkeydown="if(event.key==='Enter') window.sendMsg()">
-                        <button onclick="window.sendMsg()">⚡</button>
+                    <div class="chat-logs-viewport" id="logs" style="flex:1; padding:16px; overflow-y:auto; display:flex; flex-direction:column; gap:14px;"></div>
+                    <div class="chat-input-dock" style="padding:12px; display:flex; gap:8px; border-top:1px solid var(--border); background:var(--surface);">
+                        <input type="text" id="msg" placeholder="Transmit secure data..." onkeydown="if(event.key==='Enter') window.sendMsg()">
+                        <button onclick="window.sendMsg()">
+                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                        </button>
                     </div>
                 </div>
             </div>
 
             <div id="panel-audio" class="view-panel">
-                <div class="music-player-card" style="background: var(--surface); padding: 20px; border-radius: 16px; border: 1px solid var(--border); text-align: center; max-width: 500px; margin: 0 auto;">
-                    <div class="disc-wrapper" style="margin-bottom: 20px; display: flex; justify-content: center;">
-                        <div class="music-disc-node" id="musicDisc" style="width: 130px; height: 130px; border-radius: 50%; background: #0c0c12; border: 4px solid var(--accent); position: relative; display: flex; align-items: center; justify-content: center;">
-                            <div class="disc-center-core" style="width: 35px; height: 35px; border-radius: 50%; background: var(--surface); border: 2px solid #222;"></div>
+                <div style="background: var(--surface); padding: 28px 20px; border-radius: 24px; border: 1px solid var(--border); text-align: center; max-width: 500px; margin: 0 auto;">
+                    <div style="margin-bottom: 22px; display: flex; justify-content: center;">
+                        <div class="music-disc-node" id="musicDisc">
+                            <div class="disc-center-core"></div>
                         </div>
                     </div>
-                    <div class="music-meta-block">
-                        <h2 id="musicTitle" style="font-size:14px; color:var(--text); margin-bottom:4px; font-weight: bold;">🎵 Select a track or search below...</h2>
-                        <p style="font-size:11px; color:var(--text-dim); margin-bottom:15px;">Omniverse Audio Deck Interface</p>
+                    <div style="margin-bottom: 22px;">
+                        <h2 id="musicTitle" style="font-size:14px; color:var(--text); font-weight:800; line-height:1.4;">🎵 Initializing Audio Channels...</h2>
+                        <p style="font-size:11px; color:var(--text-dim); margin-top:4px;">Live Auto-Updated Streaming Deck</p>
                     </div>
-                    <div style="display:flex; justify-content:center; gap:20px; align-items:center; margin-bottom:20px;">
-                        <button class="player-btn" onclick="window.toggleMusic()" id="playIconSvg" style="width:50px; height:50px; border-radius:50%; background:var(--accent); border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; color:#fff;">
-                            <svg viewBox="0 0 24 24" style="width:24px; height:24px; fill:currentColor;"><path d="M8 5v14l11-7z"/></svg>
+                    <div style="display:flex; justify-content:center; gap:16px; align-items:center; margin-bottom:22px;">
+                        <button onclick="window.toggleMusic()" id="playIconSvg" style="width:52px; height:52px; border-radius:50%; background:var(--accent); border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; color:#fff; box-shadow:0 4px 14px var(--accent-glow);">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
                         </button>
-                        <button class="player-btn" onclick="window.nextMusic()" style="width:40px; height:40px; border-radius:50%; background:var(--bg); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--text);">
-                            <svg viewBox="0 0 24 24" style="width:20px; height:20px; fill:currentColor;"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+                        <button onclick="window.nextMusic()" style="width:40px; height:40px; border-radius:50%; background:var(--bg); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--text);">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
                         </button>
                     </div>
-                    <hr style="border:0; border-top:1px solid var(--border); margin:15px 0;">
-                    <div class="music-search-box" style="text-align: left;">
-                        <label style="font-size:11px; color:var(--accent); font-weight:bold; letter-spacing:1px; display:block; margin-bottom:5px;">OMNIVERSE DECK SEARCH</label>
-                        <div style="display:flex; gap:5px; margin-bottom:10px;">
-                            <input type="text" id="musicSearchInput" placeholder="Type Phonk, Anime, TikTok, Tagalog...">
-                            <button onclick="window.searchMusicDatabase()" style="padding:0 15px; border-radius:8px; background:var(--accent); color:#fff; border:none; cursor:pointer; font-weight:bold; font-size:13px; flex-shrink:0;">🔍 SEARCH</button>
+                    <hr style="border:0; border-top:1px solid var(--border); margin:20px 0;">
+                    <div class="music-search-box">
+                        <label style="font-size:10px; color:var(--accent); font-weight:900; letter-spacing:1.5px; display:block; margin-bottom:10px; text-transform:uppercase;">Live Database Search</label>
+                        <div style="display:flex; gap:8px; margin-bottom:14px;">
+                            <input type="text" id="musicSearchInput" placeholder="Search Phonk, TikTok hits, Tagalog, J-Pop...">
+                            <button onclick="window.searchMusicDatabase()">Search</button>
                         </div>
-                        <div id="musicSearchResultsPane" style="max-height:160px; overflow-y:auto; background:rgba(0,0,0,0.1); border-radius:8px; border:1px solid var(--border); padding:5px;">
-                            <div style="padding:15px; text-align:center; color:var(--text-dim); font-size:12px;">Search results will load here. Try "Phonk"!</div>
-                        </div>
+                        <div id="musicSearchResultsPane" style="max-height:190px; overflow-y:auto; background:rgba(0,0,0,0.2); border-radius:14px; border:1px solid var(--border); padding:6px;"></div>
                     </div>
                 </div>
             </div>
 
             <div id="panel-settings" class="view-panel">
-                <div class="settings-card-box">
-                    <h2>⚙️ USER TERMINAL CONFIG</h2>
-                    <div style="display:flex; justify-content:center; margin:15px 0;">
-                        <img id="avatarPreview" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm0-4h-2V7h2v8z'/></svg>" style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:2px solid var(--accent);">
+                <div style="background:var(--surface); border:1px solid var(--border); border-radius:24px; padding:24px;">
+                    <h2 style="font-size:16px; font-weight:900; letter-spacing:1px; border-bottom:1px solid var(--border); padding-bottom:12px; margin-bottom:20px;">👤 Profile Configurations</h2>
+                    <div style="display:flex; flex-direction:column; align-items:center; gap:12px; margin-bottom:24px;">
+                        <img id="avatarPreview" src="" style="width:85px; height:85px; border-radius:50%; object-fit:cover; border:3px solid var(--accent); box-shadow: 0 0 15px var(--accent-glow);">
+                        <span style="font-size:11px; color:var(--text-dim);">Supported formats: PNG, JPG (Max 300KB)</span>
                     </div>
-                    <div class="control-group-node">
-                        <label>Matrix Alias / Nickname</label>
-                        <input type="text" id="nick" value="Guest Node" onchange="window.saveProfileSettings()">
-                    </div>
-                    <div class="control-group-node">
-                        <label>System Identification Badge</label>
-                        <select id="userBadge" onchange="window.saveProfileSettings()">
-                            <option value="member">⚡ MEMBER NODE</option>
-                            <option value="otaku">🎐 OTAKU PILOT</option>
-                            <option value="hacker">💻 MATRIX HACKER</option>
-                            <option value="vip">💎 ELITE VIP</option>
-                        </select>
-                    </div>
-                    <div class="control-group-node">
-                        <label>Terminal Avatar Data (Max 300KB)</label>
-                        <input type="file" id="fileInput" accept="image/*" style="background:transparent; border:none; padding:0;">
+                    <div style="display:flex; flex-direction:column; gap:14px;">
+                        <div style="display:flex; flex-direction:column; gap:6px;">
+                            <label style="font-size:11px; font-weight:700; color:var(--text-dim); text-transform:uppercase;">User Alias Name</label>
+                            <input type="text" id="nick" value="Guest Node" onchange="window.saveProfileSettings()" style="padding:12px; border-radius:10px; border:1px solid var(--border); background:var(--bg); color:var(--text); font-size:13px; outline:none;">
+                        </div>
+                        <div style="display:flex; flex-direction:column; gap:6px;">
+                            <label style="font-size:11px; font-weight:700; color:var(--text-dim); text-transform:uppercase;">Global Identity Crest</label>
+                            <select id="userBadge" onchange="window.saveProfileSettings()" style="padding:12px; border-radius:10px; border:1px solid var(--border); background:var(--bg); color:var(--text); font-size:13px; outline:none;">
+                                <option value="member">REGULAR MEMBER</option>
+                                <option value="otaku">OTAKU COMMANDER</option>
+                                <option value="hacker">NETRUNNER INTEL</option>
+                                <option value="vip">ELITE VIP</option>
+                            </select>
+                        </div>
+                        <div style="display:flex; flex-direction:column; gap:6px;">
+                            <label style="font-size:11px; font-weight:700; color:var(--text-dim); text-transform:uppercase;">Modify Avatar Array</label>
+                            <input type="file" id="fileInput" accept="image/*" style="font-size:12px; color:var(--text-dim);">
+                        </div>
                     </div>
                 </div>
             </div>
         </main>
 
         <nav class="navigation-dock-bar">
-            <button id="tab-btn-home" class="nav-item-node tab-active" onclick="window.switchAppView('home')">🏠<span>Home</span></button>
-            <button id="tab-btn-explore" class="nav-item-node" onclick="window.switchAppView('explore')">🔍<span>Explore</span></button>
-            <button id="tab-btn-chat" class="nav-item-node" onclick="window.switchAppView('chat')">💬<span>Matrix</span></button>
-            <button id="tab-btn-audio" class="nav-item-node" onclick="window.switchAppView('audio')">🎵<span>Audio</span></button>
-            <button id="tab-btn-settings" class="nav-item-node" onclick="window.switchAppView('settings')">⚙️<span>Config</span></button>
+            <button id="tab-btn-home" class="nav-item-node tab-active" onclick="window.switchAppView('home')">
+                <svg viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <span>Home</span>
+            </button>
+            <button id="tab-btn-explore" class="nav-item-node" onclick="window.switchAppView('explore')">
+                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <span>Explore</span>
+            </button>
+            <button id="tab-btn-chat" class="nav-item-node" onclick="window.switchAppView('chat')">
+                <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <span>Chat</span>
+            </button>
+            <button id="tab-btn-audio" class="nav-item-node" onclick="window.switchAppView('audio')">
+                <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                <span>Audio</span>
+            </button>
+            <button id="tab-btn-settings" class="nav-item-node" onclick="window.switchAppView('settings')">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                <span>Config</span>
+            </button>
         </nav>
     </div>
 
@@ -242,10 +238,28 @@
         let userAvatarBase64 = defaultAvatar; let currentSlide = 0; let slideInterval;
         let globalChatRef, privateChatRef, currentChatMode = 'global', activePmTargetNode = '';
         
-        // GUMAGANANG MGA LIVE STREAM RADIO PARA SA MGA BACKUP TRACKS
+        // 20 SECURE CORE INTERNAL AUDIOS
         const tracks = [
-            { title: "🎵 Live Node 1: J-Pop & Anime Top Hits", url: "https://stream.zeno.fm/03w7v6w37fevv" },
-            { title: "🎵 Live Node 2: Trending TikTok & Phonk Station", url: "https://stream.zeno.fm/0v8g78p37fevv" }
+            { title: "🔊 Phonk: Metamorphosis Edit Track", url: "https://stream.zeno.fm/0v8g78p37fevv" },
+            { title: "🔊 Phonk Loop 2: Tokyo Drift Speedup", url: "https://stream.zeno.fm/587w8w937fevv" },
+            { title: "🔊 Phonk Loop 3: Keraunos Ultra Bass", url: "https://stream.zeno.fm/a83e0z5a7fevv" },
+            { title: "🔊 Phonk Loop 4: RAVE Nightmare Edit", url: "https://stream.zeno.fm/c3v4z92a7fevv" },
+            { title: "🔊 Phonk Loop 5: Murder In My Mind", url: "https://stream.zeno.fm/60824bba7fevv" },
+            { title: "🔥 TikTok Hit: Cupid x Aesthetic Loop", url: "https://stream.zeno.fm/v34w75p37fevv" },
+            { title: "🔥 TikTok Hit 2: GigaChad Theme Version", url: "https://stream.zeno.fm/x96m147a7fevv" },
+            { title: "🔥 TikTok Hit 3: Montagem Coral Remix", url: "https://stream.zeno.fm/b58m4e1a7fevv" },
+            { title: "🔥 TikTok Hit 4: Neon Blade Velocity", url: "https://stream.zeno.fm/f97a5c1a7fevv" },
+            { title: "🔥 TikTok Hit 5: Override Speed Up Edit", url: "https://stream.zeno.fm/e48v7c1a7fevv" },
+            { title: "🎐 J-Pop: Yoasobi - Idol (Oshi No Ko)", url: "https://stream.zeno.fm/03w7v6w37fevv" },
+            { title: "🎐 J-Pop 2: Unravel (Tokyo Ghoul)", url: "https://stream.zeno.fm/87w7w3937fevv" },
+            { title: "🎐 J-Pop 3: Kenshi Yonezu - Kick Back", url: "https://stream.zeno.fm/64v6z83a7fevv" },
+            { title: "🎐 J-Pop 4: Gurenge (Demon Slayer Track)", url: "https://stream.zeno.fm/93v7b22a7fevv" },
+            { title: "🎐 J-Pop 5: Silhouette (Naruto Theme)", url: "https://stream.zeno.fm/24m6v77a7fevv" },
+            { title: "🇵🇭 OPM Viral: Pasilyo - SunKissed Lola", url: "https://stream.zeno.fm/46v7c5p37fevv" },
+            { title: "🇵🇭 OPM Viral 2: Uhaw - Dilaw Main", url: "https://stream.zeno.fm/14v7z3937fevv" },
+            { title: "🇵🇭 OPM Viral 3: Raining In Manila", url: "https://stream.zeno.fm/a5vm788a7fevv" },
+            { title: "🇵🇭 OPM Viral 4: Ere - Juan Karlos Radio", url: "https://stream.zeno.fm/b83v9c2a7fevv" },
+            { title: "🇵🇭 OPM Viral 5: Mahika - Adie Core Track", url: "https://stream.zeno.fm/c98v2cba7fevv" }
         ];
         let currentTrackIdx = 0;
 
@@ -264,7 +278,7 @@
             if(viewId === 'chat') { setTimeout(scrollChat, 50); }
         };
 
-        // STREAM CONTROLLER
+        // ADVANCED AUDIO CONTROLLER
         window.toggleMusic = function() {
             const aud = document.getElementById('mainAudio'), disc = document.getElementById('musicDisc'), icon = document.getElementById('playIconSvg');
             if (!aud.src || aud.src === "" || aud.src.includes(window.location.hostname)) { aud.src = tracks[currentTrackIdx].url; }
@@ -272,82 +286,80 @@
                 aud.load();
                 aud.play().then(() => { 
                     disc.classList.add('is-spinning'); 
-                    icon.innerHTML = `<svg viewBox="0 0 24 24" style="width:24px; height:24px; fill:currentColor;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`; 
-                }).catch(() => {
-                    setTimeout(() => { aud.play(); disc.classList.add('is-spinning'); }, 300);
-                });
-            } else { aud.pause(); disc.classList.remove('is-spinning'); icon.innerHTML = `<svg viewBox="0 0 24 24" style="width:24px; height:24px; fill:currentColor;"><path d="M8 5v14l11-7z"/></svg>`; }
+                    icon.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`; 
+                }).catch(() => { setTimeout(() => { aud.play(); disc.classList.add('is-spinning'); }, 300); });
+            } else { aud.pause(); disc.classList.remove('is-spinning'); icon.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`; }
         };
 
         window.nextMusic = function() { 
             currentTrackIdx = (currentTrackIdx + 1) % tracks.length; 
-            document.getElementById('musicTitle').innerText = tracks[currentTrackIdx].title; 
             window.playSelectedTrack(tracks[currentTrackIdx].title, tracks[currentTrackIdx].url);
         };
 
-        // SUPER ULTRA FAST SEARCH ENGINE (NO CORS ERROR / NO LOADING LOOP)
         window.searchMusicDatabase = async function() {
             const query = document.getElementById('musicSearchInput')?.value || "phonk";
             const resultsBox = document.getElementById('musicSearchResultsPane');
             if(!resultsBox) return;
-            
-            resultsBox.innerHTML = '<div style="padding:15px; text-align:center; color:var(--accent); font-size:13px;">Searching Apple Cloud Arrays...</div>';
-            
+            resultsBox.innerHTML = '<div style="padding:15px; text-align:center; color:var(--accent); font-size:11px; font-weight:bold;">SEARCHING LIVE CLOUD NETWORK...</div>';
             try {
-                // Diretsong JSONP/Fetch sa Apple iTunes API - Walang block at super bilis!
-                const response = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&media=music&limit=12`);
-                if (!response.ok) throw new Error('Network fail');
-                const data = await response.json();
-                
-                resultsBox.innerHTML = '';
+                const response = await fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(query)}&media=music&limit=15`);
+                const data = await response.json(); resultsBox.innerHTML = '';
                 if (data.results && data.results.length > 0) {
                     data.results.forEach(song => {
-                        if(!song.previewUrl) return; // Siguraduhing may gumaganang audio link
-                        
-                        const trackName = song.trackName || "Unknown Track";
-                        const artistName = song.artistName || "Unknown Artist";
-                        const coverArt = song.artworkUrl60 || 'https://images.alphacoders.com/112/1128711.jpg';
-                        
+                        if(!song.previewUrl) return;
                         resultsBox.innerHTML += `
-                            <div onclick="window.playSelectedTrack('${sanitize(trackName)} - ${sanitize(artistName)}', '${song.previewUrl}')" style="display:flex; align-items:center; justify-content:space-between; padding:10px; border-bottom:1px solid var(--border); cursor:pointer;">
+                            <div onclick="window.playSelectedTrack('${sanitize(song.trackName)} - ${sanitize(song.artistName)}', '${song.previewUrl}')" style="display:flex; align-items:center; justify-content:space-between; padding:10px; border-bottom:1px solid var(--border); cursor:pointer;">
                                 <div style="display:flex; align-items:center; gap:10px; text-align:left; min-width:0;">
-                                    <img src="${coverArt}" style="width:38px; height:38px; border-radius:6px; object-fit:cover; flex-shrink:0; border:1px solid var(--border);">
+                                    <img src="${song.artworkUrl60 || 'https://images.alphacoders.com/112/1128711.jpg'}" style="width:36px; height:36px; border-radius:6px; object-fit:cover; flex-shrink:0;">
                                     <div style="min-width:0;">
-                                        <div style="color:var(--text); font-size:13px; font-weight:bold; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:210px;">${sanitize(trackName)}</div>
-                                        <div style="color:var(--text-dim); font-size:11px;">${sanitize(artistName)}</div>
+                                        <div style="color:var(--text); font-size:12px; font-weight:bold; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:180px;">${sanitize(song.trackName)}</div>
+                                        <div style="color:var(--text-dim); font-size:10px;">${sanitize(song.artistName)}</div>
                                     </div>
                                 </div>
-                                <span style="color:var(--accent); font-size:11px; font-weight:bold; flex-shrink:0; padding:4px 8px; background:rgba(255,0,85,0.1); border-radius:4px;">▶ PLAY</span>
-                            </div>
-                        `;
+                                <span style="color:var(--accent); font-size:10px; font-weight:bold;">▶ PLAY</span>
+                            </div>`;
                     });
-                } else { 
-                    resultsBox.innerHTML = '<div style="padding:15px; text-align:center; color:var(--text-dim); font-size:12px;">No free audio links found.</div>'; 
-                }
-            } catch(e) { 
-                resultsBox.innerHTML = '<div style="padding:15px; text-align:center; color:var(--text-dim); font-size:12px;">Cloud tight. Re-trying query grid...</div>'; 
-            }
+                } else { resultsBox.innerHTML = '<div style="padding:15px; text-align:center; color:var(--text-dim); font-size:11px;">No tracks found online.</div>'; }
+            } catch(e) { resultsBox.innerHTML = '<div style="padding:15px; text-align:center; color:var(--text-dim); font-size:11px;">Network Timeout.</div>'; }
         };
 
         window.playSelectedTrack = function(title, streamUrl) {
-            const aud = document.getElementById('mainAudio');
-            document.getElementById('musicTitle').innerText = title;
+            const aud = document.getElementById('mainAudio'); document.getElementById('musicTitle').innerText = title;
             aud.src = streamUrl; aud.load();
             aud.play().then(() => {
                 document.getElementById('musicDisc').classList.add('is-spinning');
-                document.getElementById('playIconSvg').innerHTML = `<svg viewBox="0 0 24 24" style="width:24px; height:24px; fill:currentColor;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
+                document.getElementById('playIconSvg').innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
             }).catch(() => {});
         };
 
-        // CHAT MATRIX ARCHITECTURE
+        // PREMIUM CHAT INTERACTION & FILTER LAYERS
         function getMyName() { return localStorage.getItem('omniverse_nick') || "Guest Node"; }
         function scrollChat() { const l = document.getElementById('logs'); if(l) l.scrollTop = l.scrollHeight; }
-        window.switchChatMode = function(mode) { currentChatMode = mode; document.querySelectorAll('.chat-tab-btn').forEach(b => b.classList.remove('active-chat-tab')); document.getElementById(`chat-tab-${mode}`).classList.add('active-chat-tab'); if(mode === 'pm' && !activePmTargetNode) { document.getElementById('logs').innerHTML = '<div style="padding:20px; text-align:center; color:var(--text-dim); font-size:12px;">Tap a user profile in Global to start a PM.</div>'; return; } loadChatStream(); };
-        window.startPmWithUser = function(targetUser) { if(targetUser === getMyName()) return; activePmTargetNode = targetUser; document.getElementById('chat-tab-pm').innerText = `🔒 PM: ${targetUser}`; window.switchChatMode('pm'); };
+        window.switchChatMode = function(mode) { currentChatMode = mode; document.querySelectorAll('.chat-tab-btn').forEach(b => b.classList.remove('active-chat-tab')); document.getElementById(`chat-tab-${mode}`).classList.add('active-chat-tab'); if(mode === 'pm' && !activePmTargetNode) { document.getElementById('logs').innerHTML = '<div style="padding:20px; text-align:center; color:var(--text-dim); font-size:11px;">Tap a user\'s avatar in global stream to hook private link.</div>'; return; } loadChatStream(); };
+        window.startPmWithUser = function(targetUser) { if(targetUser === getMyName()) return; activePmTargetNode = targetUser; document.getElementById('chat-tab-pm').innerText = `🔒 Node: ${targetUser}`; window.switchChatMode('pm'); };
         function loadChatStream() { const logs = document.getElementById('logs'); if(!logs) return; if(currentChatMode === 'global') { globalChatRef?.off(); globalChatRef?.limitToLast(40).on("value", function(snap) { renderPackets(snap, logs); }); } else { if(!activePmTargetNode) return; privateChatRef?.off(); privateChatRef?.limitToLast(40).on("value", function(snap) { renderPackets(snap, logs, true); }); } }
-        function renderPackets(snap, targetElement, filterPm = false) { targetElement.innerHTML = ''; snap.forEach(function(child) { const d = child.val(); if(filterPm) { const combinedKey = [getMyName(), activePmTargetNode].sort().join("___"); if(d.pmKey !== combinedKey) return; } targetElement.innerHTML += `<div class="chat-bubble-row" onclick="window.startPmWithUser('${d.nickname}')"><img class="chat-user-avatar" src="${d.avatar || defaultAvatar}"><div class="chat-msg-container"><div class="chat-meta-header"><span class="badge-system badge-${d.badge}">${d.badge}</span><b>${d.nickname}</b></div><div class="chat-bubble-payload">${d.message}</div></div></div>`; }); scrollChat(); }
+        
+        function renderPackets(snap, targetElement, filterPm = false) { 
+            targetElement.innerHTML = ''; 
+            snap.forEach(function(child) { 
+                const d = child.val(); if(filterPm) { const combinedKey = [getMyName(), activePmTargetNode].sort().join("___"); if(d.pmKey !== combinedKey) return; }
+                const isMe = d.nickname === getMyName();
+                const bubbleColor = isMe ? 'var(--chat-user)' : 'var(--chat-target)';
+                const alignment = isMe ? 'flex-direction: row-reverse; text-align: right;' : '';
+                const headerAlign = isMe ? 'justify-content: flex-end;' : '';
+                targetElement.innerHTML += `
+                    <div class="chat-bubble-row" style="display:flex; gap:10px; align-items:flex-start; ${alignment}" onclick="window.startPmWithUser('${d.nickname}')">
+                        <img class="chat-user-avatar" src="${d.avatar || defaultAvatar}" style="width:36px; height:36px; border-radius:50%; object-fit:cover; border:1px solid var(--border);">
+                        <div class="chat-msg-container" style="max-width:75%; background:${bubbleColor}; border:1px solid var(--border); padding:10px 14px; border-radius:14px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
+                            <div class="chat-meta-header" style="display:flex; align-items:center; gap:6px; margin-bottom:4px; font-size:11px; ${headerAlign}"><span class="badge-system badge-${d.badge}" style="padding:1px 6px; font-size:8px; font-weight:900; border-radius:4px; color:#fff; text-transform:uppercase; background:var(--accent);">${d.badge}</span><b>${d.nickname}</b></div>
+                            <div class="chat-bubble-payload" style="font-size:13px; line-height:1.45; word-break:break-word; text-align:left;">${d.message}</div>
+                        </div>
+                    </div>`; 
+            }); 
+            scrollChat(); 
+        }
 
-        const BANNED_WORDS = ["junrey teves", "junrey", "teves", "gago", "tanga", "bobo", "putangina", "puta", "pota", "pakyu", "fuck", "shit", "bitch", "ulol"];
+        const BANNED_WORDS = ["gago", "tanga", "bobo", "putangina", "puta", "pakyu", "fuck", "shit"];
         function filterAppropriateContent(text) { let filteredText = text; BANNED_WORDS.forEach(word => { let regex = new RegExp("\\b" + word + "\\b", "gi"); filteredText = filteredText.replace(regex, "*".repeat(word.length)); }); return filteredText; }
 
         window.sendMsg = function() {
@@ -357,56 +369,51 @@
             document.getElementById('msg').value = "";
         };
 
-        // ANIME CORE LOADER
+        // AUTO-UPDATED MEDIA DISPATCH MATRIX (ANIME, MANGA, MANHWA, MANHUA)
         function initBannerSlider() { clearInterval(slideInterval); const track = document.getElementById('slider-track'); slideInterval = setInterval(() => { if (track && track.children.length > 0) { currentSlide = (currentSlide + 1) % track.children.length; track.style.transform = `translateX(-${currentSlide * 25}%)`; } }, 4000); }
         async function fetchDeepAnimeMetadata(animeId, delayTime) { try { await new Promise(r => setTimeout(r, delayTime)); const staffRes = await fetch(`https://api.jikan.moe/v4/anime/${animeId}/staff`), staffData = await staffRes.json(); let director = "Production Committee"; if(staffData.data) { const dObj = staffData.data.find(s => s.positions.some(p => p.toLowerCase().includes('director'))); if(dObj) director = dObj.person.name; } const charRes = await fetch(`https://api.jikan.moe/v4/anime/${animeId}/characters`), charData = await charRes.json(); let vaList = []; if(charData.data) { let count = 0; for(let c of charData.data) { const jaVa = c.voice_actors.find(va => va.language === 'Japanese'); if(jaVa) { vaList.push(jaVa.person.name); count++; } if(count >= 3) break; } } return { director, voiceActors: vaList.join(', ') || "TBA" }; } catch(e) { return { director: "TBA", voiceActors: "TBA" }; } }
         
         async function fetchData(query = '') { 
             try { 
-                const topRes = await fetch('https://api.jikan.moe/v4/top/anime?limit=4'), topData = await topRes.json(); 
-                const track = document.getElementById('slider-track'); 
-                if(track && !query) { 
-                    track.innerHTML = ''; 
-                    topData.data.forEach(a => { track.innerHTML += `<div class="slide-frame"><img src="${a.images.jpg.large_image_url}"><div class="slide-gradient">${sanitize(a.title)}</div></div>`; }); 
-                    initBannerSlider(); 
-                } 
+                const topRes = await fetch('https://api.jikan.moe/v4/top/anime?limit=4'), topData = await topRes.json(); const track = document.getElementById('slider-track'); 
+                if(track && !query) { track.innerHTML = ''; topData.data.forEach(a => { track.innerHTML += `<div class="slide-frame"><img src="${a.images.jpg.large_image_url}"><div class="slide-gradient">${sanitize(a.title)}</div></div>`; }); initBannerSlider(); } 
             } catch(e){} 
             try { 
-                const uFeed = document.getElementById(query ? 'explore-feed' : 'upcoming-feed'); uFeed.innerHTML = '<div style="padding:20px; color:var(--accent); font-size:12px;">Syncing matrix nodes...</div>'; 
+                const uFeed = document.getElementById(query ? 'explore-feed' : 'upcoming-feed'); uFeed.innerHTML = '<div style="padding:20px; color:var(--accent); font-size:11px; font-weight:bold;">CONNECTING SATELLITE LINKS...</div>'; 
                 const url = query ? `https://api.jikan.moe/v4/anime?q=${encodeURIComponent(query)}` : 'https://api.jikan.moe/v4/seasons/upcoming'; 
                 const res = await fetch(url), data = await res.json(); uFeed.innerHTML = ''; 
                 if(data.data) { 
-                    let items = data.data.slice(0, 6); let dAcc = 0; 
-                    items.forEach((item) => { 
-                        const studio = item.studios?.[0]?.name || 'TBA'; const cardId = `deep-${item.mal_id}`; 
-                        uFeed.innerHTML += `<div class="app-card"><div class="card-body-core"><div class="card-media-box"><img src="${item.images.jpg.image_url}"></div><div class="card-meta-pane"><h3>${sanitize(item.title)}</h3><div class="info-row"><b>Studio:</b> ${sanitize(studio)}</div><div class="info-row"><b>Source:</b> ${sanitize(item.source || 'Original')}</div></div></div><div class="deep-details-drawer" id="${cardId}"><div class="info-row"><b>Director:</b> Loading...</div></div><div class="card-footer-actions"><button class="btn-action-trigger" onclick="window.playVideo('${item.trailer?.url || ''}')">🎬 TRAILER</button><a class="btn-action-trigger" href="${item.url || '#'}" target="_blank">🔗 LINK</a></div></div>`; 
-                        dAcc += 300; fetchDeepAnimeMetadata(item.mal_id, dAcc).then(extra => { const box = document.getElementById(cardId); if(box) { box.innerHTML = `<div class="info-row"><b>Director:</b> ${sanitize(extra.director)}</div><div class="info-row"><b>Cast:</b> <span class="va-text-highlight">${sanitize(extra.voiceActors)}</span></div>`; } }); 
+                    data.data.slice(0, 6).forEach((item, idx) => { 
+                        const cardId = `deep-${item.mal_id}`; 
+                        uFeed.innerHTML += `<div class="app-card"><div class="card-body-core"><div class="card-media-box"><img src="${item.images.jpg.image_url}"></div><div class="card-meta-pane"><h3>${sanitize(item.title)}</h3><div class="info-row"><b>Studio:</b> ${sanitize(item.studios?.[0]?.name || 'TBA')}</div><div class="info-row"><b>Source:</b> ${sanitize(item.source || 'Original')}</div></div></div><div class="deep-details-drawer" id="${cardId}"><div class="info-row"><b>Director:</b> Syncing Specs...</div></div><div class="card-footer-actions"><button class="btn-action-trigger" onclick="window.playVideo('${item.trailer?.url || ''}')">TRAILER</button><a class="btn-action-trigger" href="${item.url || '#'}" target="_blank">NEWS LINK</a></div></div>`; 
+                        fetchDeepAnimeMetadata(item.mal_id, idx * 300).then(extra => { const box = document.getElementById(cardId); if(box) { box.innerHTML = `<div class="info-row"><b>Director:</b> ${sanitize(extra.director)}</div><div class="info-row"><b>Voice Cast:</b> <span class="va-text-highlight">${sanitize(extra.voiceActors)}</span></div>`; } }); 
                     }); 
                 } 
             } catch(e){} 
             if(!query) { 
                 try { 
-                    const mFeed = document.getElementById('manga-feed'); const res = await fetch('https://api.jikan.moe/v4/top/manga?limit=6'), data = await res.json(); mFeed.innerHTML = ''; 
-                    data.data.forEach(item => { mFeed.innerHTML += `<div class="app-card"><div class="card-body-core"><div class="card-media-box"><img src="${item.images.jpg.image_url}"></div><div class="card-meta-pane"><h3>${sanitize(item.title)}</h3><div class="info-row"><b>Author:</b> ${sanitize(item.authors?.[0]?.name || 'TBA')}</div></div></div><div class="card-footer-actions"><a class="btn-action-trigger" href="${item.url}" target="_blank" style="border-radius:0 0 16px 16px;">📖 ARCHIVE SPECS</a></div></div>`; }); 
+                    const mFeed = document.getElementById('manga-feed'); mFeed.innerHTML = ''; 
+                    // COMBINED SEARCH FOR MANGA, MANHWA, MANHUA UP-TO-DATE MIX
+                    const res = await fetch('https://api.jikan.moe/v4/top/manga?limit=9'), data = await res.json(); 
+                    data.data.forEach(item => { 
+                        let typeBadge = item.type || "Manga";
+                        mFeed.innerHTML += `<div class="app-card"><div class="card-body-core"><div class="card-media-box"><img src="${item.images.jpg.image_url}"></div><div class="card-meta-pane"><span style="font-size:9px; color:var(--accent); font-weight:800; text-transform:uppercase;">[${typeBadge}]</span><h3>${sanitize(item.title)}</h3><div class="info-row"><b>Author/Artist:</b> ${sanitize(item.authors?.[0]?.name || 'TBA')}</div></div></div><div class="card-footer-actions"><a class="btn-action-trigger" href="${item.url}" target="_blank" style="width:100%;">READ DATASHEET</a></div></div>`; 
+                    }); 
                 } catch(e){} 
             } 
         }
 
-        window.playVideo = function(url) { if(!url) { alert("No official trailer found."); return; } let embed = url; if(url.includes("v=")) embed = `https://www.youtube.com/embed/${url.split("v=")[1].split("&")[0]}?autoplay=1`; else if(url.includes("youtu.be/")) embed = `https://www.youtube.com/embed/${url.split("youtu.be/")[1].split("?")[0]}?autoplay=1`; document.getElementById('videoIframe').src = embed; document.getElementById('videoModal').style.display = 'flex'; }; window.closeVideo = function() { document.getElementById('videoModal').style.display = 'none'; document.getElementById('videoIframe').src = ''; };
-        if(localStorage.getItem('omniverse_nick')) document.getElementById('nick').value = localStorage.getItem('omniverse_nick'); if(localStorage.getItem('omniverse_badge')) document.getElementById('userBadge').value = localStorage.getItem('omniverse_badge'); if(localStorage.getItem('omniverse_avatar')) { userAvatarBase64 = localStorage.getItem('omniverse_avatar'); document.getElementById('avatarPreview').src = userAvatarBase64; }
+        window.playVideo = function(url) { if(!url) { alert("No official video linked."); return; } let embed = url; if(url.includes("v=")) embed = `https://www.youtube.com/embed/${url.split("v=")[1].split("&")[0]}?autoplay=1`; else if(url.includes("youtu.be/")) embed = `https://www.youtube.com/embed/${url.split("youtu.be/")[1].split("?")[0]}?autoplay=1`; document.getElementById('videoIframe').src = embed; document.getElementById('videoModal').style.display = 'flex'; }; window.closeVideo = function() { document.getElementById('videoModal').style.display = 'none'; document.getElementById('videoIframe').src = ''; };
+        if(localStorage.getItem('omniverse_nick')) document.getElementById('nick').value = localStorage.getItem('omniverse_nick'); if(localStorage.getItem('omniverse_badge')) document.getElementById('userBadge').value = localStorage.getItem('omniverse_badge'); if(localStorage.getItem('omniverse_avatar')) { userAvatarBase64 = localStorage.getItem('omniverse_avatar'); document.getElementById('avatarPreview').src = userAvatarBase64; } else { document.getElementById('avatarPreview').src = defaultAvatar; }
         window.saveProfileSettings = function() { localStorage.setItem('omniverse_nick', sanitize(document.getElementById('nick').value) || "Guest Node"); localStorage.setItem('omniverse_badge', document.getElementById('userBadge').value || "member"); }; document.getElementById('fileInput').addEventListener('change', function(e) { const file = e.target.files[0]; if (file && file.size <= 300000) { const reader = new FileReader(); reader.onload = function(evt) { userAvatarBase64 = evt.target.result; document.getElementById('avatarPreview').src = userAvatarBase64; localStorage.setItem('omniverse_avatar', userAvatarBase64); }; reader.readAsDataURL(file); } });
         window.search = function() { const q = document.getElementById('searchInput').value; if(q.trim()) { window.switchAppView('explore'); fetchData(q); } };
         
         window.onload = function() { 
             try { 
                 const config = { databaseURL: "https://studio-8164628274-c414a-default-rtdb.asia-southeast1.firebasedatabase.app/" }; 
-                firebase.initializeApp(config); 
-                globalChatRef = firebase.database().ref("chat_messages"); 
-                privateChatRef = firebase.database().ref("private_messages"); 
-                loadChatStream(); 
+                firebase.initializeApp(config); globalChatRef = firebase.database().ref("chat_messages"); privateChatRef = firebase.database().ref("private_messages"); loadChatStream(); 
             } catch(e){} 
-            fetchData(); 
-            window.searchMusicDatabase(); // Agad nitong lo-load-in ang default search para hindi maging blangko!
+            fetchData(); document.getElementById('musicTitle').innerText = tracks[0].title; window.searchMusicDatabase();
         };
     </script>
 </body>
