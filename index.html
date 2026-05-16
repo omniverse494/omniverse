@@ -192,6 +192,8 @@
     const defaultAvatar = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>";
     let userAvatarBase64 = defaultAvatar; let currentSlide = 0; let slideInterval;
     let globalChatRef, privateChatRef, currentChatMode = 'global', activePmTargetNode = '';
+    
+    // SAFE, LEGAL & FREE LIVESTREAM LINKS
     const tracks = [
         { title: "Official Anime Radio Terminal", url: "https://stream.zeno.fm/03w7v6w37fevv" },
         { title: "Anison Hits Live Archive", url: "https://stream.zeno.fm/3r08w9p37fevv" },
@@ -211,15 +213,51 @@
         if(viewId === 'chat') { setTimeout(scrollChat, 50); }
     };
 
+    // PINALAKAS NA AUDIO TRIGGER LOGIC
     window.toggleMusic = function() {
         const aud = document.getElementById('mainAudio'), disc = document.getElementById('musicDisc'), icon = document.getElementById('playIconSvg');
-        if (!aud.src || aud.src === "" || aud.src.includes(window.location.hostname)) { aud.src = tracks[currentTrackIdx].url; aud.load(); }
+        
+        if (!aud.src || aud.src === "" || aud.src.includes(window.location.hostname)) { 
+            aud.src = tracks[currentTrackIdx].url; 
+        }
+        
         if (aud.paused) { 
-            aud.play().then(() => { disc.classList.add('is-spinning'); icon.innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`; })
-            .catch(() => { aud.load(); aud.play().then(() => { disc.classList.add('is-spinning'); icon.innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`; }); }); 
-        } else { aud.pause(); disc.classList.remove('is-spinning'); icon.innerHTML = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`; }
+            // Pinupwersa ang stream connection bago patakbuhin ang kanta
+            aud.load();
+            var playPromise = aud.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(() => { 
+                    disc.classList.add('is-spinning'); 
+                    icon.innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`; 
+                }).catch((err) => {
+                    console.log("Autoplay blocked. Re-triggering loading cycle...");
+                    aud.load();
+                    setTimeout(function() {
+                        aud.play();
+                        disc.classList.add('is-spinning');
+                        icon.innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
+                    }, 300);
+                });
+            }
+        } else { 
+            aud.pause(); 
+            disc.classList.remove('is-spinning'); 
+            icon.innerHTML = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`; 
+        }
     };
-    window.nextMusic = function() { currentTrackIdx = (currentTrackIdx + 1) % tracks.length; document.getElementById('musicTitle').innerText = tracks[currentTrackIdx].title; const aud = document.getElementById('mainAudio'); aud.src = tracks[currentTrackIdx].url; aud.load(); aud.play().then(() => { document.getElementById('musicDisc').classList.add('is-spinning'); document.getElementById('playIconSvg').innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`; }).catch(() => {}); };
+
+    window.nextMusic = function() { 
+        currentTrackIdx = (currentTrackIdx + 1) % tracks.length; 
+        document.getElementById('musicTitle').innerText = tracks[currentTrackIdx].title; 
+        const aud = document.getElementById('mainAudio'); 
+        aud.src = tracks[currentTrackIdx].url; 
+        aud.load(); 
+        aud.play().then(() => { 
+            document.getElementById('musicDisc').classList.add('is-spinning'); 
+            document.getElementById('playIconSvg').innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
+        }).catch(() => {}); 
+    };
 
     function getMyName() { return localStorage.getItem('omniverse_nick') || "Guest Node"; }
     function scrollChat() { const l = document.getElementById('logs'); if(l) l.scrollTop = l.scrollHeight; }
@@ -240,4 +278,4 @@
     window.onload = function() { try { const config = { databaseURL: "https://studio-8164628274-c414a-default-rtdb.asia-southeast1.firebasedatabase.app/" }; firebase.initializeApp(config); globalChatRef = firebase.database().ref("chat_messages"); privateChatRef = firebase.database().ref("private_messages"); loadChatStream(); } catch(e){} fetchData(); };
 </script>
 </body>
-    </html>
+</html>
