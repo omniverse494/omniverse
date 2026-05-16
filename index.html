@@ -166,9 +166,7 @@
                         <button id="chat-tab-global" class="chat-tab-btn active-chat-tab" onclick="window.switchChatMode('global')">🌐 Global Matrix</button>
                         <button id="chat-tab-pm" class="chat-tab-btn" onclick="window.switchChatMode('pm')">🔒 PM: Secure Node</button>
                     </div>
-
                     <div class="chat-logs-viewport" id="logs"></div>
-
                     <div class="chat-input-dock">
                         <input type="text" id="msg" placeholder="Transmit encrypted payload..." onkeydown="if(event.key==='Enter') window.sendMsg()">
                         <button onclick="window.sendMsg()">⚡</button>
@@ -178,18 +176,15 @@
 
             <div id="panel-audio" class="view-panel">
                 <div class="music-player-card" style="background: var(--surface); padding: 20px; border-radius: 16px; border: 1px solid #1a1a26; text-align: center; max-width: 500px; margin: 0 auto;">
-                    
                     <div class="disc-wrapper" style="margin-bottom: 20px; display: flex; justify-content: center;">
                         <div class="music-disc-node" id="musicDisc" style="width: 130px; height: 130px; border-radius: 50%; background: #0c0c12; border: 4px solid var(--accent); position: relative; display: flex; align-items: center; justify-content: center;">
                             <div class="disc-center-core" style="width: 35px; height: 35px; border-radius: 50%; background: var(--surface); border: 2px solid #222;"></div>
                         </div>
                     </div>
-                    
                     <div class="music-meta-block">
                         <h2 id="musicTitle" style="font-size:15px; color:#fff; margin-bottom:4px; font-weight: bold;">🎵 Select a track or search below...</h2>
                         <p style="font-size:11px; color:var(--text-dim); margin-bottom:15px;">Omniverse Audio Deck Interface</p>
                     </div>
-
                     <div style="display:flex; justify-content:center; gap:20px; align-items:center; margin-bottom:20px;">
                         <button class="player-btn" onclick="window.toggleMusic()" id="playIconSvg" style="width:50px; height:50px; border-radius:50%; background:var(--accent); border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; color:#fff;">
                             <svg viewBox="0 0 24 24" style="width:24px; height:24px; fill:currentColor;"><path d="M8 5v14l11-7z"/></svg>
@@ -198,9 +193,7 @@
                             <svg viewBox="0 0 24 24" style="width:20px; height:20px; fill:currentColor;"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
                         </button>
                     </div>
-
                     <hr style="border:0; border-top:1px solid #1a1a26; margin:15px 0;">
-
                     <div class="music-search-box" style="text-align: left;">
                         <label style="font-size:11px; color:var(--accent); font-weight:bold; letter-spacing:1px; display:block; margin-bottom:5px;">OMNIVERSE DECK SEARCH</label>
                         <div style="display:flex; gap:5px; margin-bottom:10px;">
@@ -209,7 +202,6 @@
                                 🔍 SEARCH
                             </button>
                         </div>
-                        
                         <div id="musicSearchResultsPane" style="max-height:160px; overflow-y:auto; background:#040408; border-radius:8px; border:1px solid #141420; padding:5px;">
                             <div style="padding:15px; text-align:center; color:var(--text-dim); font-size:12px;">
                                 Search results will load here. Try typing "Phonk"!
@@ -262,8 +254,8 @@
             <span class="close-modal-trigger" onclick="window.closeVideo()">×</span>
             <iframe id="videoIframe" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
-    </div>
-     <script>
+        </div>
+    <script>
         const defaultAvatar = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm0-4h-2V7h2v8z'/></svg>";
         let userAvatarBase64 = defaultAvatar; let currentSlide = 0; let slideInterval;
         let globalChatRef, privateChatRef, currentChatMode = 'global', activePmTargetNode = '';
@@ -461,4 +453,5 @@
         window.onload = function() { try { const config = { databaseURL: "https://studio-8164628274-c414a-default-rtdb.asia-southeast1.firebasedatabase.app/" }; firebase.initializeApp(config); globalChatRef = firebase.database().ref("chat_messages"); privateChatRef = firebase.database().ref("private_messages"); loadChatStream(); } catch(e){} fetchData(); if(document.getElementById('musicSearchResultsPane')) { window.searchMusicDatabase(); } };
     </script>
 </body>
-    </html>            
+</html>
+        
