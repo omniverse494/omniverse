@@ -137,6 +137,9 @@
             .nexus { height: 350px; }
         }
     </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/8.10.1/firebase-app.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/8.10.1/firebase-database.min.js"></script>
 </head>
 <body>
 
@@ -151,7 +154,7 @@
 
 <div class="banner">
     <div class="banner-track" id="banner-track">
-        <div class="slide"><div style="padding:100px; color:white; text-align:center;">Loading Global Spotlight...</div></div>
+        <div class="slide"><div style="padding:100px; color:white; text-align:center;">Connecting Global Hub...</div></div>
     </div>
     <div class="banner-text">
         <h2 id="banner-title">Trending Spotlight</h2>
@@ -172,10 +175,14 @@
         </div>
         
         <span class="label" id="feed-label-1">Upcoming Anime & Trailers</span>
-        <div id="upcoming-feed"></div>
+        <div id="upcoming-feed">
+            <div style="padding:20px; color:var(--sub); text-align:center;">Synchronizing Anime Database...</div>
+        </div>
         
         <span class="label" id="feed-label-2">Top Manga, Manhwa, & Manhua</span>
-        <div id="manga-feed"></div>
+        <div id="manga-feed">
+            <div style="padding:20px; color:var(--sub); text-align:center;">Synchronizing Manga Trackers...</div>
+        </div>
     </div>
 
     <div class="side">
@@ -191,8 +198,8 @@
                 </div>
                 
                 <div class="msg-row">
-                    <input type="text" id="msg" placeholder="Type a message and press enter...">
-                    <button class="send-btn" id="sendBtn">Send</button>
+                    <input type="text" id="msg" placeholder="Type a message and press enter..." onkeydown="if(event.key === 'Enter') window.sendMsg()">
+                    <button class="send-btn" onclick="window.sendMsg()">Send</button>
                 </div>
             </div>
         </div>
@@ -204,46 +211,31 @@
             </div>
         </div>
     </div>
-</div>
-
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, push, onChildAdded, limitToLast } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-    const firebaseConfig = {
-        databaseURL: "https://studio-8164628274-c414a-default-rtdb.asia-southeast1.firebasedatabase.app/"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const database = getDatabase(app);
-    const dbRef = ref(database, "chat_messages");
-
+            </div>
+    <script>
     const defaultAvatar = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>";
     let userAvatarBase64 = defaultAvatar;
 
-    if(localStorage.getItem('omniverse_nick')) {
-        document.getElementById('nick').value = localStorage.getItem('omniverse_nick');
-    }
+    if(localStorage.getItem('omniverse_nick')) document.getElementById('nick').value = localStorage.getItem('omniverse_nick');
     if(localStorage.getItem('omniverse_avatar')) {
         userAvatarBase64 = localStorage.getItem('omniverse_avatar');
         document.getElementById('avatarPreview').src = userAvatarBase64;
     }
 
     window.saveProfileSettings = function() {
-        const nickname = document.getElementById('nick').value || "Guest";
-        localStorage.setItem('omniverse_nick', nickname);
-    }
+        localStorage.setItem('omniverse_nick', document.getElementById('nick').value || "Guest");
+    };
 
-    document.getElementById('fileInput').addEventListener('change', function(event) {
-        const file = event.target.files[0];
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
         if (file) {
-            if (file.size > 300000) { 
-                alert("The selected image file is too large! Max 300KB allowed.");
+            if (file.size > 250000) {
+                alert("Image size should be below 250KB.");
                 return;
             }
             const reader = new FileReader();
-            reader.onload = function(e) {
-                userAvatarBase64 = e.target.result;
+            reader.onload = function(evt) {
+                userAvatarBase64 = evt.target.result;
                 document.getElementById('avatarPreview').src = userAvatarBase64;
                 localStorage.setItem('omniverse_avatar', userAvatarBase64);
             };
@@ -251,112 +243,112 @@
         }
     });
 
-    function dispatchMessage() {
-        const n = document.getElementById('nick').value || "Guest";
-        const m = document.getElementById('msg').value;
-        if(m.trim()) {
-            window.saveProfileSettings();
-            push(dbRef, {
-                nickname: n,
-                avatar: userAvatarBase64,
-                message: m,
-                timestamp: Date.now()
+    // FIREBASE INITIALIZATION WITHOUT EXTERNAL BLOCKS
+    function startChat() {
+        try {
+            const config = { databaseURL: "https://studio-8164628274-c414a-default-rtdb.asia-southeast1.firebasedatabase.app/" };
+            firebase.initializeApp(config);
+            const chatDb = firebase.database().ref("chat_messages");
+
+            window.sendMsg = function() {
+                const m = document.getElementById('msg').value;
+                if(m.trim()) {
+                    window.saveProfileSettings();
+                    chatDb.push({
+                        nickname: document.getElementById('nick').value || "Guest",
+                        avatar: userAvatarBase64,
+                        message: m,
+                        timestamp: firebase.database.ServerValue.TIMESTAMP
+                    });
+                    document.getElementById('msg').value = "";
+                }
+            };
+
+            chatDb.limitToLast(30).on("child_added", function(snap) {
+                const d = snap.val();
+                const logs = document.getElementById('logs');
+                const pic = d.avatar || defaultAvatar;
+                logs.innerHTML += `
+                    <div class="chat-row">
+                        <img class="chat-avatar" src="${pic}" alt="avatar">
+                        <div class="chat-body">
+                            <b style="color:var(--accent); font-size:12px; display:block;">${d.nickname}</b>
+                            <span style="font-size:13px;">${d.message}</span>
+                        </div>
+                    </div>`;
+                logs.scrollTop = logs.scrollHeight;
             });
-            document.getElementById('msg').value = "";
+        } catch(err) {
+            console.log("Chat hold:", err);
         }
     }
 
-    document.getElementById('sendBtn').addEventListener('click', dispatchMessage);
-    document.getElementById('msg').addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') dispatchMessage();
-    });
-
-    onChildAdded(limitToLast(dbRef, 40), (snapshot) => {
-        const data = snapshot.val();
-        const l = document.getElementById('logs');
-        const imgPic = data.avatar || defaultAvatar;
-
-        l.innerHTML += `
-            <div class="chat-row">
-                <img class="chat-avatar" src="${imgPic}" alt="avatar">
-                <div class="chat-body">
-                    <b style="color:var(--accent); font-size:12px; display:block;">${data.nickname}</b>
-                    <span style="font-size:13px;">${data.message}</span>
-                </div>
-            </div>`;
-        l.scrollTop = l.scrollHeight;
-    });
-</script>
-
-<script>
+    // JIKAN ENGINE PIPELINE
     async function fetchData(q = '') {
         try {
-            const topAnimeRes = await fetch('https://api.jikan.moe/v4/top/anime?filter=bypopularity');
-            const topAnimeData = await topAnimeRes.json();
-            if(topAnimeData.data && topAnimeData.data.length >= 4) {
-                const bannerTrack = document.getElementById('banner-track');
-                bannerTrack.innerHTML = '';
-                topAnimeData.data.slice(0, 4).forEach(anime => {
-                    const imgUrl = anime.images.jpg.large_image_url;
-                    bannerTrack.innerHTML += `
-                        <div class="slide">
-                            <img src="${imgUrl}" alt="${anime.title}" style="object-position: 50% 20%;">
-                        </div>`;
+            const bRes = await fetch('https://api.jikan.moe/v4/top/anime?filter=bypopularity');
+            const bData = await bRes.json();
+            if(bData.data && bData.data.length >= 4) {
+                const track = document.getElementById('banner-track');
+                track.innerHTML = '';
+                bData.data.slice(0, 4).forEach(a => {
+                    track.innerHTML += `<div class="slide"><img src="${a.images.jpg.large_image_url}" alt="banner" style="object-position: 50% 25%;"></div>`;
                 });
             }
+        } catch(e) { console.log(e); }
 
-            const api = q ? `https://api.jikan.moe/v4/anime?q=${q}` : 'https://api.jikan.moe/v4/seasons/upcoming';
-            const res = await fetch(api);
+        try {
+            const endpoint = q ? `https://api.jikan.moe/v4/anime?q=${encodeURIComponent(q)}` : 'https://api.jikan.moe/v4/seasons/upcoming';
+            const res = await fetch(endpoint);
             const data = await res.json();
             const uFeed = document.getElementById('upcoming-feed');
             uFeed.innerHTML = '';
 
-            if(q) {
-                document.getElementById('feed-label-1').innerText = `Search Results for: ${q}`;
+            document.getElementById('feed-label-1').innerText = q ? `Search Results for: ${q}` : "Upcoming Anime & Trailers";
+
+            if(data.data && data.data.length > 0) {
+                data.data.slice(0, 10).forEach(item => {
+                    const studio = item.studios && item.studios[0] ? item.studios[0].name : 'TBA';
+                    uFeed.innerHTML += `
+                        <div class="card">
+                            <img src="${item.images.jpg.large_image_url}" alt="Cover">
+                            <div class="details">
+                                <h3>${item.title}</h3>
+                                <div class="meta">
+                                    <b>Studio:</b> ${studio}<br>
+                                    <b>Source:</b> ${item.source || 'N/A'} | <b>Score:</b> ⭐ ${item.score || 'TBA'}<br>
+                                    <b>Type:</b> ${item.type || 'TV'} | <b>Episodes:</b> ${item.episodes || 'TBA'}<br>
+                                    <b>Status:</b> ${item.status}
+                                </div>
+                                <div class="links">
+                                    <a href="${item.url}" target="_blank" class="btn-portal">📺 Official Database Info</a>
+                                    <a href="${item.trailer?.url || 'https://youtube.com'}" target="_blank" class="btn-portal">🎬 Play Trailer</a>
+                                </div>
+                            </div>
+                        </div>`;
+                });
             } else {
-                document.getElementById('feed-label-1').innerText = "Upcoming Anime & Trailers";
+                uFeed.innerHTML = `<div style="padding:20px; color:var(--sub);">No matches found.</div>`;
             }
+        } catch(e) { console.log(e); }
 
-            data.data.slice(0, 10).forEach(item => {
-                const infoLink = item.url; 
-                const trailerLink = item.trailer?.url || "https://www.youtube.com";
-                const studioName = item.studios && item.studios[0] ? item.studios[0].name : 'TBA';
-
-                uFeed.innerHTML += `
-                    <div class="card">
-                        <img src="${item.images.jpg.large_image_url}" alt="Cover">
-                        <div class="details">
-                            <h3>${item.title}</h3>
-                            <div class="meta">
-                                <b>Studio:</b> ${studioName}<br>
-                                <b>Source:</b> ${item.source || 'N/A'} | <b>Score:</b> ⭐ ${item.score || 'TBA'}<br>
-                                <b>Type:</b> ${item.type || 'TV'} | <b>Episodes:</b> ${item.episodes || 'TBA'}<br>
-                                <b>Status:</b> ${item.status}
-                            </div>
-                            <div class="links">
-                                <a href="${infoLink}" target="_blank" class="btn-portal">📺 Official Database Info</a>
-                                <a href="${trailerLink}" target="_blank" class="btn-portal">🎬 Play Trailer</a>
-                            </div>
-                        </div>
-                    </div>`;
-            });
-
-            if(!q) {
+        if(!q) {
+            try {
                 const mRes = await fetch('https://api.jikan.moe/v4/top/manga');
                 const mData = await mRes.json();
                 const mFeed = document.getElementById('manga-feed');
                 mFeed.innerHTML = '';
                 
                 mData.data.slice(0, 10).forEach(item => {
-                    const authorName = item.authors && item.authors[0] ? item.authors[0].name : 'N/A';
+                    const auth = item.authors && item.authors[0] ? item.authors[0].name : 'N/A';
                     mFeed.innerHTML += `
                         <div class="card">
                             <img src="${item.images.jpg.large_image_url}" alt="Cover">
                             <div class="details">
                                 <h3>${item.title}</h3>
                                 <div class="meta">
-                                    <b>Author/Artist:</b> ${authorName}<br>
-                                    <b>Type:</b> ${item.type} (Manga/Manhwa/Manhua)<br>
+                                    <b>Author:</b> ${auth}<br>
+                                    <b>Type:</b> ${item.type}<br>
                                     <b>Rank:</b> #${item.rank} | <b>Chapters:</b> ${item.chapters || 'Ongoing'}<br>
                                     <b>Score:</b> ⭐ ${item.score}
                                 </div>
@@ -366,7 +358,36 @@
                             </div>
                         </div>`;
                 });
+            } catch(e) { console.log(e); }
 
-                const newsRes = await fetch('https://api.jikan.moe/v4/watch/episodes/popular');
-                const newsData = await newsRes.json();
-                const ne
+            try {
+                const nRes = await fetch('https://api.jikan.moe/v4/watch/episodes/popular');
+                const nData = await nRes.json();
+                const nFeed = document.getElementById('news-feed');
+                nFeed.innerHTML = '';
+                
+                nData.data.slice(0, 5).forEach(news => {
+                    nFeed.innerHTML += `
+                        <div class="news-item">
+                            <b><a href="${news.entry.url}" target="_blank">📣 Broadcast Update: ${news.entry.title}</a></b>
+                            Global licensed broadcast pipelines updated.
+                            <span class="news-meta">Click to track full legal license tracks</span>
+                        </div>`;
+                });
+            } catch(e) { console.log(e); }
+        }
+    }
+
+    window.search = function() {
+        const query = document.getElementById('searchInput').value;
+        fetchData(query);
+    };
+
+    // RUN TIME ENGINE TRIGGER
+    window.onload = function() {
+        startChat();
+        fetchData();
+    };
+</script>
+</body>
+</html>       
