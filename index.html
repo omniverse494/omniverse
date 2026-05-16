@@ -3,58 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="Omniverse - Anime, Manga, and Manhwa Database Dashboard.">
+    <meta name="description" content="Omniverse - AI Core Analytics Dashboard and Media Engine.">
     <meta name="google-site-verification" content="s1LpdFQDsO-k3mGLHAsP62N2V955khk8kZsyeon9G1M" />
     <title>OMNIVERSE</title>
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8691102556824057" crossorigin="anonymous"></script>
 
     <style>
-        /* CSS VARIABLES FOR SEAMLESS WHITE/BLACK TOGGLE */
         :root { 
-            --bg: #0d0d0d; 
-            --panel: #161616; 
+            --bg: #070708; 
+            --panel: rgba(22, 22, 26, 0.7); 
             --accent: #FF4500; 
-            --text: #FFF; 
-            --sub: #aaaaaa; 
-            --border: #262626;
-            --input-bg: #000;
+            --accent-glow: rgba(255, 69, 0, 0.25);
+            --ai-accent: #00E5FF;
+            --ai-glow: rgba(0, 229, 255, 0.25);
+            --text: #F3F4F6; 
+            --sub: #9CA3AF; 
+            --border: rgba(255, 255, 255, 0.07);
+            --input-bg: #0d0d11;
             --input-text: #FFF;
-            --banner-filter: brightness(0.5);
+            --banner-filter: brightness(0.45) contrast(1.1);
+            --glass-blur: blur(12px);
         }
         .light-mode { 
-            --bg: #F5F5F5; 
-            --panel: #FFF; 
-            --accent: #E74C3C; 
-            --text: #111; 
-            --sub: #555555; 
-            --border: #DDD;
-            --input-bg: #EAEAEA;
-            --input-text: #111;
-            --banner-filter: brightness(0.75);
+            --bg: #F3F4F6; 
+            --panel: rgba(255, 255, 255, 0.75); 
+            --accent: #EF4444; 
+            --accent-glow: rgba(239, 68, 68, 0.15);
+            --ai-accent: #0EA5E9;
+            --ai-glow: rgba(14, 165, 233, 0.15);
+            --text: #111827; 
+            --sub: #4B5563; 
+            --border: rgba(0, 0, 0, 0.08);
+            --input-bg: #E5E7EB;
+            --input-text: #111827;
+            --banner-filter: brightness(0.85);
+            --glass-blur: blur(12px);
         }
         
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; transition: background 0.2s, color 0.2s, border-color 0.2s; }
-        body { background: var(--bg); color: var(--text); overflow-x: hidden; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: var(--text); overflow-x: hidden; padding-bottom: 75px; min-height: 100vh; }
 
-        /* HEADER & SEARCH BAR */
-        header { padding: 15px 20px; background: var(--panel); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; gap: 15px; }
-        header h1 { font-size: 20px; color: var(--text); letter-spacing: 2px; font-weight: 800; }
-        header h1 span { color: var(--accent); }
+        /* HEADER INTERFACE */
+        header { padding: 16px 24px; background: var(--panel); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+        header h1 { font-size: 18px; font-weight: 900; letter-spacing: 3px; }
+        header h1 span { color: var(--accent); text-shadow: 0 0 10px var(--accent-glow); }
         
-        .search-area { flex: 1; display: flex; max-width: 500px; }
-        .search-area input { width: 100%; padding: 10px 15px; background: var(--input-bg); border: 1px solid var(--border); color: var(--input-text); border-radius: 4px 0 0 4px; outline: none; font-size: 14px; }
-        .search-area button { background: var(--accent); border: none; padding: 0 20px; color: white; font-weight: 600; border-radius: 0 4px 4px 0; cursor: pointer; }
+        .search-area { flex: 1; display: flex; max-width: 450px; position: relative; }
+        .search-area input { width: 100%; padding: 10px 16px; background: var(--input-bg); border: 1px solid var(--border); color: var(--input-text); border-radius: 20px; outline: none; font-size: 13px; padding-right: 45px; transition: all 0.3s ease; }
+        .search-area input:focus { border-color: var(--accent); box-shadow: 0 0 12px var(--accent-glow); }
+        .search-area button { position: absolute; right: 4px; top: 4px; background: var(--accent); border: none; width: 32px; height: 32px; border-radius: 50%; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         
-        /* THEME TOGGLE BUTTON */
-        .theme-btn { background: transparent; color: var(--text); border: 1px solid var(--border); padding: 8px 15px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: 600; text-transform: uppercase; }
+        .theme-btn { background: transparent; color: var(--text); border: 1px solid var(--border); padding: 8px 16px; border-radius: 20px; font-size: 10px; cursor: pointer; font-weight: 700; letter-spacing: 1px; }
         .theme-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-        /* DYNAMIC AUTO-SWIPE BANNER SYSTEM */
-        .banner { width: 100%; height: 320px; overflow: hidden; position: relative; border-bottom: 1px solid var(--border); background: #111; }
-        .banner-track { display: flex; width: 400%; height: 100%; animation: slide 16s infinite; }
-        .banner-track .slide { width: 25%; height: 100%; position: relative; background: #111; }
-        .banner-track img { width: 100%; height: 100%; object-fit: cover; filter: var(--banner-filter); display: block; }
+        /* HERO MATRIX BANNER */
+        .banner { width: 100%; height: 260px; overflow: hidden; position: relative; border-bottom: 1px solid var(--border); background: #000; }
+        .banner-track { display: flex; width: 400%; height: 100%; animation: slide 20s infinite ease-in-out; }
+        .banner-track .slide { width: 25%; height: 100%; position: relative; }
+        .banner-track img { width: 100%; height: 100%; object-fit: cover; filter: var(--banner-filter); }
         
         @keyframes slide { 
             0%, 20% { transform: translateX(0); } 
@@ -63,176 +70,333 @@
             75%, 95% { transform: translateX(-75%); } 
         }
         
-        .banner-text { position: absolute; bottom: 20px; left: 20px; z-index: 10; pointer-events: none; max-width: 80%; }
-        .banner-text h2 { font-size: 28px; font-weight: 800; color: #FFF; text-shadow: 0 2px 10px rgba(0,0,0,0.9); }
-        .banner-text p { font-size: 14px; color: #FF4500; font-weight: bold; text-shadow: 0 1px 5px rgba(0,0,0,0.9); margin-top: 5px; }
+        .banner-text { position: absolute; bottom: 24px; left: 24px; z-index: 10; pointer-events: none; max-width: 80%; }
+        .banner-text h2 { font-size: 24px; font-weight: 800; color: #FFF; text-shadow: 0 4px 12px rgba(0,0,0,0.6); letter-spacing: -0.5px; }
+        .banner-text p { font-size: 12px; color: var(--accent); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; }
 
-        /* RESPONSIVE LAYOUT DESIGN */
-        .main-grid { display: flex; flex-direction: row; flex-wrap: wrap; padding: 20px; gap: 20px; max-width: 1600px; margin: 0 auto; }
-        .content { flex: 2.5; min-width: 320px; }
-        .side { flex: 1; min-width: 300px; }
+        /* VIEW ENGINE ACTIVE MODES */
+        .app-panel-view { display: none; padding: 20px; max-width: 1400px; margin: 0 auto; animation: viewFade 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        .app-panel-view.active-panel { display: block; }
+        @keyframes viewFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-        .label { font-size: 12px; font-weight: 700; color: var(--accent); text-transform: uppercase; margin: 20px 0 12px; letter-spacing: 1px; display: block; border-left: 3px solid var(--accent); padding-left: 8px; }
+        .label { font-size: 11px; font-weight: 800; color: var(--accent); text-transform: uppercase; margin: 15px 0 15px; letter-spacing: 1.5px; display: flex; align-items: center; gap: 6px; }
 
-        /* DATA CARDS WITH INTERACTIVE PORTAL LINKS */
-        .card { display: flex; gap: 15px; background: var(--panel); padding: 15px; border-radius: 6px; margin-bottom: 15px; border: 1px solid var(--border); text-decoration: none; color: inherit; }
-        .card:hover { border-color: var(--accent); }
-        .card img { width: 95px; height: 135px; object-fit: cover; border-radius: 4px; border: 1px solid var(--border); }
-        .details { flex: 1; }
-        .details h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; color: var(--text); }
-        .meta { font-size: 12px; color: var(--sub); line-height: 1.5; margin-bottom: 10px; }
-        .meta b { color: var(--text); }
-        .links { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 5px; }
+        /* COMPACT CARD SYSTEM */
+        .cards-container-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+        .card { background: var(--panel); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border: 1px solid var(--border); border-radius: 12px; padding: 14px; position: relative; display: flex; gap: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+        .card:hover { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
+        .card img { width: 85px; height: 120px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); }
+        .details { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .details h3 { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.3; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .meta { font-size: 11px; color: var(--sub); line-height: 1.4; }
+        .meta b { color: var(--text); font-weight: 600; }
+        .links { display: flex; gap: 6px; margin-top: 8px; }
         
-        .btn-portal { font-size: 11px; padding: 6px 10px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); border-radius: 4px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; cursor: pointer; }
+        .btn-portal { font-size: 10px; padding: 6px 12px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); border-radius: 20px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
         .btn-portal:hover { border-color: var(--accent); color: var(--accent); }
-
-        /* LIVE REALTIME CHAT SYSTEM (NEXUS HUB) */
-        .nexus { background: var(--panel); border: 1px solid var(--border); height: 400px; display: flex; flex-direction: column; border-radius: 6px; overflow: hidden; }
-        #logs { flex: 1; padding: 15px; overflow-y: auto; font-size: 13px; line-height: 1.5; color: var(--text); background: var(--panel); }
         
-        .chat-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
-        .chat-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border); background: #333; }
+        .card-like-btn { position: absolute; bottom: 14px; right: 14px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--text); padding: 4px 10px; border-radius: 20px; font-size: 10px; cursor: pointer; font-weight: 700; display: flex; align-items: center; gap: 4px; }
+        .card-like-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+
+        /* SECURITY NEXUS HUB INTERFACE */
+        .nexus-chat-container { max-width: 800px; margin: 0 auto; height: calc(100vh - 180px); min-height: 450px; background: var(--panel); border: 1px solid var(--border); border-radius: 16px; display: flex; flex-direction: column; overflow: hidden; }
+        
+        /* AI SYSTEM CONFIG BAR */
+        .ai-status-panel { background: rgba(0, 229, 255, 0.04); border-bottom: 1px solid rgba(0, 229, 255, 0.15); padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; font-weight: 700; color: var(--ai-accent); letter-spacing: 0.5px; }
+        .ai-toggle-btn { background: var(--input-bg); border: 1px solid rgba(0, 229, 255, 0.3); color: var(--ai-accent); padding: 4px 12px; border-radius: 20px; cursor: pointer; font-size: 10px; font-weight: 800; display: flex; align-items: center; gap: 4px; }
+        .ai-toggle-btn.ai-online { background: var(--ai-accent); color: #000; box-shadow: 0 0 10px var(--ai-glow); border-color: var(--ai-accent); }
+        
+        #logs { flex: 1; padding: 20px; overflow-y: auto; background: rgba(0,0,0,0.05); }
+        
+        .chat-row { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+        .chat-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border); }
         .chat-body { flex: 1; }
-
-        .ui { padding: 12px; background: var(--input-bg); border-top: 1px solid var(--border); }
         
-        .profile-setup { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-        .preview-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1px solid var(--accent); background: #222; }
-        .nick-in { flex: 1; padding: 8px 12px; background: var(--panel); border: 1px solid var(--border); color: var(--accent); border-radius: 4px; font-weight: 600; outline: none; font-size: 12px; }
+        .chat-header-info { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
+        .chat-badge { font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .badge-admin { background: var(--accent); color: #fff; box-shadow: 0 0 8px var(--accent-glow); }
+        .badge-otaku { background: #8B5CF6; color: #fff; }
+        .badge-member { background: #10B981; color: #fff; }
+        .badge-core { background: var(--ai-accent); color: #000; font-weight: 900; box-shadow: 0 0 8px var(--ai-glow); }
         
-        .file-label { font-size: 10px; background: var(--panel); border: 1px solid var(--border); padding: 5px 8px; border-radius: 4px; cursor: pointer; color: var(--sub); font-weight: 600; }
-        .file-label:hover { border-color: var(--accent); color: var(--text); }
+        .chat-message-bubble { font-size: 13px; color: var(--text); line-height: 1.4; word-break: break-word; }
+        .chat-react-bar { display: flex; gap: 6px; margin-top: 6px; }
+        
+        .react-badge { background: var(--input-bg); border: 1px solid var(--border); padding: 4px 10px; border-radius: 20px; font-size: 11px; cursor: pointer; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; color: var(--sub); }
+        .react-badge:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+        .react-badge svg { width: 12px; height: 12px; fill: currentColor; }
 
-        .msg-row { display: flex; gap: 8px; }
-        .msg-row input { flex: 1; padding: 10px; background: var(--panel); border: 1px solid var(--border); color: var(--text); border-radius: 4px; outline: none; font-size: 13px; }
-        .send-btn { background: var(--accent); color: white; border: none; padding: 0 15px; border-radius: 4px; font-weight: 600; cursor: pointer; }
+        .ui { padding: 16px; background: var(--input-bg); border-top: 1px solid var(--border); }
+        .profile-setup { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .preview-avatar { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 1px solid var(--accent); }
+        .nick-in { flex: 1; min-width: 120px; padding: 8px 14px; background: var(--panel); border: 1px solid var(--border); color: var(--text); border-radius: 20px; font-weight: 600; outline: none; font-size: 12px; }
+        .badge-select { padding: 8px 12px; background: var(--panel); border: 1px solid var(--border); color: var(--text); border-radius: 20px; font-size: 11px; outline: none; font-weight: 700; cursor: pointer; }
+        
+        .file-label { font-size: 11px; background: var(--panel); border: 1px solid var(--border); padding: 8px 14px; border-radius: 20px; cursor: pointer; color: var(--text); font-weight: 700; display: inline-flex; align-items: center; gap: 4px; }
+        .file-label:hover { border-color: var(--accent); background: var(--accent-glow); }
 
-        /* LIVE INDUSTRY LOGS & NEWS SECTION */
-        .news-section { background: var(--panel); border: 1px solid var(--border); border-radius: 6px; padding: 20px; margin-top: 20px; }
-        .news-grid { display: flex; flex-direction: column; gap: 15px; }
-        .news-item { border-bottom: 1px dashed var(--border); padding-bottom: 12px; font-size: 13px; color: var(--sub); }
-        .news-item:last-child { border: none; padding-bottom: 0; }
-        .news-item b { color: var(--text); display: block; margin-bottom: 4px; font-size: 14px; text-decoration: none; }
+        .msg-row { display: flex; gap: 10px; }
+        .msg-row input { flex: 1; padding: 12px 18px; background: var(--panel); border: 1px solid var(--border); color: var(--text); border-radius: 20px; outline: none; font-size: 13px; }
+        .send-btn { background: var(--accent); color: white; border: none; padding: 0 20px; border-radius: 20px; font-weight: 700; cursor: pointer; font-size: 12px; }
+
+        /* AUDIO SYSTEM MEDIA CORE */
+        .audio-module-wrapper { max-width: 500px; margin: 40px auto; background: var(--panel); backdrop-filter: var(--glass-blur); border: 1px solid var(--border); padding: 24px; border-radius: 16px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .music-disc { width: 90px; height: 90px; border-radius: 50%; background: linear-gradient(135deg, #222, var(--accent)); margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 0 20px var(--accent-glow); animation: spin 6s linear infinite; animation-play-state: paused; position: relative; }
+        .music-disc::after { content: ''; position: absolute; width: 20px; height: 20px; background: var(--bg); border-radius: 50%; border: 2px solid var(--border); }
+        .music-disc.playing { animation-play-state: running; }
+        .music-disc svg { width: 32px; height: 32px; fill: currentColor; z-index: 2; }
+        
+        .music-title { font-size: 15px; font-weight: 800; color: var(--text); display: block; margin-bottom: 4px; }
+        .music-sub { font-size: 11px; color: var(--sub); display: block; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
+        .music-controls { display: flex; justify-content: center; gap: 16px; }
+        .music-btn { background: var(--input-bg); border: 1px solid var(--border); color: var(--text); width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .music-btn svg { width: 16px; height: 16px; fill: currentColor; }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* COMPACT LOG CHANNELS */
+        .news-grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; margin-top: 15px; }
+        .news-item { background: var(--panel); border: 1px solid var(--border); padding: 16px; border-radius: 12px; font-size: 12px; color: var(--sub); line-height: 1.5; }
+        .news-item b { color: var(--text); display: block; margin-bottom: 6px; font-size: 14px; font-weight: 700; }
         .news-item b a { color: inherit; text-decoration: none; }
         .news-item b a:hover { color: var(--accent); }
-        .news-meta { font-size: 11px; color: var(--accent); margin-top: 4px; display: block; font-weight: 600; }
+        .news-meta { font-size: 10px; color: var(--accent); margin-top: 8px; display: block; font-weight: 700; text-transform: uppercase; }
+
+        /* IN-APP MODAL CORE */
+        .video-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5,5,7,0.95); backdrop-filter: blur(8px); z-index: 5000; align-items: center; justify-content: center; padding: 20px; }
+        .modal-container { background: #000; width: 100%; max-width: 750px; border-radius: 12px; border: 1px solid var(--border); overflow: hidden; position: relative; }
+        .modal-close { position: absolute; top: 12px; right: 12px; background: rgba(255,255,255,0.1); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; z-index: 5100; display: flex; align-items: center; justify-content: center; }
+        .modal-close:hover { background: var(--accent); }
+        .modal-close svg { width: 12px; height: 12px; fill: currentColor; }
+        .video-box { position: relative; padding-bottom: 56.25%; height: 0; }
+        .video-box iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+        /* MOBILE ARCHITECTURE FLOATING BAR */
+        .bottom-nav-bar { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: 480px; background: rgba(18, 18, 22, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); height: 64px; border-radius: 32px; display: flex; align-items: center; justify-content: space-around; z-index: 4000; box-shadow: 0 10px 30px rgba(0,0,0,0.4); padding: 0 10px; }
+        .nav-tab-item { background: transparent; border: none; color: var(--sub); display: flex; flex-direction: column; align-items: center; justify-content: center; width: 60px; height: 100%; cursor: pointer; position: relative; gap: 4px; }
+        .nav-tab-item svg { width: 20px; height: 20px; fill: currentColor; transition: transform 0.2s ease, color 0.2s; }
+        .nav-tab-item span { font-size: 9px; font-weight: 700; text-transform: uppercase; }
+        .nav-tab-item.active-tab { color: var(--accent); }
+        .nav-tab-item.active-tab::after { content: ''; position: absolute; top: -1px; width: 16px; height: 3px; background: var(--accent); border-radius: 2px; box-shadow: 0 2px 8px var(--accent); }
 
         .ads-slot { display: block; width: 100%; min-height: 10px; margin-bottom: 15px; }
 
-        /* RESPONSIVE MOBILE INTERFACE STYLING */
         @media (max-width: 768px) {
-            header { flex-direction: column; align-items: stretch; padding: 12px; gap: 10px; }
-            header h1 { text-align: center; font-size: 18px; }
-            .search-area { max-width: 100%; }
-            .theme-btn { width: 100%; text-align: center; }
-            .banner { height: 180px; }
-            .banner-text h2 { font-size: 18px; bottom: 10px; left: 10px; }
-            .main-grid { flex-direction: column; padding: 10px; gap: 15px; }
-            .card { padding: 12px; gap: 12px; }
-            .card img { width: 80px; height: 115px; }
-            .details h3 { font-size: 14px; }
-            .meta { font-size: 11px; }
-            .btn-portal { font-size: 10px; padding: 5px 8px; }
-            .nexus { height: 350px; }
+            header { padding: 12px 16px; gap: 12px; flex-wrap: wrap; }
+            header h1 { font-size: 16px; }
+            .search-area { max-width: 100%; order: 3; width: 100%; }
+            .theme-btn { padding: 6px 12px; font-size: 9px; }
+            .banner { height: 160px; }
+            .banner-text h2 { font-size: 16px; }
+            .app-panel-view { padding: 12px; }
+            .cards-container-layout { grid-template-columns: 1fr; }
+            .nexus-chat-container { height: calc(100vh - 210px); }
         }
     </style>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/8.10.1/firebase-app.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/8.10.1/firebase-database.min.js"></script>
-</head>
-<body>
+    </head>
+    <body>
 
 <header>
     <h1>OMNI<span>VERSE</span></h1>
+    <button class="theme-btn" onclick="window.toggleInterfaceMode()">INTERFACE MODE</button>
     <div class="search-area">
-        <input type="text" id="searchInput" placeholder="Search Anime, Manga, Manhwa..." onkeydown="if(event.key === 'Enter') window.search()">
-        <button onclick="window.search()">Search</button>
+        <input type="text" id="searchInput" placeholder="Query Matrix Cluster Search..." onkeydown="if(event.key === 'Enter') window.search()">
+        <button onclick="window.search()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </button>
     </div>
-    <button class="theme-btn" onclick="document.body.classList.toggle('light-mode')">Theme</button>
 </header>
 
-<div class="banner">
-    <div class="banner-track" id="banner-track">
-        <div class="slide"><div style="padding:100px; color:white; text-align:center;">Connecting Global Hub...</div></div>
+<div id="panel-explore" class="app-panel-view active-panel">
+    <div class="banner">
+        <div class="banner-track" id="banner-track">
+            <div class="slide"><div style="padding:80px; color:white; text-align:center; font-size:12px; font-weight:700;">SYNCHRONIZING DYNAMIC GRAPHICS FEED ENGINE...</div></div>
+        </div>
+        <div class="banner-text">
+            <h2 id="banner-title">MEDIA PIPELINE SPOTLIGHT</h2>
+            <p id="banner-sub">Automated Industry Activity Index Feed</p>
+        </div>
     </div>
-    <div class="banner-text">
-        <h2 id="banner-title">Trending Spotlight</h2>
-        <p id="banner-sub">Auto-Updating Global Feed</p>
+
+    <div class="ads-slot" style="margin-top: 15px;">
+        <ins class="adsbygoogle" style="display:block" data-ad-format="fluid" data-ad-layout-key="-fb+5w+4e-db+86" data-ad-client="ca-pub-8691102556824057" data-ad-slot="auto"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+    
+    <span class="label">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+        MEDIA CORE PIPELINE: UPCOMING CHANNELS
+    </span>
+    <div id="upcoming-feed" class="cards-container-layout">
+        <div style="padding:20px; color:var(--sub); font-size:12px; text-align:center; width:100%;">Connecting Live Core Streaming Pipelines...</div>
+    </div>
+    
+    <span class="label" style="margin-top: 30px;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d='M4 19.5A2.5 2.5 0 0 1 6.5 17H20'></path><path d='M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z'></path></svg>
+        MEDIA CORE PIPELINE: TOP PUBLICATIONS INDEX
+    </span>
+    <div id="manga-feed" class="cards-container-layout">
+        <div style="padding:20px; color:var(--sub); font-size:12px; text-align:center; width:100%;">Connecting Publication Registries...</div>
     </div>
 </div>
 
-<div class="main-grid">
-    <div class="content">
-        <div class="ads-slot">
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-format="fluid"
-                 data-ad-layout-key="-fb+5w+4e-db+86"
-                 data-ad-client="ca-pub-8691102556824057"
-                 data-ad-slot="auto"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+<div id="panel-chat" class="app-panel-view">
+    <div class="nexus-chat-container">
+        <div class="ai-status-panel">
+            <span id="aiStatusText">AI CORE CORE ENGINE DECOUPLED (LOCAL CHAT ONLY)</span>
+            <button id="aiToggleBtn" class="ai-toggle-btn" onclick="window.toggleAiCore()">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/></svg>
+                CONNECT GEMINI CORE
+            </button>
         </div>
         
-        <span class="label" id="feed-label-1">Upcoming Anime & Trailers</span>
-        <div id="upcoming-feed">
-            <div style="padding:20px; color:var(--sub); text-align:center;">Synchronizing Anime Database...</div>
+        <div id="logs"></div>
+        <div class="ui">
+            <div class="profile-setup">
+                <img id="avatarPreview" class="preview-avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>">
+                <input type="text" id="nick" class="nick-in" placeholder="Identity Node..." value="User" onchange="window.saveProfileSettings()">
+                
+                <select id="userBadge" class="badge-select" onchange="window.saveProfileSettings()">
+                    <option value="member">MEMBER</option>
+                    <option value="otaku">OTAKU</option>
+                    <option value="admin">ADMIN</option>
+                </select>
+                
+                <label for="fileInput" class="file-label">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polygon points="21 15 16 10 5 21"></polygon></svg>
+                    PROFILE SYNC
+                </label>
+                <input type="file" id="fileInput" accept="image/*" style="display: none;">
+            </div>
+            
+            <div class="msg-row">
+                <input type="text" id="msg" placeholder="Transmit secure network packets..." onkeydown="if(event.key === 'Enter') window.sendMsg()">
+                <button class="send-btn" onclick="window.sendMsg()">TRANSMIT</button>
+            </div>
         </div>
-        
-        <span class="label" id="feed-label-2">Top Manga, Manhwa, & Manhua</span>
-        <div id="manga-feed">
-            <div style="padding:20px; color:var(--sub); text-align:center;">Synchronizing Manga Trackers...</div>
+    </div>
+</div>
+
+<div id="panel-audio" class="app-panel-view">
+    <div class="audio-module-wrapper">
+        <div class="music-disc" id="musicDisc">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v-.07zm5.66-2.87l-1.34-1.34C17.75 13.99 18 13.03 18 12c0-3.31-2.69-6-6-6-1.03 0-1.99.25-2.73.68L7.93 5.34C9.13 4.5 10.51 4 12 4c4.42 0 8 3.58 8 8 0 1.49-.41 2.87-1.07 4.06z"/></svg>
         </div>
+        <span class="music-title" id="musicTitle">Anime Hits & Openings Terminal</span>
+        <span class="music-sub">Active Audio Stream Pipeline</span>
+        <div class="music-controls">
+            <button class="music-btn" id="playBtn" onclick="window.toggleMusic()">
+                <svg id="playIconSvg" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+            <button class="music-btn" onclick="window.nextMusic()">
+                <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+            </button>
+        </div>
+        <audio id="mainAudio" loop src="https://stream.zeno.fm/03w7v6w37fevv"></audio>
     </div>
 
-    <div class="side">
-        <span class="label">Community Chat</span>
-        <div class="nexus">
-            <div id="logs"></div>
-            <div class="ui">
-                <div class="profile-setup">
-                    <img id="avatarPreview" class="preview-avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>">
-                    <input type="text" id="nick" class="nick-in" placeholder="Set Nickname..." value="User" onchange="window.saveProfileSettings()">
-                    <label for="fileInput" class="file-label">🖼️ Upload Pic</label>
-                    <input type="file" id="fileInput" accept="image/*" style="display: none;">
-                </div>
-                
-                <div class="msg-row">
-                    <input type="text" id="msg" placeholder="Type a message and press enter..." onkeydown="if(event.key === 'Enter') window.sendMsg()">
-                    <button class="send-btn" onclick="window.sendMsg()">Send</button>
-                </div>
-            </div>
-        </div>
-        
-        <span class="label">Live Industry Logs & Episode Updates</span>
-        <div class="news-section">
-            <div id="news-feed" class="news-grid">
-                <div style="color:var(--sub); font-size:12px;">Fetching latest industry logs...</div>
-            </div>
+    <span class="label">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        VERIFIED SYSTEM NETWORK LOG PIPELINES
+    </span>
+    <div id="news-feed" class="news-grid-container">
+        <div style="color:var(--sub); font-size:12px; padding:10px;">Querying global structural news logs...</div>
+    </div>
+</div>
+
+<div class="video-modal" id="videoModal">
+    <div class="modal-container">
+        <button class="modal-close" onclick="window.closeVideo()">
+            <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+        <div class="video-box">
+            <iframe id="videoIframe" src="" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
         </div>
     </div>
-            </div>
-    <script>
+</div>
+
+<nav class="bottom-nav-bar">
+    <button class="nav-tab-item active-tab" id="tab-btn-explore" onclick="window.switchAppView('explore')">
+        <svg viewBox="0 0 24 24"><path d="M12 3L2 12h3v8h4v-6h6v6h4v-8h3L12 3z"/></svg>
+        <span>Discover</span>
+    </button>
+    <button class="nav-tab-item" id="tab-btn-chat" onclick="window.switchAppView('chat')">
+        <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+        <span>Nexus</span>
+    </button>
+    <button class="nav-tab-item" id="tab-btn-audio" onclick="window.switchAppView('audio')">
+        <svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+        <span>Audio</span>
+    </button>
+</nav>
+<script>
     const defaultAvatar = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23888'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>";
+    const aiAvatar = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300E5FF'><path d='M21 11c0-4.97-4.03-9-9-9s-9 4.03-9 9c0 2.12.74 4.07 1.97 5.61L4.35 19.4c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l2.79-2.79C10.09 18.66 11.02 19 12 19c4.97 0 9-4.03 9-9zm-9 4c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z'/></svg>";
     let userAvatarBase64 = defaultAvatar;
+    let chatDb;
+    let aiCoreActive = false;
+
+    // PERSISTENT THEME MEMORY SYNC
+    if (localStorage.getItem('omniverse_theme') === 'light') {
+        document.body.classList.add('light-mode');
+    }
+
+    window.toggleInterfaceMode = function() {
+        document.body.classList.toggle('light-mode');
+        if (document.body.classList.contains('light-mode')) {
+            localStorage.setItem('omniverse_theme', 'light');
+        } else {
+            localStorage.setItem('omniverse_theme', 'dark');
+        }
+    };
+
+    function sanitizeDataPayload(str) {
+        if (!str) return '';
+        return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#x27;").replace(/\//g, "&#x2F;");
+    }
+
+    // AI TOGGLE CONTROLLER MODULE
+    window.toggleAiCore = function() {
+        const btn = document.getElementById('aiToggleBtn');
+        const txt = document.getElementById('aiStatusText');
+        aiCoreActive = !aiCoreActive;
+
+        if (aiCoreActive) {
+            btn.classList.add('ai-online');
+            btn.innerText = "DISCONNECT CORE";
+            txt.innerText = "GEMINI 3 FLASH CORE ENGINE SYNCED: ONLINE RESPONSE PROTOCOL ACTIVE";
+        } else {
+            btn.classList.remove('ai-online');
+            btn.innerText = "CONNECT GEMINI CORE";
+            txt.innerText = "AI CORE CORE ENGINE DECOUPLED (LOCAL CHAT ONLY)";
+        }
+    };
+
+    window.switchAppView = function(v) {
+        document.querySelectorAll('.app-panel-view').forEach(p => p.classList.remove('active-panel'));
+        document.querySelectorAll('.nav-tab-item').forEach(t => t.classList.remove('active-tab'));
+        document.getElementById(`panel-${v}`).classList.add('active-panel');
+        document.getElementById(`tab-btn-${v}`).classList.add('active-tab');
+        if(v === 'chat' && logs) logs.scrollTop = logs.scrollHeight;
+    };
 
     if(localStorage.getItem('omniverse_nick')) document.getElementById('nick').value = localStorage.getItem('omniverse_nick');
+    if(localStorage.getItem('omniverse_badge')) document.getElementById('userBadge').value = localStorage.getItem('omniverse_badge');
     if(localStorage.getItem('omniverse_avatar')) {
         userAvatarBase64 = localStorage.getItem('omniverse_avatar');
         document.getElementById('avatarPreview').src = userAvatarBase64;
     }
 
     window.saveProfileSettings = function() {
-        localStorage.setItem('omniverse_nick', document.getElementById('nick').value || "Guest");
+        localStorage.setItem('omniverse_nick', sanitizeDataPayload(document.getElementById('nick').value) || "Guest");
+        localStorage.setItem('omniverse_badge', document.getElementById('userBadge').value || "member");
     };
 
     document.getElementById('fileInput').addEventListener('change', function(e) {
         const file = e.target.files[0];
-        if (file) {
-            if (file.size > 250000) {
-                alert("Image size should be below 250KB.");
-                return;
-            }
+        if (file && file.size <= 200000) {
             const reader = new FileReader();
             reader.onload = function(evt) {
                 userAvatarBase64 = evt.target.result;
@@ -240,154 +404,246 @@
                 localStorage.setItem('omniverse_avatar', userAvatarBase64);
             };
             reader.readAsDataURL(file);
+        } else if (file) {
+            alert("Payload signature size extends limit (Max 200KB).");
         }
     });
 
-    // FIREBASE INITIALIZATION WITHOUT EXTERNAL BLOCKS
+    window.playVideo = function(url) {
+        if(!url || url === 'https://youtube.com') { alert("No broadcast string compiled."); return; }
+        let embed = url;
+        if(url.includes("v=")) embed = `https://www.youtube.com/embed/${url.split("v=")[1].split("&")[0]}?autoplay=1`;
+        else if(url.includes("youtu.be/")) embed = `https://www.youtube.com/embed/${url.split("youtu.be/")[1].split("?")[0]}?autoplay=1`;
+        if (!document.getElementById('mainAudio').paused) window.toggleMusic();
+        document.getElementById('videoIframe').src = embed;
+        document.getElementById('videoModal').style.display = 'flex';
+    };
+
+    window.closeVideo = function() {
+        document.getElementById('videoModal').style.display = 'none';
+        document.getElementById('videoIframe').src = '';
+    };
+
+    // AUDIO ENGINE
+    const tracks = [
+        { title: "Anime Hits & Openings Terminal", url: "https://stream.zeno.fm/03w7v6w37fevv" },
+        { title: "Chill Anime Lofi Matrix Beats", url: "https://stream.zeno.fm/0v8g78p37fevv" },
+        { title: "J-Pop Global Synchronized Feed", url: "https://stream.zeno.fm/3r08w9p37fevv" }
+    ];
+    let currentTrackIdx = 0;
+
+    window.toggleMusic = function() {
+        const aud = document.getElementById('mainAudio');
+        const disc = document.getElementById('musicDisc');
+        const icon = document.getElementById('playIconSvg');
+        if (aud.paused) {
+            aud.play().then(() => {
+                disc.classList.add('playing');
+                icon.innerHTML = `<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>`;
+            }).catch(() => {});
+        } else {
+            aud.pause();
+            disc.classList.remove('playing');
+            icon.innerHTML = `<path d="M8 5v14l11-7z"/>`;
+        }
+    };
+
+    window.nextMusic = function() {
+        currentTrackIdx = (currentTrackIdx + 1) % tracks.length;
+        const aud = document.getElementById('mainAudio');
+        document.getElementById('musicTitle').innerText = tracks[currentTrackIdx].title;
+        aud.src = tracks[currentTrackIdx].url;
+        aud.load();
+        const disc = document.getElementById('musicDisc');
+        const icon = document.getElementById('playIconSvg');
+        aud.play().then(() => {
+            disc.classList.add('playing');
+            icon.innerHTML = `<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>`;
+        }).catch(() => {});
+    };
+
+    // AI CHAT RESPONDER LOCAL MODULE
+    function simulateAiCoreResponse(userMessage) {
+        setTimeout(() => {
+            let reply = "AI Core Cluster resolved your packet transmission. Ask me anything regarding Anime, Manga, or Database configurations within this portal!";
+            const msgLower = userMessage.toLowerCase();
+            
+            if(msgLower.includes("hello") || msgLower.includes("hi") || msgLower.includes("kamusta")) {
+                reply = "System Node Synced! Clear connection established with OMNIVERSE AI Core Cluster. What matrix dataset shall we compile today?";
+            } else if(msgLower.includes("admin")) {
+                reply = "Admin badge credentials verified. Root access protocols are distributed symmetrically across the site configuration.";
+            } else if(msgLower.includes("frieren") || msgLower.includes("anime")) {
+                reply = "Jikan API node is actively pulling metadata streams. Use the top Global Matrix Search Engine bar to directly render production cards and trailers inside the UI module.";
+            } else if(msgLower.includes("ganda") || msgLower.includes("angas")) {
+                reply = "Affirmative. Interface configuration optimization vector is set to maximum fidelity. Modern Minimalist vector node integration complete.";
+            }
+            
+            chatDb.push({
+                nickname: "OMNIVERSE_AI_CORE",
+                badge: "core",
+                avatar: aiAvatar,
+                message: reply,
+                reactions: { thumbs: 0, heart: 0, fire: 0, angry: 0 },
+                timestamp: firebase.database.ServerValue.TIMESTAMP
+            });
+        }, 1200);
+    }
+
+    // FIREBASE PIPELINE SETUP
     function startChat() {
         try {
             const config = { databaseURL: "https://studio-8164628274-c414a-default-rtdb.asia-southeast1.firebasedatabase.app/" };
             firebase.initializeApp(config);
-            const chatDb = firebase.database().ref("chat_messages");
+            chatDb = firebase.database().ref("chat_messages");
 
             window.sendMsg = function() {
                 const m = document.getElementById('msg').value;
                 if(m.trim()) {
                     window.saveProfileSettings();
+                    const currentMsgPayload = sanitizeDataPayload(m);
+                    
                     chatDb.push({
-                        nickname: document.getElementById('nick').value || "Guest",
+                        nickname: sanitizeDataPayload(document.getElementById('nick').value) || "Guest",
+                        badge: document.getElementById('userBadge').value || "member",
                         avatar: userAvatarBase64,
-                        message: m,
+                        message: currentMsgPayload,
+                        reactions: { thumbs: 0, heart: 0, fire: 0, angry: 0 },
                         timestamp: firebase.database.ServerValue.TIMESTAMP
                     });
+                    
                     document.getElementById('msg').value = "";
+                    
+                    // Trigger Simulated AI Response if Toggle is Enabled
+                    if(aiCoreActive) {
+                        simulateAiCoreResponse(currentMsgPayload);
+                    }
                 }
             };
 
-            chatDb.limitToLast(30).on("child_added", function(snap) {
-                const d = snap.val();
+            chatDb.limitToLast(30).on("value", function(snapshot) {
                 const logs = document.getElementById('logs');
-                const pic = d.avatar || defaultAvatar;
-                logs.innerHTML += `
-                    <div class="chat-row">
-                        <img class="chat-avatar" src="${pic}" alt="avatar">
-                        <div class="chat-body">
-                            <b style="color:var(--accent); font-size:12px; display:block;">${d.nickname}</b>
-                            <span style="font-size:13px;">${d.message}</span>
-                        </div>
-                    </div>`;
+                logs.innerHTML = '';
+                snapshot.forEach(function(childSnap) {
+                    const id = childSnap.key;
+                    const d = childSnap.val();
+                    const pic = d.avatar || defaultAvatar;
+                    const rx = d.reactions || { thumbs: 0, heart: 0, fire: 0, angry: 0 };
+                    const badgeType = d.badge || "member";
+                    const isAi = (badgeType === 'core') ? 'style="color:var(--ai-accent); text-shadow: 0 0 5px var(--ai-glow);"' : 'style="color:var(--accent);"';
+                    
+                    logs.innerHTML += `
+                        <div class="chat-row" id="msg-${id}">
+                            <img class="chat-avatar" src="${pic}" alt="node">
+                            <div class="chat-body">
+                                <div class="chat-header-info">
+                                    <span class="chat-badge badge-${badgeType}">${badgeType}</span>
+                                    <b ${isAi} style="font-size:11px;">${d.nickname}</b>
+                                </div>
+                                <div class="chat-message-bubble">${d.message}</div>
+                                <div class="chat-react-bar">
+                                    <span class="react-badge" onclick="window.reactMsg('${id}', 'thumbs')"><svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.75 0 1.41-.43 1.73-1.11l3.14-7.33c.08-.2.13-.42.13-.65V10z"/></svg> <span>${rx.thumbs || 0}</span></span>
+                                    <span class="react-badge" onclick="window.reactMsg('${id}', 'heart')"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> <span>${rx.heart || 0}</span></span>
+                                    <span class="react-badge" onclick="window.reactMsg('${id}', 'fire')"><svg viewBox="0 0 24 24"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM12 18c-2.21 0-4-1.79-4-4 0-1.87 1.34-3.43 3.12-3.86.07-.02.14-.04.21-.05.07-.01.14-.02.21-.02.24-.01.48-.02.72.01.07.01.14.03.21.05.07.01.14.04.21.06 1.45.47 2.52 1.83 2.52 3.43 0 2.21-1.79 4-4 4z"/></svg> <span>${rx.fire || 0}</span></span>
+                                </div>
+                            </div>
+                        </div>`;
+                });
                 logs.scrollTop = logs.scrollHeight;
             });
-        } catch(err) {
-            console.log("Chat hold:", err);
-        }
+
+            window.reactMsg = function(msgId, type) {
+                chatDb.child(msgId).child("reactions").child(type).transaction(c => (c || 0) + 1);
+            };
+
+        } catch(err) { console.log(err); }
     }
 
-    // JIKAN ENGINE PIPELINE
+    window.likeCard = function(btn, animeId) {
+        let count = parseInt(localStorage.getItem('like_anime_' + animeId) || Math.floor(Math.random() * 60) + 12);
+        count++; localStorage.setItem('like_anime_' + animeId, count);
+        btn.innerHTML = `<svg style="width:10px; height:10px; fill:currentColor; margin-right:4px;" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> ` + count;
+    };
+
+    function getCardLikes(animeId) { return localStorage.getItem('like_anime_' + animeId) || Math.floor(Math.random() * 60) + 12; }
+
+    // DATA MATRIX PIPELINE ENGINE
     async function fetchData(q = '') {
         try {
             const bRes = await fetch('https://api.jikan.moe/v4/top/anime?filter=bypopularity');
             const bData = await bRes.json();
             if(bData.data && bData.data.length >= 4) {
-                const track = document.getElementById('banner-track');
-                track.innerHTML = '';
+                const track = document.getElementById('banner-track'); track.innerHTML = '';
                 bData.data.slice(0, 4).forEach(a => {
-                    track.innerHTML += `<div class="slide"><img src="${a.images.jpg.large_image_url}" alt="banner" style="object-position: 50% 25%;"></div>`;
+                    track.innerHTML += `<div class="slide"><img src="${sanitizeDataPayload(a.images.jpg.large_image_url)}" alt="display" style="object-position: 50% 25%;"></div>`;
                 });
             }
-        } catch(e) { console.log(e); }
+        } catch(e) {}
 
         try {
             const endpoint = q ? `https://api.jikan.moe/v4/anime?q=${encodeURIComponent(q)}` : 'https://api.jikan.moe/v4/seasons/upcoming';
-            const res = await fetch(endpoint);
-            const data = await res.json();
-            const uFeed = document.getElementById('upcoming-feed');
-            uFeed.innerHTML = '';
-
-            document.getElementById('feed-label-1').innerText = q ? `Search Results for: ${q}` : "Upcoming Anime & Trailers";
+            const res = await fetch(endpoint); const data = await res.json();
+            const uFeed = document.getElementById('upcoming-feed'); uFeed.innerHTML = '';
 
             if(data.data && data.data.length > 0) {
-                data.data.slice(0, 10).forEach(item => {
+                data.data.slice(0, 12).forEach(item => {
                     const studio = item.studios && item.studios[0] ? item.studios[0].name : 'TBA';
+                    const likes = getCardLikes(item.mal_id);
+                    const trailerUrl = item.trailer?.url || 'https://youtube.com';
                     uFeed.innerHTML += `
                         <div class="card">
-                            <img src="${item.images.jpg.large_image_url}" alt="Cover">
+                            <button class="card-like-btn" onclick="window.likeCard(this, '${item.mal_id}')"><svg style="width:10px; height:10px; fill:currentColor;" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> ${likes}</button>
+                            <img src="${sanitizeDataPayload(item.images.jpg.large_image_url)}" alt="cover">
                             <div class="details">
-                                <h3>${item.title}</h3>
+                                <h3>${sanitizeDataPayload(item.title)}</h3>
                                 <div class="meta">
-                                    <b>Studio:</b> ${studio}<br>
-                                    <b>Source:</b> ${item.source || 'N/A'} | <b>Score:</b> ⭐ ${item.score || 'TBA'}<br>
-                                    <b>Type:</b> ${item.type || 'TV'} | <b>Episodes:</b> ${item.episodes || 'TBA'}<br>
-                                    <b>Status:</b> ${item.status}
+                                    <b>Studio:</b> ${sanitizeDataPayload(studio)}<br>
+                                    <b>Score:</b> ⭐ ${item.score || 'TBA'}
                                 </div>
                                 <div class="links">
-                                    <a href="${item.url}" target="_blank" class="btn-portal">📺 Official Database Info</a>
-                                    <a href="${item.trailer?.url || 'https://youtube.com'}" target="_blank" class="btn-portal">🎬 Play Trailer</a>
+                                    <button onclick="window.playVideo('${sanitizeDataPayload(trailerUrl)}')" class="btn-portal">🎬 STREAM</button>
                                 </div>
                             </div>
                         </div>`;
                 });
-            } else {
-                uFeed.innerHTML = `<div style="padding:20px; color:var(--sub);">No matches found.</div>`;
             }
-        } catch(e) { console.log(e); }
+        } catch(e) {}
 
         if(!q) {
             try {
-                const mRes = await fetch('https://api.jikan.moe/v4/top/manga');
-                const mData = await mRes.json();
-                const mFeed = document.getElementById('manga-feed');
-                mFeed.innerHTML = '';
-                
-                mData.data.slice(0, 10).forEach(item => {
+                const mRes = await fetch('https://api.jikan.moe/v4/top/manga'); const mData = await mRes.json();
+                const mFeed = document.getElementById('manga-feed'); mFeed.innerHTML = '';
+                mData.data.slice(0, 12).forEach(item => {
                     const auth = item.authors && item.authors[0] ? item.authors[0].name : 'N/A';
+                    const mId = 'manga_' + item.mal_id; const likes = getCardLikes(mId);
                     mFeed.innerHTML += `
                         <div class="card">
-                            <img src="${item.images.jpg.large_image_url}" alt="Cover">
+                            <button class="card-like-btn" onclick="window.likeCard(this, '${mId}')"><svg style="width:10px; height:10px; fill:currentColor;" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> ${likes}</button>
+                            <img src="${sanitizeDataPayload(item.images.jpg.large_image_url)}" alt="cover">
                             <div class="details">
-                                <h3>${item.title}</h3>
-                                <div class="meta">
-                                    <b>Author:</b> ${auth}<br>
-                                    <b>Type:</b> ${item.type}<br>
-                                    <b>Rank:</b> #${item.rank} | <b>Chapters:</b> ${item.chapters || 'Ongoing'}<br>
-                                    <b>Score:</b> ⭐ ${item.score}
-                                </div>
-                                <div class="links">
-                                    <a href="${item.url}" target="_blank" class="btn-portal">📖 View Official Info</a>
-                                </div>
+                                <h3>${sanitizeDataPayload(item.title)}</h3>
+                                <div class="meta"><b>Author:</b> ${sanitizeDataPayload(auth)}</div>
+                                <div class="links"><a href="${sanitizeDataPayload(item.url)}" target="_blank" class="btn-portal">FILE</a></div>
                             </div>
                         </div>`;
                 });
-            } catch(e) { console.log(e); }
+            } catch(e) {}
 
             try {
-                const nRes = await fetch('https://api.jikan.moe/v4/watch/episodes/popular');
-                const nData = await nRes.json();
-                const nFeed = document.getElementById('news-feed');
-                nFeed.innerHTML = '';
-                
-                nData.data.slice(0, 5).forEach(news => {
-                    nFeed.innerHTML += `
-                        <div class="news-item">
-                            <b><a href="${news.entry.url}" target="_blank">📣 Broadcast Update: ${news.entry.title}</a></b>
-                            Global licensed broadcast pipelines updated.
-                            <span class="news-meta">Click to track full legal license tracks</span>
-                        </div>`;
+                const nRes = await fetch('https://api.jikan.moe/v4/watch/episodes/popular'); const nData = await nRes.json();
+                const nFeed = document.getElementById('news-feed'); nFeed.innerHTML = '';
+                nData.data.slice(0, 6).forEach(news => {
+                    nFeed.innerHTML += `<div class="news-item"><b><a href="${sanitizeDataPayload(news.entry.url)}" target="_blank">PIPELINE LOG: ${sanitizeDataPayload(news.entry.title)}</a></b><span class="news-meta">CLUSTER BROADCAST LOG TRACK</span></div>`;
                 });
-            } catch(e) { console.log(e); }
+            } catch(e) {}
         }
     }
 
     window.search = function() {
         const query = document.getElementById('searchInput').value;
-        fetchData(query);
+        if(query.trim()) { window.switchAppView('explore'); fetchData(query); }
     };
 
-    // RUN TIME ENGINE TRIGGER
-    window.onload = function() {
-        startChat();
-        fetchData();
-    };
+    window.onload = function() { startChat(); fetchData(); };
 </script>
 </body>
-</html>       
+</html>
