@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OMNIVERSE CORE | Premium Streaming Hub</title>
+    <title>OMNIVERSE CORE | Streaming Hub</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -35,62 +35,42 @@
         .view-section { display: none; padding: 20px; max-width: 1400px; margin: 0 auto; }
         .view-section.active { display: block; }
 
-        .search-box { width: 100%; padding: 14px 18px; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 8px; margin-bottom: 20px; font-size: 0.95rem; transition: all 0.2s; }
-        .search-box:focus { border-color: var(--accent); outline: none; }
+        .search-box { width: 100%; padding: 14px 18px; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 8px; margin-bottom: 20px; font-size: 0.95rem; }
         .filter-tabs { display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
-        .f-btn { background: var(--bg-panel); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; font-weight: 600; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
+        .f-btn { background: var(--bg-panel); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; font-weight: 600; white-space: nowrap; }
         .f-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
 
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 18px; }
-        .media-card { background: var(--bg-panel); border-radius: 10px; overflow: hidden; border: 1px solid var(--border-color); display: flex; flex-direction: column; cursor: pointer; transition: transform 0.2s, border-color 0.2s; }
-        .media-card:hover { transform: translateY(-4px); border-color: var(--accent); }
+        .media-card { background: var(--bg-panel); border-radius: 10px; overflow: hidden; border: 1px solid var(--border-color); display: flex; flex-direction: column; cursor: pointer; }
         .media-card img { width: 100%; aspect-ratio: 11/16; object-fit: cover; }
-        .media-card-info { padding: 12px; font-size: 0.8rem; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .media-title { font-weight: 700; line-height: 1.3; max-height: 2.6em; overflow: hidden; margin-bottom: 6px; }
-        .badge { display: inline-block; padding: 2px 6px; background: rgba(255, 71, 87, 0.1); color: var(--accent); font-size: 0.65rem; font-weight: bold; border-radius: 4px; width: fit-content; }
+        .media-card-info { padding: 12px; font-size: 0.8rem; }
+        .media-title { font-weight: 700; line-height: 1.3; max-height: 2.6em; overflow: hidden; }
 
-        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; padding: 15px; }
-        .modal-content { background: var(--bg-panel); border: 1px solid var(--border-color); padding: 25px; border-radius: 12px; max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; position: relative; }
-        .close-modal { position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--text-main); cursor: pointer; font-size: 1.1rem; }
-        .svg-icon { width: 18px; height: 18px; fill: currentColor; display: inline-block; vertical-align: middle; }
-            </style>
-            <style>
         .chat-layout { display: grid; grid-template-columns: 1fr; gap: 20px; }
         @media (min-width: 768px) { .chat-layout { grid-template-columns: 280px 1fr; } }
         .chat-channels-bar { display: flex; flex-direction: column; gap: 10px; }
-        .room-toggle-card { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; cursor: pointer; font-weight: bold; font-size: 0.9rem; display: flex; align-items: center; gap: 10px; }
-        .room-toggle-card.active { border-color: var(--accent); background: rgba(255,71,87,0.05); }
-        .user-list { background: var(--bg-panel); padding: 15px; border-radius: 10px; border: 1px solid var(--border-color); max-height: 320px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
-        .online-user { display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; padding: 10px; border-radius: 6px; background: rgba(255,255,255,0.01); border: 1px solid transparent; cursor: pointer; }
-        .online-user:hover, .online-user.active { border-color: var(--accent); background: rgba(255,71,87,0.02); }
-        .status-dot { width: 8px; height: 8px; background: #2ed573; border-radius: 50%; }
+        .room-toggle-card { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; cursor: pointer; font-weight: bold; }
+        .room-toggle-card.active { border-color: var(--accent); }
+        .user-list { background: var(--bg-panel); padding: 15px; border-radius: 10px; border: 1px solid var(--border-color); max-height: 320px; overflow-y: auto; }
+        .online-user { padding: 10px; border-radius: 6px; cursor: pointer; margin-bottom: 5px; background: rgba(255,255,255,0.01); }
         
         .chat-main { background: var(--bg-panel); border-radius: 10px; border: 1px solid var(--border-color); display: flex; flex-direction: column; overflow: hidden; }
-        .chat-messages { height: 380px; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 14px; background: rgba(0,0,0,0.02); }
-        .msg-bubble { background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 12px; max-width: 80%; width: fit-content; display: flex; gap: 12px; align-items: flex-start; }
-        .msg-bubble.self { align-self: flex-end; border-color: rgba(255,71,87,0.3); background: rgba(255,71,87,0.02); }
-        .msg-bubble img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border-color); }
-        .chat-controls { display: flex; padding: 12px; gap: 10px; background: rgba(0,0,0,0.05); border-top: 1px solid var(--border-color); }
+        .chat-messages { height: 380px; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+        .msg-bubble { background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 12px; max-width: 80%; width: fit-content; }
+        .msg-bubble.self { align-self: flex-end; border-color: var(--accent); }
+        .chat-controls { display: flex; padding: 12px; gap: 10px; }
         .chat-controls input { flex: 1; padding: 12px; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 6px; }
 
         .identity-lockout { background: rgba(6,7,9,0.96); position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .profile-card { background: var(--bg-panel); border: 1px solid var(--border-color); padding: 30px; border-radius: 12px; text-align: center; }
-        .profile-avatar { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent); display: block; margin-bottom: 15px; }
         .action-btn { background: var(--accent); color: white; border: none; padding: 12px 24px; border-radius: 6px; font-weight: bold; width: 100%; cursor: pointer; }
 
         .spotify-container { display: flex; flex-direction: column; gap: 8px; }
-        .track-row { display: flex; align-items: center; justify-content: space-between; background: var(--bg-panel); padding: 14px 20px; border-radius: 8px; border: 1px solid var(--border-color); transition: background 0.2s; }
-        .track-row:hover { background: rgba(255,255,255,0.02); }
-        .track-details { display: flex; flex-direction: column; gap: 4px; }
-        .track-meta { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .track-row { display: flex; align-items: center; justify-content: space-between; background: var(--bg-panel); padding: 14px 20px; border-radius: 8px; border: 1px solid var(--border-color); }
         
-        .master-player { position: fixed; bottom: 70px; left: 0; right: 0; background: var(--bg-panel); border-top: 2px solid var(--accent); padding: 15px 30px; z-index: 998; display: flex; flex-direction: column; align-items: center; gap: 12px; box-shadow: 0 -8px 24px rgba(0,0,0,0.3); }
-        @media (min-width: 768px) { .master-player { flex-direction: row; justify-content: space-between; } }
-        .player-btns { display: flex; align-items: center; gap: 12px; }
-        .ctrl-btn { background: var(--accent); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; }
-        
+        .master-player { position: fixed; bottom: 70px; left: 0; right: 0; background: var(--bg-panel); border-top: 2px solid var(--accent); padding: 15px 30px; z-index: 998; display: flex; justify-content: space-between; align-items: center; }
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-panel); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border-color); z-index: 1000; }
-        .nav-btn { background: none; border: none; color: var(--text-muted); font-size: 0.75rem; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; width: 80px; transition: color 0.2s; }
+        .nav-btn { background: none; border: none; color: var(--text-muted); font-size: 0.75rem; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; width: 80px; }
         .nav-btn.active { color: var(--accent); font-weight: bold; }
     </style>
 </head>
@@ -98,126 +78,69 @@
     <div id="identity-interceptor" class="identity-lockout">
         <div class="profile-card" style="max-width:400px; width:100%;">
             <h2 style="margin-bottom: 10px; color: var(--accent);">Setup Identity</h2>
-            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:20px;">Verification username and avatar config file needed.</p>
-            <img id="lockout-avatar-view" class="profile-avatar" style="margin: 0 auto 15px;" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><rect width='100%' height='100%' fill='%23222530'/></svg>">
-            <input type="file" id="lockout-file-trigger" accept="image/*" style="display:none;" onchange="processAvatarBuffer(event, true)">
-            <button onclick="document.getElementById('lockout-file-trigger').click()" style="background:none; border:none; color:var(--accent); font-size:0.8rem; cursor:pointer; margin-bottom:20px; font-weight:bold;">[ Choose Avatar Pic ]</button>
-            <input type="text" id="lockout-username-field" class="search-box" style="text-align:center; font-weight:bold;" placeholder="Enter Nickname...">
+            <input type="text" id="lockout-username-field" class="search-box" style="text-align:center;" placeholder="Enter Nickname...">
             <button class="action-btn" onclick="saveGatekeeperIdentity()">Launch App System</button>
         </div>
     </div>
 
     <div class="top-bar">
         <div class="logo">● OMNIVERSE CORE</div>
-        <button class="f-btn" onclick="toggleThemeCore()">
-            Theme Variant
-        </button>
+        <button class="f-btn" onclick="toggleThemeCore()">Theme Switch</button>
     </div>
 
     <div id="home-view" class="view-section active">
-        <input type="text" id="media-search" class="search-box" placeholder="🔍 Filter Japanese Anime, Manga blocks..." oninput="filterMediaMatrix()">
-        <div class="filter-tabs">
-            <button class="f-btn active" onclick="setMediaClass('all', this)">All Feeds</button>
-            <button class="f-btn" onclick="setMediaClass('airing', this)">Airing Anime</button>
-            <button class="f-btn" onclick="setMediaClass('upcoming', this)">Upcoming</button>
-            <button class="f-btn" onclick="setMediaClass('manga', this)">Manga Grid</button>
-        </div>
+        <input type="text" id="media-search" class="search-box" placeholder="🔍 Filter Anime/Manga..." oninput="filterMediaMatrix()">
         <div id="media-grid-display" class="grid"></div>
     </div>
 
     <div id="chat-view" class="view-section">
         <div class="chat-layout">
             <div class="chat-channels-bar">
-                <div onclick="switchToGlobalRoom()" id="global-room-tab" class="room-toggle-card active">🌐 Global Terminal</div>
-                <h4 style="font-size:0.65rem; color:var(--text-muted); margin:10px 0 2px; text-transform:uppercase; letter-spacing:1px;">Private Secure Matrix</h4>
+                <div onclick="switchToGlobalRoom()" id="global-room-tab" class="room-toggle-card active">🌐 Global Chat</div>
                 <div id="pm-users-list" class="user-list"></div>
             </div>
             <div class="chat-main">
-                <div id="active-chat-header" style="padding:14px; background:rgba(0,0,0,0.1); font-weight:bold; font-size:0.85rem; border-bottom:1px solid var(--border-color); color:var(--accent);">Active: Public Global</div>
+                <div id="active-chat-header" style="padding:14px; color:var(--accent);">Active: Public Global</div>
                 <div class="chat-messages" id="chat-messages-container"></div>
                 <div class="chat-controls">
-                    <input type="text" id="chat-message-input" placeholder="Broadcast to network...">
-                    <button class="ctrl-btn" onclick="sendOmniChatMessage()">✔</button>
+                    <input type="text" id="chat-message-input" placeholder="Type a message...">
+                    <button class="action-btn" style="width:auto;" onclick="sendOmniChatMessage()">Send</button>
                 </div>
             </div>
         </div>
     </div>
 
     <div id="audio-view" class="view-section">
-        <input type="text" id="audio-search-box" class="search-box" placeholder="🔍 Search Phonk, OPM Hits, TikTok Viral..." oninput="renderSpotifyLayout()">
         <div id="spotify-tracks-container" class="spotify-container"></div>
     </div>
 
-    <div id="profile-view" class="view-section">
-        <div class="profile-card">
-            <img id="profile-avatar-display" class="profile-avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><rect width='100%' height='100%' fill='%23222530'/></svg>">
-            <input type="file" id="profile-file-trigger" accept="image/*" style="display:none;" onchange="processAvatarBuffer(event, false)">
-            <button onclick="document.getElementById('profile-file-trigger').click()" style="background:none; border:none; color:var(--accent); font-size:0.8rem; cursor:pointer; margin-bottom:20px; font-weight:bold;">[ Re-upload Image ]</button>
-            <input type="text" id="profile-username-field" class="search-box" style="text-align:center; font-weight:bold;">
-            <button class="action-btn" onclick="updateProfileIdentity()">Save To Cloud</button>
-        </div>
-    </div>
-    <div class="modal" id="media-modal" onclick="closeMediaModal()">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <button class="close-modal" onclick="closeMediaModal()">✕</button>
-            <div id="modal-body-content"></div>
-        </div>
-    </div>
-
     <div class="master-player">
-        <div id="player-track-title" style="font-weight:bold; font-size:0.85rem;">No Audio Source Injected</div>
-        <div class="player-btns">
-            <button class="ctrl-btn" onclick="audioPrevTrack()">◀</button>
-            <button class="ctrl-btn" id="audio-play-pause-btn" style="width:46px; height:46px;" onclick="toggleAudioEngineState()">▶</button>
-            <button class="ctrl-btn" onclick="audioNextTrack()">▶</button>
-        </div>
+        <div id="player-track-title">No Audio Loaded</div>
+        <button class="f-btn" id="audio-play-pause-btn" onclick="toggleAudioEngineState()">Play/Pause</button>
     </div>
 
     <div class="bottom-nav">
-        <button class="nav-btn active" onclick="routeTo('home', this)"><span>Core Grid</span></button>
-        <button class="nav-btn" onclick="routeTo('chat', this)"><span>Chat Hub</span></button>
-        <button class="nav-btn" onclick="routeTo('audio', this)"><span>Spotify</span></button>
-        <button class="nav-btn" onclick="routeTo('profile', this)"><span>Identity</span></button>
+        <button class="nav-btn active" onclick="routeTo('home', this)"><span>Home</span></button>
+        <button class="nav-btn" onclick="routeTo('chat', this)"><span>Chat</span></button>
+        <button class="nav-btn" onclick="routeTo('audio', this)"><span>Music</span></button>
     </div>
 
     <audio id="hardware-audio-streamer"></audio>
-
     <script>
-        // CONFIG DISK CLOUD SYSTEM DATABASE LINK
         const firebaseConfig = { databaseURL: "https://studio-8164628274-c414a-default-rtdb.asia-southeast1.firebasedatabase.app/" };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
         let localProfileName = localStorage.getItem('omni_v3_name') || "";
-        let localProfileAvatar = localStorage.getItem('omni_v3_pfp') || "";
         let targetChatRoom = "Global";
         let mediaCacheBlock = [];
-        let activeTrackIndex = 0;
-        let selectedAudioCategory = "all";
 
         function verifyIdentityRequirements() {
             if (localProfileName) {
                 document.getElementById('identity-interceptor').style.display = 'none';
-                document.getElementById('profile-username-field').value = localProfileName;
-                if(localProfileAvatar) {
-                    document.getElementById('profile-avatar-display').src = localProfileAvatar;
-                    document.getElementById('lockout-avatar-view').src = localProfileAvatar;
-                }
-                database.ref('users/' + localProfileName).set({ pfp: localProfileAvatar, heartbeat: Date.now() });
+                database.ref('users/' + localProfileName).set({ heartbeat: Date.now() });
             } else {
                 document.getElementById('identity-interceptor').style.display = 'flex';
-            }
-        }
-
-        function processAvatarBuffer(event, isLockoutView) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    localProfileAvatar = e.target.result;
-                    document.getElementById(isLockoutView ? 'lockout-avatar-view' : 'profile-avatar-display').src = localProfileAvatar;
-                };
-                reader.readAsDataURL(file);
             }
         }
 
@@ -226,20 +149,7 @@
             if(!nameInput) return alert("Username required.");
             localProfileName = nameInput;
             localStorage.setItem('omni_v3_name', localProfileName);
-            localStorage.setItem('omni_v3_pfp', localProfileAvatar);
             verifyIdentityRequirements();
-        }
-
-        function updateProfileIdentity() {
-            const editName = document.getElementById('profile-username-field').value.trim();
-            if(editName) {
-                database.ref('users/' + localProfileName).remove();
-                localProfileName = editName;
-                localStorage.setItem('omni_v3_name', localProfileName);
-                localStorage.setItem('omni_v3_pfp', localProfileAvatar);
-                verifyIdentityRequirements();
-                alert("Cloud Profiles Synced Successfully!");
-            }
         }
 
         function routeTo(viewId, element) {
@@ -253,19 +163,13 @@
             database.ref('global_broadcast_messages').limitToLast(50).on('value', snap => {
                 if(targetChatRoom === "Global") renderChatBubbles(snap.val());
             });
-
             database.ref('users').on('value', snap => {
                 const users = snap.val() || {};
                 const pmBox = document.getElementById('pm-users-list');
                 pmBox.innerHTML = '';
-                for(let onlineUser in users) {
-                    if(onlineUser !== localProfileName) {
-                        const activeClass = (targetChatRoom === onlineUser) ? 'active' : '';
-                        pmBox.innerHTML += `
-                            <div class="online-user ${activeClass}" onclick="switchToPrivateMessage('${onlineUser}')">
-                                <span>👤 ${onlineUser}</span>
-                            </div>
-                        `;
+                for(let u in users) {
+                    if(u !== localProfileName) {
+                        pmBox.innerHTML += `<div class="online-user" onclick="switchToPrivateMessage('${u}')">👤 ${u}</div>`;
                     }
                 }
             });
@@ -273,75 +177,49 @@
 
         function switchToGlobalRoom() {
             targetChatRoom = "Global";
-            document.getElementById('active-chat-header').innerText = "Channel: Global Public Broadcast";
+            document.getElementById('active-chat-header').innerText = "Channel: Global Room";
             database.ref('global_broadcast_messages').limitToLast(50).once('value', s => renderChatBubbles(s.val()));
         }
 
         function switchToPrivateMessage(userTarget) {
             targetChatRoom = userTarget;
-            document.getElementById('active-chat-header').innerText = `Secure Tunnel Connection: @${userTarget}`;
-            const tunnelPathID = [localProfileName, userTarget].sort().join("_pmchannel_");
-            database.ref('private_tunnels/' + tunnelPathID).limitToLast(50).on('value', snap => {
+            document.getElementById('active-chat-header').innerText = `PM: @${userTarget}`;
+            const tunnel = [localProfileName, userTarget].sort().join("_pmchannel_");
+            database.ref('private_tunnels/' + tunnel).limitToLast(50).on('value', snap => {
                 if(targetChatRoom === userTarget) renderChatBubbles(snap.val());
             });
-        } 
-    
-    </script>
-    <script>
-        function renderChatBubbles(messagesData) {
+        }
+
+        function renderChatBubbles(data) {
             const container = document.getElementById('chat-messages-container');
             container.innerHTML = '';
-            if(!messagesData) return;
-            for(let msgKey in messagesData) {
-                const payload = messagesData[msgKey];
-                const isSelf = payload.sender === localProfileName ? 'self' : '';
-                const pfpImg = payload.avatar || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='36'><rect width='100%' height='100%' fill='%23ff4757'/></svg>";
-                container.innerHTML += `
-                    <div class="msg-bubble ${isSelf}">
-                        <img src="${pfpImg}" style="width:30px; height:30px; border-radius:50%; inline-block;">
-                        <div style="display:inline-block; vertical-align:top;">
-                            <strong style="color:var(--accent); font-size:0.75rem;">${payload.sender}</strong>
-                            <p style="font-size:0.85rem;">${payload.text}</p>
-                        </div>
-                    </div>
-                `;
+            if(!data) return;
+            for(let k in data) {
+                const isSelf = data[k].sender === localProfileName ? 'self' : '';
+                container.innerHTML += `<div class="msg-bubble ${isSelf}"><strong>${data[k].sender}:</strong> ${data[k].text}</div>`;
             }
             container.scrollTop = container.scrollHeight;
         }
 
         function sendOmniChatMessage() {
             const input = document.getElementById('chat-message-input');
-            const dataString = input.value.trim();
-            if(!dataString) return;
-
-            const structuredPacket = { sender: localProfileName, avatar: localProfileAvatar, text: dataString, epochTime: Date.now() };
-
+            if(!input.value.trim()) return;
+            const packet = { sender: localProfileName, text: input.value.trim(), epochTime: Date.now() };
             if(targetChatRoom === "Global") {
-                database.ref('global_broadcast_messages').push(structuredPacket);
+                database.ref('global_broadcast_messages').push(packet);
             } else {
-                const tunnelPathID = [localProfileName, targetChatRoom].sort().join("_pmchannel_");
-                database.ref('private_tunnels/' + tunnelPathID).push(structuredPacket);
+                const tunnel = [localProfileName, targetChatRoom].sort().join("_pmchannel_");
+                database.ref('private_tunnels/' + tunnel).push(packet);
             }
             input.value = '';
         }
 
-        // FETCH SYNCING ENGINE VIA OFFICIAL JAPAN DIRECTORY
-        let activeMediaCategory = "all";
         async function fetchJikanCloudFeeds() {
             try {
-                const airingRes = await (await fetch('https://api.jikan.moe/v4/top/anime?filter=airing&limit=10')).json();
-                const upcomingRes = await (await fetch('https://api.jikan.moe/v4/top/anime?filter=upcoming&limit=10')).json();
-                mediaCacheBlock = [
-                    ...airingRes.data.map(m => ({...m, calculatedType: 'airing'})),
-                    ...upcomingRes.data.map(m => ({...m, calculatedType: 'upcoming'}))
-                ];
+                const res = await (await fetch('https://api.jikan.moe/v4/top/anime?limit=12')).json();
+                mediaCacheBlock = res.data;
                 filterMediaMatrix();
             } catch(e) {}
-        }
-
-        function setMediaClass(classType, element) {
-            activeMediaCategory = classType;
-            filterMediaMatrix();
         }
 
         function filterMediaMatrix() {
@@ -356,44 +234,29 @@
             `).join('');
         }
 
-        // INTERNAL MUSIC PACKET LISTS
         const trackDatabase = [
-            { title: "Metamorphosis Phonk Loop Track", stream: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", trackClass: "phonk" },
-            { title: "Raining In Manila (OPM Hit Block)", stream: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3", trackClass: "tagalog" }
+            { title: "Metamorphosis Phonk Track", stream: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
+            { title: "Raining In Manila - Lola Amour", stream: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3" }
         ];
-
         const audioCoreNode = document.getElementById('hardware-audio-streamer');
-        audioCoreNode.onended = () => { audioNextTrack(); };
 
         function renderSpotifyLayout() {
-            const wrapper = document.getElementById('spotify-tracks-container');
-            wrapper.innerHTML = trackDatabase.map((track, index) => `
+            document.getElementById('spotify-tracks-container').innerHTML = trackDatabase.map((t, idx) => `
                 <div class="track-row">
-                    <div class="track-details"><strong>${track.title}</strong></div>
-                    <button onclick="bootAudioTrack(${index})" class="f-btn">BOOT AUDIO</button>
+                    <span>🎵 ${t.title}</span>
+                    <button class="f-btn" onclick="bootAudioTrack(${idx})">PLAY</button>
                 </div>
             `).join('');
         }
 
         function bootAudioTrack(index) {
-            activeTrackIndex = index;
-            audioCoreNode.src = trackDatabase[activeTrackIndex].stream;
+            audioCoreNode.src = trackDatabase[index].stream;
             audioCoreNode.play();
-            document.getElementById('player-track-title').innerText = "Streaming: " + trackDatabase[activeTrackIndex].title;
+            document.getElementById('player-track-title').innerText = "Streaming: " + trackDatabase[index].title;
         }
 
         function toggleAudioEngineState() {
             if(audioCoreNode.paused) audioCoreNode.play(); else audioCoreNode.pause();
-        }
-
-        function audioNextTrack() {
-            activeTrackIndex = (activeTrackIndex + 1) % trackDatabase.length;
-            bootAudioTrack(activeTrackIndex);
-        }
-
-        function audioPrevTrack() {
-            activeTrackIndex = (activeTrackIndex - 1 + trackDatabase.length) % trackDatabase.length;
-            bootAudioTrack(activeTrackIndex);
         }
 
         function toggleThemeCore() {
