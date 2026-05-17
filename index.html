@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="tl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OMNIVERSE CORE | Premium System</title>
+    <title>OMNIVERSE CORE | Premium Streaming Hub</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -27,112 +27,141 @@
             --border-color: #ced6e0;
             --input-bg: #ffffff;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: var(--bg-main); color: var(--text-main); padding-bottom: 150px; overflow-x: hidden; transition: background 0.2s, color 0.2s; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background: var(--bg-main); color: var(--text-main); padding-bottom: 160px; overflow-x: hidden; transition: background 0.2s, color 0.2s; }
         
-        /* Layout Framework */
+        /* Layout Structure */
         .top-bar { position: sticky; top: 0; display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: var(--bg-panel); border-bottom: 1px solid var(--border-color); z-index: 999; }
         .logo { font-weight: 900; color: var(--accent); letter-spacing: 2px; font-size: 1.3rem; }
         .view-section { display: none; padding: 20px; max-width: 1400px; margin: 0 auto; }
         .view-section.active { display: block; }
 
-        /* Search Bar & Filtering Matrix */
-        .search-box { width: 100%; padding: 14px 18px; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 8px; margin-bottom: 20px; font-size: 0.95rem; box-shadow: 0 4px 6px rgba(0,0,0,0.02); transition: all 0.2s; }
+        /* Search Bars & Theme-Adaptive Inputs */
+        .search-box { width: 100%; padding: 14px 18px; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 8px; margin-bottom: 20px; font-size: 0.95rem; transition: all 0.2s; }
         .search-box:focus { border-color: var(--accent); outline: none; }
         .filter-tabs { display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
-        .f-btn { background: var(--bg-panel); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; font-weight: 600; white-space: nowrap; }
+        .f-btn { background: var(--bg-panel); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; font-weight: 600; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
         .f-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
 
-        /* Advanced Display Grid */
+        /* Media Display Grid */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 18px; }
         .media-card { background: var(--bg-panel); border-radius: 10px; overflow: hidden; border: 1px solid var(--border-color); display: flex; flex-direction: column; cursor: pointer; transition: transform 0.2s, border-color 0.2s; }
         .media-card:hover { transform: translateY(-4px); border-color: var(--accent); }
         .media-card img { width: 100%; aspect-ratio: 11/16; object-fit: cover; }
         .media-card-info { padding: 12px; font-size: 0.8rem; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
         .media-title { font-weight: 700; line-height: 1.3; max-height: 2.6em; overflow: hidden; margin-bottom: 6px; }
-        .badge { display: inline-block; padding: 2px 6px; background: rgba(255, 71, 87, 0.1); color: var(--accent); font-size: 0.65rem; font-weight: bold; border-radius: 4px; width: fit-content; margin-top: 4px; }
+        .badge { display: inline-block; padding: 2px 6px; background: rgba(255, 71, 87, 0.1); color: var(--accent); font-size: 0.65rem; font-weight: bold; border-radius: 4px; width: fit-content; }
 
-        /* Full Details Pop-Up Window (Modal) */
-        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 2000; align-items: center; justify-content: center; padding: 15px; }
+        /* Pop-up Modals */
+        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; padding: 15px; }
         .modal-content { background: var(--bg-panel); border: 1px solid var(--border-color); padding: 25px; border-radius: 12px; max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; position: relative; }
-        .close-modal { position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--text-main); cursor: pointer; }
+        .close-modal { position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--text-main); cursor: pointer; font-size: 1.1rem; }
 
-        /* SVG Icon Wrappers */
-        .svg-icon { width: 20px; height: 20px; fill: currentColor; display: inline-block; vertical-align: middle; }
+        /* Icons */
+        .svg-icon { width: 18px; height: 18px; fill: currentColor; display: inline-block; vertical-align: middle; }
     </style>
 </head>
 <body>
-    <style>
-        /* Live Chat Layout Matrix */
+ <style>
+        /* Separated Chat Rooms & PM Engine CSS */
         .chat-layout { display: grid; grid-template-columns: 1fr; gap: 20px; }
-        @media (min-width: 768px) { .chat-layout { grid-template-columns: 260px 1fr; } }
-        .user-list { background: var(--bg-panel); padding: 15px; border-radius: 10px; border: 1px solid var(--border-color); max-height: 450px; overflow-y: auto; }
-        .online-user { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; margin-bottom: 10px; cursor: pointer; padding: 8px; border-radius: 6px; background: rgba(255,255,255,0.01); border: 1px solid transparent; }
-        .online-user:hover { border-color: var(--accent); }
+        @media (min-width: 768px) { .chat-layout { grid-template-columns: 280px 1fr; } }
+        .chat-channels-bar { display: flex; flex-direction: column; gap: 10px; }
+        .room-toggle-card { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; cursor: pointer; font-weight: bold; font-size: 0.9rem; display: flex; align-items: center; gap: 10px; }
+        .room-toggle-card.active { border-color: var(--accent); background: rgba(255,71,87,0.05); }
+        .user-list { background: var(--bg-panel); padding: 15px; border-radius: 10px; border: 1px solid var(--border-color); max-height: 320px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+        .online-user { display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; padding: 10px; border-radius: 6px; background: rgba(255,255,255,0.01); border: 1px solid transparent; cursor: pointer; }
+        .online-user:hover, .online-user.active { border-color: var(--accent); background: rgba(255,71,87,0.02); }
         .status-dot { width: 8px; height: 8px; background: #2ed573; border-radius: 50%; }
         
         .chat-main { background: var(--bg-panel); border-radius: 10px; border: 1px solid var(--border-color); display: flex; flex-direction: column; overflow: hidden; }
-        .chat-messages { height: 350px; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; background: rgba(0,0,0,0.02); }
-        .msg-bubble { background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); padding: 10px 14px; border-radius: 10px; max-width: 75%; display: flex; gap: 10px; }
-        .msg-bubble img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+        .chat-messages { height: 380px; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 14px; background: rgba(0,0,0,0.02); }
+        .msg-bubble { background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 12px; max-width: 80%; width: fit-content; display: flex; gap: 12px; align-items: flex-start; }
+        .msg-bubble.self { align-self: flex-end; border-color: rgba(255,71,87,0.3); background: rgba(255,71,87,0.02); }
+        .msg-bubble img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border-color); }
         .chat-controls { display: flex; padding: 12px; gap: 10px; background: rgba(0,0,0,0.05); border-top: 1px solid var(--border-color); }
         .chat-controls input { flex: 1; padding: 12px; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 6px; }
 
-        /* Professional Audio Components */
-        .audio-row { display: flex; align-items: center; justify-content: space-between; background: var(--bg-panel); padding: 14px 20px; margin-bottom: 10px; border-radius: 8px; border: 1px solid var(--border-color); }
-        .master-player { position: fixed; bottom: 70px; left: 0; right: 0; background: var(--bg-panel); border-top: 2px solid var(--accent); padding: 15px 30px; z-index: 999; display: flex; flex-direction: column; align-items: center; gap: 10px; box-shadow: 0 -8px 24px rgba(0,0,0,0.2); }
+        /* Identity Profile Setup Elements */
+        .identity-lockout { background: rgba(6,7,9,0.96); position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .profile-card { background: var(--bg-panel); border: 1px solid var(--border-color); padding: 30px; border-radius: 12px; text-align: center; }
+        .profile-avatar { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent); display: block; margin-bottom: 15px; }
+        .action-btn { background: var(--accent); color: white; border: none; padding: 12px 24px; border-radius: 6px; font-weight: bold; width: 100%; cursor: pointer; }
+
+        /* Spotify List Elements */
+        .spotify-container { display: flex; flex-direction: column; gap: 8px; }
+        .track-row { display: flex; align-items: center; justify-content: space-between; background: var(--bg-panel); padding: 14px 20px; border-radius: 8px; border: 1px solid var(--border-color); transition: background 0.2s; }
+        .track-row:hover { background: rgba(255,255,255,0.02); }
+        .track-details { display: flex; flex-direction: column; gap: 4px; }
+        .track-meta { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        /* Persistent Audio Engine Bar */
+        .master-player { position: fixed; bottom: 70px; left: 0; right: 0; background: var(--bg-panel); border-top: 2px solid var(--accent); padding: 15px 30px; z-index: 998; display: flex; flex-direction: column; align-items: center; gap: 12px; box-shadow: 0 -8px 24px rgba(0,0,0,0.3); }
         @media (min-width: 768px) { .master-player { flex-direction: row; justify-content: space-between; } }
         .player-btns { display: flex; align-items: center; gap: 12px; }
-        .ctrl-btn { background: var(--accent); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: opacity 0.2s; }
-        .ctrl-btn:hover { opacity: 0.9; }
+        .ctrl-btn { background: var(--accent); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; }
+        .ctrl-btn:active { transform: scale(0.95); }
 
-        /* Identity System Card */
-        .profile-card { background: var(--bg-panel); border-radius: 12px; padding: 30px; text-align: center; max-width: 450px; margin: 0 auto; border: 1px solid var(--border-color); }
-        .profile-avatar { width: 100px; height: 100px; border-radius: 50%; margin: 0 auto 15px; object-fit: cover; border: 3px solid var(--accent); display: block; }
-        .action-btn { width: 100%; padding: 12px; background: var(--accent); border: none; color: white; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; }
-
-        /* Fixed Navigation Layout (Pang App at Pang Desktop) */
+        /* Fixed Navigation System */
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-panel); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border-color); z-index: 1000; }
-        .nav-btn { background: none; border: none; color: var(--text-muted); font-size: 0.75rem; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; width: 70px; }
+        .nav-btn { background: none; border: none; color: var(--text-muted); font-size: 0.75rem; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; width: 80px; transition: color 0.2s; }
         .nav-btn.active { color: var(--accent); font-weight: bold; }
     </style>
+    <div id="identity-interceptor" class="identity-lockout">
+        <div class="profile-card" style="max-width:400px; width:100%;">
+            <h2 style="margin-bottom: 10px; color: var(--accent);">Setup Identity</h2>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:20px;">You need a verified username and avatar to access the live network streams and chat systems.</p>
+            <img id="lockout-avatar-view" class="profile-avatar" style="margin: 0 auto 15px;" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><rect width='100%' height='100%' fill='%23222530'/></svg>">
+            <input type="file" id="lockout-file-trigger" accept="image/*" style="display:none;" onchange="processAvatarBuffer(event, true)">
+            <button onclick="document.getElementById('lockout-file-trigger').click()" style="background:none; border:none; color:var(--accent); font-size:0.8rem; cursor:pointer; margin-bottom:20px; font-weight:bold;">[ Select From Files / Gallery ]</button>
+            <input type="text" id="lockout-username-field" class="search-box" style="text-align:center; font-weight:bold;" placeholder="Enter Username...">
+            <button class="action-btn" onclick="saveGatekeeperIdentity()">Access Omniverse Platform</button>
+        </div>
+    </div>
+
     <div class="top-bar">
         <div class="logo">● OMNIVERSE CORE</div>
-        <button class="f-btn" onclick="toggleThemeSystem()" id="theme-btn">
+        <button class="f-btn" onclick="toggleThemeCore()" id="theme-btn">
             <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>
-            Theme
+            Theme Switch
         </button>
     </div>
 
     <div id="home-view" class="view-section active">
-        <input type="text" id="media-search" class="search-box" placeholder="🔍 Mag-search ng Anime, Manga, Manhwa, Manhua..." oninput="filterMediaMatrix()">
         
-        <div class="filter-tabs">
-            <button class="f-btn active" onclick="setMediaCategory('all', this)">Lahat</button>
-            <button class="f-btn" onclick="setMediaCategory('airing', this)">Airing Anime</button>
-            <button class="f-btn" onclick="setMediaCategory('upcoming', this)">Upcoming (Inaasahan)</button>
-            <button class="f-btn" onclick="setMediaCategory('manga', this)">Manga Portal</button>
+        <div style="width: 100%; text-align: center; margin: 0 auto 20px; border-radius: 8px; overflow: hidden;">
+            <script async="async" data-cfasync="false" src="https://pl29471257.effectivecpmnetwork.com/4cf7e0a66c311471132f6ac2b1acd8b0/invoke.js"></script>
+            <div id="container-4cf7e0a66c311471132f6ac2b1acd8b0"></div>
         </div>
 
+        <input type="text" id="media-search" class="search-box" placeholder="🔍 Search Anime, Manga, Manhwa, Manhua titles..." oninput="filterMediaMatrix()">
+        <div class="filter-tabs">
+            <button class="f-btn active" onclick="setMediaClass('all', this)">All Feeds</button>
+            <button class="f-btn" onclick="setMediaClass('airing', this)">Airing Anime</button>
+            <button class="f-btn" onclick="setMediaClass('upcoming', this)">Upcoming Blocks</button>
+            <button class="f-btn" onclick="setMediaClass('manga', this)">Manga</button>
+            <button class="f-btn" onclick="setMediaClass('manhwa', this)">Manhwa</button>
+            <button class="f-btn" onclick="setMediaClass('manhua', this)">Manhua</button>
+        </div>
         <div id="media-grid-display" class="grid"></div>
     </div>
 
     <div id="chat-view" class="view-section">
         <div class="chat-layout">
-            <div class="user-list">
-                <div onclick="setToGlobalChat()" class="online-user" style="font-weight:bold; color:var(--accent);">
-                    <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-                    GLOBAL ROOM
+            <div class="chat-channels-bar">
+                <div onclick="switchToGlobalRoom()" id="global-room-tab" class="room-toggle-card active">
+                    <svg class="svg-icon" viewBox="0 0 24 24" style="color:var(--accent);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                    🌐 Global Broadcast Room
                 </div>
-                <h4 style="font-size:0.7rem; color:var(--text-muted); margin:15px 0 8px; text-transform:uppercase;">MGA USER (PM):</h4>
-                <div id="chatters-injection-box"></div>
+                <h4 style="font-size:0.65rem; color:var(--text-muted); margin:10px 0 2px; text-transform:uppercase; letter-spacing:1px;">Private Messages (PM)</h4>
+                <div id="pm-users-list" class="user-list"></div>
             </div>
             <div class="chat-main">
-                <div id="chat-room-title" style="padding:12px; background:rgba(0,0,0,0.1); font-weight:bold; font-size:0.85rem; border-bottom:1px solid var(--border-color);">Channel: Global</div>
-                <div class="chat-messages" id="live-chat-box"></div>
+                <div id="active-chat-header" style="padding:14px; background:rgba(0,0,0,0.1); font-weight:bold; font-size:0.85rem; border-bottom:1px solid var(--border-color); color:var(--accent);">Channel: Global Room</div>
+                <div class="chat-messages" id="chat-messages-container"></div>
                 <div class="chat-controls">
-                    <input type="text" id="chat-input-field" placeholder="Sumulat ng encrypted message...">
-                    <button class="ctrl-btn" onclick="dispatchLiveMessage()">
+                    <input type="text" id="chat-message-input" placeholder="Type a secure message...">
+                    <button class="ctrl-btn" onclick="sendOmniChatMessage()">
                         <svg class="svg-icon" viewBox="0 0 24 24" style="fill:white;"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
                     </button>
                 </div>
@@ -141,39 +170,44 @@
     </div>
 
     <div id="audio-view" class="view-section">
-        <input type="text" id="audio-search-field" class="search-box" placeholder="🔍 Mag-search ng Phonk, Edit tracks, Anime, OPM..." oninput="renderAudioPortal()">
-        <div id="audio-tracks-wrapper"></div>
+        <input type="text" id="audio-search-box" class="search-box" placeholder="🔍 Search Phonk, TikTok Trends, English Hits, OPM, J-Pop..." oninput="renderSpotifyLayout()">
+        <div class="filter-tabs">
+            <button class="f-btn active" onclick="setAudioCategory('all', this)">All Music</button>
+            <button class="f-btn" onclick="setAudioCategory('phonk', this)">TikTok Phonk</button>
+            <button class="f-btn" onclick="setAudioCategory('trending', this)">TikTok Viral</button>
+            <button class="f-btn" onclick="setAudioCategory('english', this)">English Hits</button>
+            <button class="f-btn" onclick="setAudioCategory('tagalog', this)">OPM Tagalog</button>
+            <button class="f-btn" onclick="setAudioCategory('japanese', this)">J-Pop / Anime</button>
+        </div>
+        <div id="spotify-tracks-container" class="spotify-container"></div>
     </div>
 
     <div id="profile-view" class="view-section">
         <div class="profile-card">
-            <img id="avatar-img-view" class="profile-avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><rect width='100%' height='100%' fill='%23222530'/></svg>">
-            <input type="file" id="upload-file-trigger" accept="image/*" style="display:none;" onchange="processAvatarFile(event)">
-            <button onclick="document.getElementById('upload-file-trigger').click()" style="background:none; border:none; color:var(--accent); font-size:0.8rem; cursor:pointer; margin-bottom:20px; font-weight:bold;">[ Kumuha sa Gallery / Files ]</button>
-            <input type="text" id="username-input-field" class="search-box" style="text-align:center; font-weight:bold;" placeholder="I-type ang iyong Username">
-            <button class="action-btn" onclick="saveSystemIdentity()">I-SAVE SYSTEM PROFILE</button>
+            <img id="profile-avatar-display" class="profile-avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><rect width='100%' height='100%' fill='%23222530'/></svg>">
+            <input type="file" id="profile-file-trigger" accept="image/*" style="display:none;" onchange="processAvatarBuffer(event, false)">
+            <button onclick="document.getElementById('profile-file-trigger').click()" style="background:none; border:none; color:var(--accent); font-size:0.8rem; cursor:pointer; margin-bottom:20px; font-weight:bold;">[ Change Avatar Picture ]</button>
+            <input type="text" id="profile-username-field" class="search-box" style="text-align:center; font-weight:bold;" placeholder="Username">
+            <button class="action-btn" onclick="updateProfileIdentity()">Update Cloud Identity</button>
         </div>
     </div>
-
-    <div class="modal" id="details-modal" onclick="closeMediaModal(event)">
+    <div class="modal" id="media-modal" onclick="closeMediaModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <button class="close-modal" onclick="document.getElementById('details-modal').style.display='none'">✕ Close</button>
-            <div id="modal-data-body"></div>
+            <button class="close-modal" onclick="closeMediaModal()">✕</button>
+            <div id="modal-body-content"></div>
         </div>
     </div>
 
     <div class="master-player">
-        <div style="display:flex; align-items:center; gap:10px;">
-            <div style="font-weight:bold; font-size:0.85rem;" id="player-track-name">No track running</div>
-        </div>
+        <div id="player-track-title" style="font-weight:bold; font-size:0.85rem;">No Track Loaded</div>
         <div class="player-btns">
-            <button class="ctrl-btn" onclick="triggerPrevTrack()">
+            <button class="ctrl-btn" onclick="audioPrevTrack()">
                 <svg class="svg-icon" viewBox="0 0 24 24" style="fill:white;"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
             </button>
-            <button class="ctrl-btn" id="master-toggle-btn" style="width:46px; height:46px;" onclick="toggleAudioState()">
-                <svg class="svg-icon" viewBox="0 0 24 24" style="fill:white;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+            <button class="ctrl-btn" id="audio-play-pause-btn" style="width:46px; height:46px;" onclick="toggleAudioEngineState()">
+                <svg class="svg-icon" viewBox="0 0 24 24" style="fill:white;"><path d="M8 5v14l11-7z"/></svg>
             </button>
-            <button class="ctrl-btn" onclick="triggerNextTrack()">
+            <button class="ctrl-btn" onclick="audioNextTrack()">
                 <svg class="svg-icon" viewBox="0 0 24 24" style="fill:white;"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6z"/></svg>
             </button>
         </div>
@@ -186,62 +220,78 @@
         </button>
         <button class="nav-btn" onclick="routeTo('chat', this)">
             <svg class="svg-icon" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
-            <span>Chat</span>
+            <span>Chat Hub</span>
         </button>
         <button class="nav-btn" onclick="routeTo('audio', this)">
             <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
-            <span>Audio</span>
+            <span>Spotify Audio</span>
         </button>
         <button class="nav-btn" onclick="routeTo('profile', this)">
             <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-            <span>Profile</span>
+            <span>Identity</span>
         </button>
     </div>
 
-    <audio id="audio-hardware-core"></audio>
+    <audio id="hardware-audio-streamer"></audio>
+
     <script>
-        // FIREBASE MASTER MATRIX CONFIGURATION
+        // FIREBASE CONNECTION CONFIGURATION
         const firebaseConfig = { databaseURL: "https://studio-8164628274-c414a-default-rtdb.asia-southeast1.firebasedatabase.app/" };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // Application State
-        let systemUser = localStorage.getItem('omni_v2_name') || "OmniUser_" + Math.floor(1000 + Math.random()*9000);
-        let systemAvatar = localStorage.getItem('omni_v2_pfp') || "";
-        let currentChatChannel = "Global";
+        let localProfileName = localStorage.getItem('omni_v3_name') || "";
+        let localProfileAvatar = localStorage.getItem('omni_v3_pfp') || "";
+        let targetChatRoom = "Global";
         
-        let apiCacheStore = [];
-        let activeAudioPointer = 0;
+        let mediaCacheBlock = [];
+        let activeTrackIndex = 0;
+        let selectedAudioCategory = "all";
 
-        function initializeIdentitySystem() {
-            document.getElementById('username-input-field').value = systemUser;
-            if(systemAvatar) document.getElementById('avatar-img-view').src = systemAvatar;
-            
-            // I-broadast ang presensya sa real-time node
-            database.ref('users/' + systemUser).set({ pfp: systemAvatar, ping: Date.now() });
-        }
-
-        function processAvatarFile(event) {
-            const uploadedFile = event.target.files[0];
-            if (uploadedFile) {
-                const streamReader = new FileReader();
-                streamReader.onload = function(e) {
-                    systemAvatar = e.target.result; // Base64 Buffer Engine
-                    document.getElementById('avatar-img-view').src = systemAvatar;
-                };
-                streamReader.readAsDataURL(uploadedFile);
+        function verifyIdentityRequirements() {
+            if (localProfileName) {
+                document.getElementById('identity-interceptor').style.display = 'none';
+                document.getElementById('profile-username-field').value = localProfileName;
+                if(localProfileAvatar) {
+                    document.getElementById('profile-avatar-display').src = localProfileAvatar;
+                    document.getElementById('lockout-avatar-view').src = localProfileAvatar;
+                }
+                database.ref('users/' + localProfileName).set({ pfp: localProfileAvatar, heartbeat: Date.now() });
+            } else {
+                document.getElementById('identity-interceptor').style.display = 'flex';
             }
         }
 
-        function saveSystemIdentity() {
-            const targetedName = document.getElementById('username-input-field').value.trim();
-            if(targetedName) {
-                database.ref('users/' + systemUser).remove(); // Wasakin ang lumang register node
-                systemUser = targetedName;
-                localStorage.setItem('omni_v2_name', systemUser);
-                localStorage.setItem('omni_v2_pfp', systemAvatar);
-                initializeIdentitySystem();
-                alert("Identity Block Secured Successfully!");
+        function processAvatarBuffer(event, isLockoutView) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    localProfileAvatar = e.target.result;
+                    document.getElementById(isLockoutView ? 'lockout-avatar-view' : 'profile-avatar-display').src = localProfileAvatar;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function saveGatekeeperIdentity() {
+            const nameInput = document.getElementById('lockout-username-field').value.trim();
+            if(!nameInput) return alert("Username input field cannot be left blank.");
+            localProfileName = nameInput;
+            localStorage.setItem('omni_v3_name', localProfileName);
+            localStorage.setItem('omni_v3_pfp', localProfileAvatar);
+            verifyIdentityRequirements();
+        }
+
+        function updateProfileIdentity() {
+            const editName = document.getElementById('profile-username-field').value.trim();
+            if(editName) {
+                database.ref('users/' + localProfileName).remove();
+                localProfileName = editName;
+                localStorage.setItem('omni_v3_name', localProfileName);
+                localStorage.setItem('omni_v3_pfp', localProfileAvatar);
+                verifyIdentityRequirements();
+                alert("Cloud Sync Successful!");
             }
         }
 
@@ -252,126 +302,133 @@
             element.classList.add('active');
         }
 
-        // CHAT NETWORKING PROTOCOLS
-        function startChatNetworkSync() {
-            database.ref('global_messages').limitToLast(40).on('value', snap => {
-                if(currentChatChannel === "Global") executeRenderMessages(snap.val());
+        function startLiveChatRouter() {
+            database.ref('global_broadcast_messages').limitToLast(50).on('value', snap => {
+                if(targetChatRoom === "Global") renderChatBubbles(snap.val());
             });
 
             database.ref('users').on('value', snap => {
-                const nodes = snap.val() || {};
-                let injectionHTML = '';
-                for(let nodeName in nodes) {
-                    if(nodeName !== systemUser) {
-                        injectionHTML += `
-                            <div class="online-user" onclick="routeToPMChannel('${nodeName}')">
-                                <div class="status-dot"></div>
-                                <div>${nodeName}</div>
+                const users = snap.val() || {};
+                const pmBox = document.getElementById('pm-users-list');
+                pmBox.innerHTML = '';
+                for(let onlineUser in users) {
+                    if(onlineUser !== localProfileName) {
+                        const activeClass = (targetChatRoom === onlineUser) ? 'active' : '';
+                        pmBox.innerHTML += `
+                            <div class="online-user ${activeClass}" onclick="switchToPrivateMessage('${onlineUser}')">
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <div class="status-dot"></div>
+                                    <span>${onlineUser}</span>
+                                </div>
+                                <svg class="svg-icon" style="width:14px; height:14px; color:var(--text-muted);" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
                             </div>
                         `;
                     }
                 }
-                document.getElementById('chatters-injection-box').innerHTML = injectionHTML;
             });
         }
 
-        function setToGlobalChat() {
-            currentChatChannel = "Global";
-            document.getElementById('chat-room-title').innerText = "Channel: Global Room";
-            database.ref('global_messages').limitToLast(40).once('value', s => executeRenderMessages(s.val()));
+        function switchToGlobalRoom() {
+            targetChatRoom = "Global";
+            document.getElementById('global-room-tab').classList.add('active');
+            document.getElementById('active-chat-header').innerText = "Channel: Global Broadcast Room";
+            database.ref('global_broadcast_messages').limitToLast(50).once('value', s => renderChatBubbles(s.val()));
         }
 
-        function routeToPMChannel(userTarget) {
-            currentChatChannel = userTarget;
-            document.getElementById('chat-room-title').innerText = `Private PM with: ${userTarget}`;
-            const tunnelID = [systemUser, userTarget].sort().join("_secure_");
-            database.ref('pms/' + tunnelID).limitToLast(40).on('value', snap => {
-                executeRenderMessages(snap.val());
+        function switchToPrivateMessage(userTarget) {
+            targetChatRoom = userTarget;
+            document.getElementById('global-room-tab').classList.remove('active');
+            document.getElementById('active-chat-header').innerText = `Private Secure Channel: @${userTarget}`;
+            
+            const tunnelPathID = [localProfileName, userTarget].sort().join("_pmchannel_");
+            database.ref('private_tunnels/' + tunnelPathID).limitToLast(50).on('value', snap => {
+                if(targetChatRoom === userTarget) renderChatBubbles(snap.val());
             });
         }
 
-        function executeRenderMessages(dataPack) {
-            const logBox = document.getElementById('live-chat-box');
-            logBox.innerHTML = '';
-            if(!dataPack) return;
-            for(let key in dataPack) {
-                const payload = dataPack[key];
-                const cleanAvatar = payload.pfp || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><rect width='100%' height='100%' fill='%23ff4757'/></svg>";
-                logBox.innerHTML += `
-                    <div class="msg-bubble">
-                        <img src="${cleanAvatar}">
+        function renderChatBubbles(messagesData) {
+            const container = document.getElementById('chat-messages-container');
+            container.innerHTML = '';
+            if(!messagesData) return;
+            for(let msgKey in messagesData) {
+                const payload = messagesData[msgKey];
+                const isSelf = payload.sender === localProfileName ? 'self' : '';
+                const fallbackAvatar = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='36'><rect width='100%' height='100%' fill='%23ff4757'/></svg>";
+                
+                container.innerHTML += `
+                    <div class="msg-bubble ${isSelf}">
+                        <img src="${payload.avatar || fallbackAvatar}">
                         <div>
                             <strong style="color:var(--accent); font-size:0.75rem;">${payload.sender}</strong>
-                            <p style="margin-top:4px; font-size:0.85rem;">${payload.text}</p>
+                            <p style="margin-top:4px; font-size:0.85rem; word-break:break-word;">${payload.text}</p>
                         </div>
                     </div>
                 `;
             }
-            logBox.scrollTop = logBox.scrollHeight;
+            container.scrollTop = container.scrollHeight;
         }
 
-        function dispatchLiveMessage() {
-            const inputField = document.getElementById('chat-input-field');
-            const messageTxt = inputField.value.trim();
-            if(!messageTxt) return;
+        function sendOmniChatMessage() {
+            const input = document.getElementById('chat-message-input');
+            const dataString = input.value.trim();
+            if(!dataString) return;
 
-            const messagePacket = { sender: systemUser, pfp: systemAvatar, text: messageTxt, timestamp: Date.now() };
+            const structuredPacket = { sender: localProfileName, avatar: localProfileAvatar, text: dataString, epochTime: Date.now() };
 
-            if(currentChatChannel === "Global") {
-                database.ref('global_messages').push(messagePacket);
+            if(targetChatRoom === "Global") {
+                database.ref('global_broadcast_messages').push(structuredPacket);
             } else {
-                const tunnelID = [systemUser, currentChatChannel].sort().join("_secure_");
-                database.ref('pms/' + tunnelID).push(messagePacket);
+                const tunnelPathID = [localProfileName, targetChatRoom].sort().join("_pmchannel_");
+                database.ref('private_tunnels/' + tunnelPathID).push(structuredPacket);
             }
-            inputField.value = '';
+            input.value = '';
         }
-        // ADVANCED JIKAN API FOR ANIME, UPCOMING, MANGA, MANHWA, AND MANHUA
-        let activeCategoryFilter = "all";
+        // ADVANCED API JIKAN SYSTEM
+        let activeMediaCategory = "all";
 
-        async function fetchOmniverseMediaCore() {
-            const displayGrid = document.getElementById('media-grid-display');
-            displayGrid.innerHTML = "<p style='color:var(--text-muted)'>Awtomatikong kinukuha ang live global network data...</p>";
+        async function fetchJikanCloudFeeds() {
+            const grid = document.getElementById('media-grid-display');
+            grid.innerHTML = "<p style='color:var(--text-muted); padding:10px;'>Fetching live data streams from legal directory frameworks...</p>";
             try {
-                const airingAnime = await (await fetch('https://api.jikan.moe/v4/top/anime?filter=airing&limit=12')).json();
-                const upcomingAnime = await (await fetch('https://api.jikan.moe/v4/top/anime?filter=upcoming&limit=12')).json();
-                const generalManga = await (await fetch('https://api.jikan.moe/v4/top/manga?limit=25')).json();
+                const airingRes = await (await fetch('https://api.jikan.moe/v4/top/anime?filter=airing&limit=12')).json();
+                const upcomingRes = await (await fetch('https://api.jikan.moe/v4/top/anime?filter=upcoming&limit=12')).json();
+                const generalMangaRes = await (await fetch('https://api.jikan.moe/v4/top/manga?limit=25')).json();
 
-                apiCacheStore = [
-                    ...airingAnime.data.map(i => ({...i, omniClass: 'airing'})),
-                    ...upcomingAnime.data.map(i => ({...i, omniClass: 'upcoming'})),
-                    ...generalManga.data.map(i => {
-                        // Awtomatikong pag-uuri ng data base sa MyAnimeList types
-                        let subClass = 'manga';
-                        if(i.type === 'Manhwa') subClass = 'manhwa';
-                        if(i.type === 'Manhua') subClass = 'manhua';
-                        return {...i, omniClass: subClass};
+                mediaCacheBlock = [
+                    ...airingRes.data.map(m => ({...m, calculatedType: 'airing'})),
+                    ...upcomingRes.data.map(m => ({...m, calculatedType: 'upcoming'})),
+                    ...generalMangaRes.data.map(m => {
+                        let dynamicClass = 'manga';
+                        if(m.type === 'Manhwa') dynamicClass = 'manhwa';
+                        if(m.type === 'Manhua') dynamicClass = 'manhua';
+                        return {...m, calculatedType: dynamicClass};
                     })
                 ];
                 filterMediaMatrix();
-            } catch(err) { displayGrid.innerHTML = "<p style='color:var(--accent)'>Error loading API data.</p>"; }
+            } catch(e) { grid.innerHTML = "<p style='color:var(--accent);'>Error syncing network data.</p>"; }
         }
 
-        function setMediaCategory(cat, element) {
+        function setMediaClass(classType, element) {
             document.querySelectorAll('.filter-tabs .f-btn').forEach(b => b.classList.remove('active'));
             element.classList.add('active');
-            activeCategoryFilter = cat;
+            activeMediaCategory = classType;
             filterMediaMatrix();
         }
 
         function filterMediaMatrix() {
             const searchKeyword = document.getElementById('media-search').value.toLowerCase();
-            const gridContainer = document.getElementById('media-grid-display');
+            const grid = document.getElementById('media-grid-display');
             
-            let matchedData = apiCacheStore.filter(item => {
-                const matchesSearch = item.title.toLowerCase().includes(searchKeyword);
-                const matchesTab = (activeCategoryFilter === "all") || (item.omniClass === activeCategoryFilter);
-                return matchesSearch && matchesTab;
+            let dataset = mediaCacheBlock.filter(item => {
+                const queryMatch = item.title.toLowerCase().includes(searchKeyword);
+                const categoryMatch = (activeMediaCategory === "all") || (item.calculatedType === activeMediaCategory);
+                return queryMatch && categoryMatch;
             });
 
-            gridContainer.innerHTML = matchedData.map((item, index) => {
-                const realCacheIndex = apiCacheStore.findIndex(x => x.title === item.title);
+            grid.innerHTML = dataset.map(item => {
+                const databasePointerIndex = mediaCacheBlock.findIndex(x => x.title === item.title);
                 return `
-                    <div class="media-card" onclick="launchMediaModal(${realCacheIndex})">
+                    <div class="media-card" onclick="openMediaDetailsModal(${databasePointerIndex})">
                         <img src="${item.images.jpg.image_url}">
                         <div class="media-card-info">
                             <div class="media-title">${item.title}</div>
@@ -382,122 +439,137 @@
             }).join('');
         }
 
-        function launchMediaModal(index) {
-            const media = apiCacheStore[index];
-            const targetModal = document.getElementById('details-modal');
-            const bodyInjection = document.getElementById('modal-data-body');
-            
-            // Link configs
-            const extLink = media.omniClass === 'airing' || media.omniClass === 'upcoming' 
-                ? `https://www.crunchyroll.com/search?q=${encodeURIComponent(media.title)}`
-                : `https://mangaplus.shueisha.co.jp/search?keyword=${encodeURIComponent(media.title)}`;
+        function openMediaDetailsModal(index) {
+            const data = mediaCacheBlock[index];
+            const redirectionURL = data.calculatedType === 'airing' || data.calculatedType === 'upcoming'
+                ? `https://www.crunchyroll.com/search?q=${encodeURIComponent(data.title)}`
+                : `https://mangaplus.shueisha.co.jp/search?keyword=${encodeURIComponent(data.title)}`;
 
-            const trailerLink = media.trailer && media.trailer.url 
-                ? `<a href="${media.trailer.url}" target="_blank" class="f-btn" style="background:#e50914; color:white; display:inline-block; margin-top:10px; text-decoration:none;">▶ Watch Official Trailer</a>`
+            const trailerBlock = data.trailer && data.trailer.url
+                ? `<a href="${data.trailer.url}" target="_blank" class="f-btn" style="background:#e50914; color:white; border:none; display:inline-block; text-decoration:none; margin-top:10px;">▶ Watch Trailer</a>`
                 : '';
 
-            bodyInjection.innerHTML = `
+            document.getElementById('modal-body-content').innerHTML = `
                 <div style="display:flex; gap:20px; flex-wrap:wrap; color:var(--text-main);">
-                    <img src="${media.images.jpg.image_url}" style="width:150px; border-radius:8px; object-fit:cover;">
-                    <div style="flex:1; min-width:250px;">
-                        <h2>${media.title}</h2>
-                        <p style="color:var(--accent); font-weight:bold; margin:5px 0;">Score: ⭐ ${media.score || 'N/A'}</p>
-                        <p><b>Status:</b> ${media.status}</p>
-                        <p><b>Episodes/Chapters:</b> ${media.episodes || media.chapters || 'Ongoing'}</p>
-                        ${trailerLink}
+                    <img src="${data.images.jpg.image_url}" style="width:140px; border-radius:8px; object-fit:cover;">
+                    <div style="flex:1; min-width:240px;">
+                        <h3>${data.title}</h3>
+                        <p style="color:var(--accent); font-weight:bold; margin:6px 0;">Score: ⭐ ${data.score || 'N/A'}</p>
+                        <p style="font-size:0.85rem;"><b>Status:</b> ${data.status}</p>
+                        <p style="font-size:0.85rem;"><b>Units/Episodes:</b> ${data.episodes || data.chapters || 'Ongoing'}</p>
+                        ${trailerBlock}
                     </div>
                 </div>
-                <div style="margin-top:20px; border-top:1px solid var(--border-color); padding-top:15px; color:var(--text-main);">
-                    <h4>Synopsis / Summary:</h4>
-                    <p style="font-size:0.85rem; color:var(--text-muted); margin-top:5px; line-height:1.5;">${media.synopsis || 'Walang nakalaang impormasyon sa kasalukuyan.'}</p>
-                    <a href="${extLink}" target="_blank" class="action-btn" style="display:block; text-align:center; text-decoration:none; margin-top:20px;">READ / WATCH ON OFFICIAL PLATFORM</a>
+                <div style="margin-top:20px; border-top:1px solid var(--border-color); padding-top:12px; color:var(--text-main);">
+                    <h5 style="font-size:0.9rem;">Synopsis Output:</h5>
+                    <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.5; margin-top:6px;">${data.synopsis || 'No detailed log overview file provided.'}</p>
+                    <a href="${redirectionURL}" target="_blank" class="action-btn" style="display:block; text-align:center; text-decoration:none; margin-top:20px;">ACCESS OFFICIAL BROADCAST PLATFORM</a>
                 </div>
             `;
-            targetModal.style.display = "flex";
+            document.getElementById('media-modal').style.display = 'flex';
         }
 
-        function closeMediaModal(e) {
-            document.getElementById('details-modal').style.display = 'none';
+        function closeMediaModal() {
+            document.getElementById('media-modal').style.display = 'none';
         }
 
-        // PROFESSIONAL MUSIC CONTROLLER DATA (AUTO-UPDATED SIMULATION)
-        const musicLibrary = [
-            { title: "⚡ PHONK - Metamorphosis (TikTok Speed Up)", source: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
-            { title: "😈 PHONK - Brazilian Dança Phonk Track", source: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
-            { title: "🇺🇸 English Pop - Stay (TikTok Speed Mix)", source: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" },
-            { title: "🇵🇭 OPM Hit - Raining In Manila (Trend Edit)", source: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" },
-            { title: "🎸 OPM Pop - Ere (Popular TikTok Slowed)", source: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3" },
-            { title: "🇯🇵 J-Pop Hit - Idol / Yoasobi (Oshi No Ko)", source: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3" },
-            { title: "🌸 Anime Cute - Renai Circulation Kawaii Mix", source: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3" }
+        // COMPREHENSIVE INTERNAL SPOTIFY AUDIO DATA ARRAYS
+        const trackDatabase = [
+            { title: "Metamorphosis (TikTok Super Speed Phonk)", stream: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", trackClass: "phonk" },
+            { title: "Brazilian Dança Phonk (TikTok Bass Edit)", stream: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", trackClass: "phonk" },
+            { title: "Paint The Town Red (TikTok Viral Loop)", stream: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", trackClass: "trending" },
+            { title: "Greedy - Tate McRae (Speed Up Remix)", stream: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3", trackClass: "trending" },
+            { title: "Blinding Lights (Slowed & Reverb Ultimate Mix)", stream: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3", trackClass: "english" },
+            { title: "Stay With Me (Acoustic Billboard Cut)", stream: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3", trackClass: "english" },
+            { title: "Raining In Manila - Lola Amour (TikTok Trend)", stream: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3", trackClass: "tagalog" },
+            { title: "Ere - Juan Karlos (Viral OPM Slowed)", stream: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3", trackClass: "tagalog" },
+            { title: "Idol - YOASOBI (Oshi No Ko Theme Track)", stream: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3", trackClass: "japanese" },
+            { title: "Renai Circulation (Super Cute Kawaii Mix)", stream: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3", trackClass: "japanese" }
         ];
 
-        const audioNode = document.getElementById('audio-hardware-core');
-        audioNode.onended = () => { triggerNextTrack(); };
+        const audioCoreNode = document.getElementById('hardware-audio-streamer');
+        audioCoreNode.onended = () => { audioNextTrack(); };
 
-        function renderAudioPortal() {
-            const query = document.getElementById('audio-search-field').value.toLowerCase();
-            const wrapper = document.getElementById('audio-tracks-wrapper');
+        function setAudioCategory(cat, element) {
+            document.querySelectorAll('#audio-view .filter-tabs .f-btn').forEach(b => b.classList.remove('active'));
+            element.classList.add('active');
+            selectedAudioCategory = cat;
+            renderSpotifyLayout();
+        }
+
+        function renderSpotifyLayout() {
+            const query = document.getElementById('audio-search-box').value.toLowerCase();
+            const wrapper = document.getElementById('spotify-tracks-container');
             
-            wrapper.innerHTML = musicLibrary
-                .filter(m => m.title.toLowerCase().includes(query))
-                .map(track => {
-                    const trackingIndex = musicLibrary.findIndex(x => x.title === track.title);
-                    return `
-                        <div class="audio-row">
-                            <div><b style="font-size:0.85rem;">${track.title}</b></div>
-                            <button onclick="bootTrack(${trackingIndex})" class="ctrl-btn" style="border-radius:6px; width:auto; padding:0 15px; font-size:0.75rem;">PLAY</button>
+            let subset = trackDatabase.filter(m => {
+                const searchMatch = m.title.toLowerCase().includes(query);
+                const classMatch = (selectedAudioCategory === "all") || (m.trackClass === selectedAudioCategory);
+                return searchMatch && classMatch;
+            });
+
+            wrapper.innerHTML = subset.map(track => {
+                const absoluteIndex = trackDatabase.findIndex(x => x.title === track.title);
+                return `
+                    <div class="track-row">
+                        <div class="track-details">
+                            <strong style="font-size:0.9rem;">${track.title}</strong>
+                            <span class="track-meta">${track.trackClass}</span>
                         </div>
-                    `;
-                }).join('');
+                        <button onclick="bootAudioTrack(${absoluteIndex})" class="ctrl-btn" style="border-radius:6px; width:auto; padding:0 16px; font-size:0.75rem; font-weight:bold;">PLAY</button>
+                    </div>
+                `;
+            }).join('');
         }
 
-        function bootTrack(index) {
-            activeAudioPointer = index;
-            const targetTrack = musicLibrary[activeAudioPointer];
-            audioNode.src = targetTrack.source;
-            audioNode.play().catch(e => console.log('Autoplay blocked.'));
-            document.getElementById('player-track-name').innerText = "Running: " + targetTrack.title;
-            document.getElementById('master-toggle-btn').innerHTML = `<svg class="svg-icon" viewBox="0 0 24 24" style="fill:white;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
+        function bootAudioTrack(index) {
+            activeTrackIndex = index;
+            const chosenTrack = trackDatabase[activeTrackIndex];
+            audioCoreNode.src = chosenTrack.stream;
+            audioCoreNode.play().catch(e => console.log("Autoplay context saved."));
+            document.getElementById('player-track-title').innerText = "Playing: " + chosenTrack.title;
+            document.getElementById('audio-play-pause-btn').innerHTML = `<svg class="svg-icon" viewBox="0 0 24 24" style="fill:white;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
         }
 
-        function toggleAudioState() {
-            const btn = document.getElementById('master-toggle-btn');
-            if(audioNode.paused) {
-                audioNode.play();
+        function toggleAudioEngineState() {
+            const btn = document.getElementById('audio-play-pause-btn');
+            if(audioCoreNode.paused) {
+                audioCoreNode.play();
                 btn.innerHTML = `<svg class="svg-icon" viewBox="0 0 24 24" style="fill:white;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
             } else {
-                audioNode.pause();
+                audioCoreNode.pause();
                 btn.innerHTML = `<svg class="svg-icon" viewBox="0 0 24 24" style="fill:white;"><path d="M8 5v14l11-7z"/></svg>`;
             }
         }
 
-        function triggerNextTrack() {
-            activeAudioPointer = (activeAudioPointer + 1) % musicLibrary.length;
-            bootTrack(activeAudioPointer);
+        // NEXT/PREV AUDIO LOOP ENGINE
+        function audioNextTrack() {
+            activeTrackIndex = (activeTrackIndex + 1) % trackDatabase.length;
+            bootAudioTrack(activeTrackIndex);
         }
 
-        function triggerPrevTrack() {
-            activeAudioPointer = (activeAudioPointer - 1 + musicLibrary.length) % musicLibrary.length;
-            bootTrack(activeAudioPointer);
+        function audioPrevTrack() {
+            activeTrackIndex = (activeTrackIndex - 1 + trackDatabase.length) % trackDatabase.length;
+            bootAudioTrack(activeTrackIndex);
         }
 
-        // WHITE AND BLACK CONTROLLER THEME SYSTEM
-        function toggleThemeSystem() {
-            const bodyNode = document.body;
-            if(bodyNode.getAttribute('data-theme') === 'light') {
-                bodyNode.removeAttribute('data-theme');
+        function toggleThemeCore() {
+            const body = document.body;
+            if(body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
             } else {
-                bodyNode.setAttribute('data-theme', 'light');
+                body.setAttribute('data-theme', 'light');
             }
         }
 
-        // RUN SYSTEM INSTANCES
         document.addEventListener('DOMContentLoaded', () => {
-            initializeIdentitySystem();
-            startChatNetworkSync();
-            fetchOmniverseMediaCore();
-            renderAudioPortal();
+            verifyIdentityRequirements();
+            startLiveChatRouter();
+            fetchJikanCloudFeeds();
+            renderSpotifyLayout();
         });
     </script>
+
+    <script src="https://pl29471258.effectivecpmnetwork.com/27/7b/f8/277bf845b91c531ad9fb066482ac8cae.js"></script>
+
 </body>
 </html>
