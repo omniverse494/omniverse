@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OMNIVERSE TERMINAL</title>
+    <title>OMNIVERSE ANIME TERMINAL</title>
     
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8691102556824057" crossorigin="anonymous"></script>
 
@@ -109,8 +109,10 @@
         @media (min-width: 992px) { .hero-banner-slider { height: 380px; } }
         .slide-frame { width: 100%; height: 100%; position: relative; display: none; }
         .slide-frame.active-slide { display: block; animation: fadeEffect 0.6s ease-in-out; }
-        .slide-frame img { width: 100%; height: 100%; object-fit: cover; }
+        .slide-frame img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; }
         .slide-gradient { position: absolute; bottom: 0; left: 0; width: 100%; padding: 60px 20px 20px; background: linear-gradient(to top, rgba(0,0,0,0.95), transparent); color: #fff; font-size: 16px; font-weight: bold; }
+
+        @keyframes fadeEffect { from { opacity: 0.4; } to { opacity: 1; } }
 
         .viewport-canvas { padding: 16px; flex: 1; overflow-y: auto; }
         .view-panel { display: none; }
@@ -147,6 +149,11 @@
 
         .volume-container { display: flex; align-items: center; gap: 10px; justify-content: center; margin-top: 15px; background: rgba(0,0,0,0.1); padding: 8px 16px; border-radius: 12px; border: 1px solid var(--border); }
         .volume-slider { flex: 1; accent-color: var(--accent); cursor: pointer; height: 6px; border-radius: 3px; outline: none; }
+        
+        /* CHAT STYLE UPDATES FOR PROFILES */
+        .chat-avatar-bubble { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--accent); background: var(--border); }
+        .chat-tab-btn { flex: 1; padding: 14px; background: none; border: none; color: var(--text-dim); font-size: 13px; font-weight: bold; cursor: pointer; border-bottom: 2px solid transparent; }
+        .chat-tab-btn.chat-tab-active { color: var(--accent); border-bottom-color: var(--accent); background: rgba(255,0,85,0.03); }
     </style>
 </head>
 <body>
@@ -169,18 +176,23 @@
                     <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
                 </button>
             </div>
-            </header>
-            <main class="viewport-canvas">
+        </header>
+
+        <main class="viewport-canvas">
             <div id="panel-home" class="view-panel active-panel">
                 <div class="hero-banner-slider">
                     <div class="slider-track">
                         <div class="slide-frame active-slide">
-                            <img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=1200" alt="Banner 1">
-                            <div class="slide-gradient">Omniverse Cyber Anime Broadcast Station</div>
+                            <img src="https://images.alphacoders.com/134/1340156.png" alt="Eren Yeager">
+                            <div class="slide-gradient">Attack on Titan - Eren Yeager Terminal</div>
                         </div>
                         <div class="slide-frame">
-                            <img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=1200" alt="Banner 2">
-                            <div class="slide-gradient">Database Synchronization Active</div>
+                            <img src="https://images.alphacoders.com/131/1316521.jpeg" alt="Luffy Gear 5">
+                            <div class="slide-gradient">One Piece - Monkey D. Luffy Gear 5 Awakened</div>
+                        </div>
+                        <div class="slide-frame">
+                            <img src="https://images.alphacoders.com/605/605703.jpg" alt="Anime Stars Clash">
+                            <div class="slide-gradient">Omniverse Premium Anime Broadcast Station</div>
                         </div>
                     </div>
                 </div>
@@ -217,8 +229,15 @@
             <div id="panel-chat" class="view-panel">
                 <div style="background:var(--surface); border:1px solid var(--border); border-radius:24px; height:calc(100vh - 220px); min-height:500px; display:flex; flex-direction:column; overflow:hidden; max-width:800px; margin:0 auto;">
                     <div style="display:flex; border-bottom:1px solid var(--border); background:rgba(0,0,0,0.15);">
-                        <button id="chat-tab-global" style="flex:1; padding:14px; background:none; border:none; color:var(--text); font-size:13px; font-weight:bold; cursor:pointer;">Global Stream Node</button>
+                        <button id="chat-tab-global" class="chat-tab-btn chat-tab-active" onclick="window.setChatMode('global')">Global Stream</button>
+                        <button id="chat-tab-pm" class="chat-tab-btn" onclick="window.setChatMode('pm')">Private Message (PM)</button>
                     </div>
+                    
+                    <div id="pm-header-target" style="display:none; padding:10px 16px; background:rgba(0,0,0,0.1); border-bottom:1px solid var(--border); gap:10px; align-items:center;">
+                        <span style="font-size:12px; color:var(--accent); font-weight:bold;">To (Username):</span>
+                        <input type="text" id="pmTargetInput" placeholder="Enter target username..." style="background:var(--bg); border:1px solid var(--border); padding:6px 12px; color:var(--text); font-size:12px; border-radius:6px; outline:none; flex:1;">
+                    </div>
+
                     <div id="logs" style="flex:1; padding:20px; overflow-y:auto; display:flex; flex-direction:column; gap:14px;"></div>
                     <div style="padding:16px; display:flex; gap:10px; border-top:1px solid var(--border); background:var(--surface);">
                         <input type="text" id="msg" placeholder="Type secure message..." onkeydown="if(event.key==='Enter') window.sendMsg()" style="flex:1; padding:14px; border-radius:12px; border:1px solid var(--border); background:var(--bg); color:var(--text); outline:none;">
@@ -267,10 +286,16 @@
             <div id="panel-settings" class="view-panel">
                 <div style="background:var(--surface); border:1px solid var(--border); border-radius:24px; padding:30px; max-width:500px; margin: 0 auto;">
                     <div style="display:flex; flex-direction:column; align-items:center; gap:14px; margin-bottom:25px;">
-                        <div style="width:90px; height:90px; border-radius:50%; background:var(--border); display:flex; align-items:center; justify-content:center; border:3px solid var(--accent); color:var(--accent);">
-                            <svg viewBox="0 0 24 24" width="32" height="32" stroke="currentColor" stroke-width="2" fill="none"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        
+                        <div style="position:relative; width:100px; height:100px;">
+                            <img id="profileImageDisplay" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff0055' stroke-width='2'><path d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/><circle cx='12' cy='7' r='4'/></svg>" style="width:100%; height:100%; border-radius:50%; object-fit:cover; border:3px solid var(--accent); background:var(--bg);">
+                            <label for="galleryImageInput" style="position:absolute; bottom:0; right:0; background:var(--accent); padding:6px; border-radius:50%; cursor:pointer; width:30px; height:30px; display:flex; align-items:center; justify-content:center; box-shadow:0 0 8px rgba(0,0,0,0.5);">
+                                <svg viewBox="0 0 24 24" width="14" height="14" stroke="white" stroke-width="2.5" fill="none"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx='12' cy='13' r='4'/></svg>
+                            </label>
+                            <input type="file" id="galleryImageInput" accept="image/*" style="display:none;" onchange="window.handleProfileImageUpload(this)">
                         </div>
-                        <h4 style="color:var(--text-dim); font-size:13px; text-transform:uppercase; letter-spacing:1px;">Identity Config</h4>
+                        
+                        <h4 style="color:var(--text-dim); font-size:13px; text-transform:uppercase; letter-spacing:1px;">Identity Terminal Config</h4>
                     </div>
                     <div style="display:flex; flex-direction:column; gap:14px;">
                         <label style="font-size:11px; font-weight:bold; color:var(--accent); text-transform:uppercase;">User Alias Identification</label>
@@ -283,8 +308,8 @@
                     </div>
                 </div>
             </div>
-    </main>
-    <nav class="navigation-dock-bar">
+        </main>
+        <nav class="navigation-dock-bar">
             <button id="tab-btn-home" class="nav-item-node tab-active" onclick="window.switchAppView('home')">
                 <svg viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
                 <span>Home</span>
@@ -316,11 +341,14 @@
     </div>
 
     <script>
-        let currentSlide = 0; let globalChatRef;
+        let currentSlide = 0; let globalChatRef; let pmChatRef;
+        let activeChatMode = "global"; // "global" o "pm"
+        const defaultProfileImg = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff0055' stroke-width='2'><path d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/><circle cx='12' cy='7' r='4'/></svg>";
+
         const tracks = [
-            { title: "Phonk Hit Mix Channel", url: "https://stream.zeno.fm/0v8g78p37fevv" },
-            { title: "TikTok Aesthetic Vibe", url: "https://stream.zeno.fm/v34w75p37fevv" },
-            { title: "J-Pop: Anime Core Stream", url: "https://stream.zeno.fm/03w7v6w37fevv" }
+            { title: "Anime J-Pop Hits (Auto-Updated)", url: "https://listen.moe/stream" },
+            { title: "Anison Live Broadcast Node", url: "https://stream.zeno.fm/03w7v6w37fevv" },
+            { title: "Vocaloid & Cyber Pop Station", url: "https://listen.moe/kpop/stream" }
         ];
         let currentTrackIdx = 0;
 
@@ -347,6 +375,34 @@
             currentSlide = (currentSlide + 1) % slides.length;
             slides[currentSlide].classList.add('active-slide');
         }
+
+        window.setChatMode = function(mode) {
+            activeChatMode = mode;
+            document.getElementById('chat-tab-global').classList.remove('chat-tab-active');
+            document.getElementById('chat-tab-pm').classList.remove('chat-tab-active');
+            
+            if (mode === "global") {
+                document.getElementById('chat-tab-global').classList.add('chat-tab-active');
+                document.getElementById('pm-header-target').style.display = 'none';
+                if(globalChatRef) globalChatRef.trigger('value');
+            } else {
+                document.getElementById('chat-tab-pm').classList.add('chat-tab-active');
+                document.getElementById('pm-header-target').style.display = 'flex';
+                if(pmChatRef) pmChatRef.trigger('value');
+            }
+        };
+
+        window.handleProfileImageUpload = function(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64Img = e.target.result;
+                    document.getElementById('profileImageDisplay').src = base64Img;
+                    localStorage.setItem('omniverse_profile_img', base64Img);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        };
 
         window.toggleMusic = function() {
             const aud = document.getElementById('mainAudio'), icon = document.getElementById('playIconSvg'), disc = document.getElementById('musicDisc');
@@ -399,22 +455,72 @@
         };
 
         function getMyName() { return localStorage.getItem('omniverse_nick') || "Guest Node"; }
+        function getMyImage() { return localStorage.getItem('omniverse_profile_img') || defaultProfileImg; }
         function scrollChat() { const l = document.getElementById('logs'); if(l) l.scrollTop = l.scrollHeight; }
-        window.saveProfileSettings = function() { localStorage.setItem('omniverse_nick', sanitize(document.getElementById('nick').value)); };
+        
+        window.saveProfileSettings = function() { 
+            localStorage.setItem('omniverse_nick', sanitize(document.getElementById('nick').value)); 
+        };
 
         window.sendMsg = function() {
-            const m = document.getElementById('msg').value; if(!m.trim() || !globalChatRef) return;
-            globalChatRef.push({ nickname: getMyName(), message: sanitize(m), timestamp: firebase.database.ServerValue.TIMESTAMP });
+            const m = document.getElementById('msg').value; if(!m.trim()) return;
+            const payload = {
+                nickname: getMyName(),
+                avatar: getMyImage(),
+                message: sanitize(m),
+                timestamp: firebase.database.ServerValue.TIMESTAMP
+            };
+            
+            if (activeChatMode === "global" && globalChatRef) {
+                globalChatRef.push(payload);
+            } else if (activeChatMode === "pm" && pmChatRef) {
+                const targetUser = document.getElementById('pmTargetInput').value.trim();
+                if (!targetUser) { alert("Please enter a target username for PM!"); return; }
+                payload.pmTarget = targetUser;
+                pmChatRef.push(payload);
+            }
             document.getElementById('msg').value = "";
         };
 
+        function renderMessages(snap) {
+            const logs = document.getElementById('logs'); if(!logs) return; logs.innerHTML = '';
+            let lastUser = "System", lastMsg = "Database synchronized securely.";
+            
+            snap.forEach(function(child) {
+                const d = child.val(); const isMe = d.nickname === getMyName();
+                const userAvatar = d.avatar || defaultProfileImg;
+                
+                if (activeChatMode === "pm") {
+                    const targetUser = document.getElementById('pmTargetInput').value.trim();
+                    // I-filter ang mga messages para lang sa nag-uusap (Me at Target)
+                    if (!((d.nickname === getMyName() && d.pmTarget === targetUser) || (d.nickname === targetUser && d.pmTarget === getMyName()))) {
+                        return;
+                    }
+                }
+                
+                lastUser = d.nickname; lastMsg = d.message;
+                
+                logs.innerHTML += `
+                    <div style="display:flex; gap:10px; align-items:flex-end; ${isMe?'flex-direction:row-reverse;':''}">
+                        <img class="chat-avatar-bubble" src="${userAvatar}">
+                        <div style="background:${isMe?'var(--chat-user)':'var(--chat-target)'}; border:1px solid var(--border); padding:10px 14px; border-radius:14px; font-size:13px; max-width:70%;">
+                            <b style="font-size:10px; display:block; color:var(--accent); margin-bottom:2px;">${d.nickname}</b>
+                            <div>${d.message}</div>
+                        </div>
+                    </div>`;
+            });
+            scrollChat();
+            if (activeChatMode === "global") {
+                document.getElementById('systemLiveTicker').innerHTML = `<b>${sanitize(lastUser)}:</b> "${sanitize(lastMsg)}" &nbsp;&nbsp;&bull;&nbsp;&nbsp; Join the chat node terminal room for real-time discussions!`;
+            }
+        }
+
         window.downloadSystemConfigProfile = function() {
             const profileData = {
-                stationName: "OMNIVERSE TERMINAL CORE",
+                stationName: "OMNIVERSE ANIME TERMINAL CORE",
                 userAliasId: getMyName(),
                 timestampExported: new Date().toISOString(),
-                statusAdsense: "Pending Validation",
-                buildVersion: "2.5.0-Stabilized"
+                buildVersion: "4.0.0-PM-Stabilized"
             };
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(profileData, null, 4));
             const downloadAnchor = document.createElement('a');
@@ -432,15 +538,7 @@
                 if(trendFeed && data.data) {
                     trendFeed.innerHTML = '';
                     data.data.forEach((item, index) => {
-                        trendFeed.innerHTML += `
-                            <div class="trending-card-item">
-                                <div class="trending-rank-badge">#${index + 1}</div>
-                                <div class="trending-thumb"><img src="${item.images.jpg.image_url}"></div>
-                                <div style="flex:1; min-width:0;">
-                                    <h3 style="font-size:14px; font-weight:bold; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${sanitize(item.title)}</h3>
-                                    <div style="font-size:11px; color:var(--text-dim); margin-top:3px;">Score: ${item.score || 'N/A'} | Episodes: ${item.episodes || 'TBA'}</div>
-                                </div>
-                            </div>`;
+                        trendFeed.innerHTML += `<div class="trending-card-item"><div class="trending-rank-badge">#${index + 1}</div><div class="trending-thumb"><img src="${item.images.jpg.image_url}"></div><div style="flex:1; min-width:0;"><h3 style="font-size:14px; font-weight:bold; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${sanitize(item.title)}</h3><div style="font-size:11px; color:var(--text-dim); margin-top:3px;">Score: ${item.score || 'N/A'} | Episodes: ${item.episodes || 'TBA'}</div></div></div>`;
                     });
                 }
             } catch(e){}
@@ -485,25 +583,32 @@
         window.closeVideo = function() { document.getElementById('videoModal').style.display = 'none'; document.getElementById('videoIframe').src = ''; };
 
         window.onload = function() {
+            // Load saved UI identity settings
+            document.getElementById('nick').value = getMyName();
+            document.getElementById('profileImageDisplay').src = getMyImage();
+
             try {
                 firebase.initializeApp({ databaseURL: "https://studio-8164628274-c414a-default-rtdb.asia-southeast1.firebasedatabase.app/" });
                 globalChatRef = firebase.database().ref("chat_messages");
+                pmChatRef = firebase.database().ref("pm_messages");
+
                 globalChatRef.limitToLast(30).on("value", function(snap) {
-                    const logs = document.getElementById('logs'); if(!logs) return; logs.innerHTML = '';
-                    let lastUser = "System", lastMsg = "Database synchronized securely.";
-                    snap.forEach(function(child) {
-                        const d = child.val(); const isMe = d.nickname === getMyName();
-                        lastUser = d.nickname; lastMsg = d.message;
-                        logs.innerHTML += `<div style="display:flex; gap:10px; ${isMe?'flex-direction:row-reverse;':''}"><div style="background:${isMe?'var(--chat-user)':'var(--chat-target)'}; border:1px solid var(--border); padding:10px 14px; border-radius:14px; font-size:13px; max-width:80%;"><b style="font-size:10px; display:block; color:var(--accent);">${d.nickname}</b><div>${d.message}</div></div></div>`;
-                    });
-                    scrollChat();
-                    document.getElementById('systemLiveTicker').innerHTML = `<b>${sanitize(lastUser)}:</b> "${sanitize(lastMsg)}" &nbsp;&nbsp;&bull;&nbsp;&nbsp; Join the chat node terminal room for real-time secure discussions!`;
+                    if (activeChatMode === "global") renderMessages(snap);
                 });
+
+                pmChatRef.limitToLast(50).on("value", function(snap) {
+                    if (activeChatMode === "pm") renderMessages(snap);
+                });
+
+                document.getElementById('pmTargetInput').addEventListener('input', () => {
+                    if(activeChatMode === "pm") pmChatRef.trigger('value');
+                });
+                
             } catch(e){}
+            
             fetchData(); document.getElementById('musicTitleTxt').innerText = tracks[0].title;
             setInterval(runSlider, 4000);
-            const defaultVol = document.getElementById('audioVolumeControl').value;
-            window.adjustSystemVolume(defaultVol);
+            window.adjustSystemVolume(document.getElementById('audioVolumeControl').value);
         };
     </script>
 </body>
