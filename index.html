@@ -30,20 +30,17 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
         body { background: var(--bg-main); color: var(--text-main); padding-bottom: 160px; overflow-x: hidden; transition: background 0.2s, color 0.2s; }
         
-        /* Layout Structure */
         .top-bar { position: sticky; top: 0; display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: var(--bg-panel); border-bottom: 1px solid var(--border-color); z-index: 999; }
         .logo { font-weight: 900; color: var(--accent); letter-spacing: 2px; font-size: 1.3rem; }
         .view-section { display: none; padding: 20px; max-width: 1400px; margin: 0 auto; }
         .view-section.active { display: block; }
 
-        /* Search Bars & Theme-Adaptive Inputs */
         .search-box { width: 100%; padding: 14px 18px; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 8px; margin-bottom: 20px; font-size: 0.95rem; transition: all 0.2s; }
         .search-box:focus { border-color: var(--accent); outline: none; }
         .filter-tabs { display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
         .f-btn { background: var(--bg-panel); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; font-weight: 600; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
         .f-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
 
-        /* Media Display Grid */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 18px; }
         .media-card { background: var(--bg-panel); border-radius: 10px; overflow: hidden; border: 1px solid var(--border-color); display: flex; flex-direction: column; cursor: pointer; transition: transform 0.2s, border-color 0.2s; }
         .media-card:hover { transform: translateY(-4px); border-color: var(--accent); }
@@ -52,18 +49,12 @@
         .media-title { font-weight: 700; line-height: 1.3; max-height: 2.6em; overflow: hidden; margin-bottom: 6px; }
         .badge { display: inline-block; padding: 2px 6px; background: rgba(255, 71, 87, 0.1); color: var(--accent); font-size: 0.65rem; font-weight: bold; border-radius: 4px; width: fit-content; }
 
-        /* Pop-up Modals */
         .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; padding: 15px; }
         .modal-content { background: var(--bg-panel); border: 1px solid var(--border-color); padding: 25px; border-radius: 12px; max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; position: relative; }
         .close-modal { position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--text-main); cursor: pointer; font-size: 1.1rem; }
-
-        /* Icons */
         .svg-icon { width: 18px; height: 18px; fill: currentColor; display: inline-block; vertical-align: middle; }
-    </style>
-</head>
-<body>
- <style>
-        /* Separated Chat Rooms & PM Engine CSS */
+            </style>
+            <style>
         .chat-layout { display: grid; grid-template-columns: 1fr; gap: 20px; }
         @media (min-width: 768px) { .chat-layout { grid-template-columns: 280px 1fr; } }
         .chat-channels-bar { display: flex; flex-direction: column; gap: 10px; }
@@ -82,66 +73,54 @@
         .chat-controls { display: flex; padding: 12px; gap: 10px; background: rgba(0,0,0,0.05); border-top: 1px solid var(--border-color); }
         .chat-controls input { flex: 1; padding: 12px; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 6px; }
 
-        /* Identity Profile Setup Elements */
         .identity-lockout { background: rgba(6,7,9,0.96); position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .profile-card { background: var(--bg-panel); border: 1px solid var(--border-color); padding: 30px; border-radius: 12px; text-align: center; }
         .profile-avatar { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent); display: block; margin-bottom: 15px; }
         .action-btn { background: var(--accent); color: white; border: none; padding: 12px 24px; border-radius: 6px; font-weight: bold; width: 100%; cursor: pointer; }
 
-        /* Spotify List Elements */
         .spotify-container { display: flex; flex-direction: column; gap: 8px; }
         .track-row { display: flex; align-items: center; justify-content: space-between; background: var(--bg-panel); padding: 14px 20px; border-radius: 8px; border: 1px solid var(--border-color); transition: background 0.2s; }
         .track-row:hover { background: rgba(255,255,255,0.02); }
         .track-details { display: flex; flex-direction: column; gap: 4px; }
         .track-meta { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
         
-        /* Persistent Audio Engine Bar */
         .master-player { position: fixed; bottom: 70px; left: 0; right: 0; background: var(--bg-panel); border-top: 2px solid var(--accent); padding: 15px 30px; z-index: 998; display: flex; flex-direction: column; align-items: center; gap: 12px; box-shadow: 0 -8px 24px rgba(0,0,0,0.3); }
         @media (min-width: 768px) { .master-player { flex-direction: row; justify-content: space-between; } }
         .player-btns { display: flex; align-items: center; gap: 12px; }
         .ctrl-btn { background: var(--accent); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; }
-        .ctrl-btn:active { transform: scale(0.95); }
-
-        /* Fixed Navigation System */
+        
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-panel); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border-color); z-index: 1000; }
         .nav-btn { background: none; border: none; color: var(--text-muted); font-size: 0.75rem; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; width: 80px; transition: color 0.2s; }
         .nav-btn.active { color: var(--accent); font-weight: bold; }
     </style>
+</head>
+<body>
     <div id="identity-interceptor" class="identity-lockout">
         <div class="profile-card" style="max-width:400px; width:100%;">
             <h2 style="margin-bottom: 10px; color: var(--accent);">Setup Identity</h2>
-            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:20px;">You need a verified username and avatar to access the live network streams and chat systems.</p>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:20px;">Verification username and avatar config file needed.</p>
             <img id="lockout-avatar-view" class="profile-avatar" style="margin: 0 auto 15px;" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><rect width='100%' height='100%' fill='%23222530'/></svg>">
             <input type="file" id="lockout-file-trigger" accept="image/*" style="display:none;" onchange="processAvatarBuffer(event, true)">
-            <button onclick="document.getElementById('lockout-file-trigger').click()" style="background:none; border:none; color:var(--accent); font-size:0.8rem; cursor:pointer; margin-bottom:20px; font-weight:bold;">[ Select From Files / Gallery ]</button>
-            <input type="text" id="lockout-username-field" class="search-box" style="text-align:center; font-weight:bold;" placeholder="Enter Username...">
-            <button class="action-btn" onclick="saveGatekeeperIdentity()">Access Omniverse Platform</button>
+            <button onclick="document.getElementById('lockout-file-trigger').click()" style="background:none; border:none; color:var(--accent); font-size:0.8rem; cursor:pointer; margin-bottom:20px; font-weight:bold;">[ Choose Avatar Pic ]</button>
+            <input type="text" id="lockout-username-field" class="search-box" style="text-align:center; font-weight:bold;" placeholder="Enter Nickname...">
+            <button class="action-btn" onclick="saveGatekeeperIdentity()">Launch App System</button>
         </div>
     </div>
 
     <div class="top-bar">
         <div class="logo">● OMNIVERSE CORE</div>
-        <button class="f-btn" onclick="toggleThemeCore()" id="theme-btn">
-            <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>
-            Theme Switch
+        <button class="f-btn" onclick="toggleThemeCore()">
+            Theme Variant
         </button>
     </div>
 
     <div id="home-view" class="view-section active">
-        
-        <div style="width: 100%; text-align: center; margin: 0 auto 20px; border-radius: 8px; overflow: hidden;">
-            <script async="async" data-cfasync="false" src="https://pl29471257.effectivecpmnetwork.com/4cf7e0a66c311471132f6ac2b1acd8b0/invoke.js"></script>
-            <div id="container-4cf7e0a66c311471132f6ac2b1acd8b0"></div>
-        </div>
-
-        <input type="text" id="media-search" class="search-box" placeholder="🔍 Search Anime, Manga, Manhwa, Manhua titles..." oninput="filterMediaMatrix()">
+        <input type="text" id="media-search" class="search-box" placeholder="🔍 Filter Japanese Anime, Manga blocks..." oninput="filterMediaMatrix()">
         <div class="filter-tabs">
             <button class="f-btn active" onclick="setMediaClass('all', this)">All Feeds</button>
             <button class="f-btn" onclick="setMediaClass('airing', this)">Airing Anime</button>
-            <button class="f-btn" onclick="setMediaClass('upcoming', this)">Upcoming Blocks</button>
-            <button class="f-btn" onclick="setMediaClass('manga', this)">Manga</button>
-            <button class="f-btn" onclick="setMediaClass('manhwa', this)">Manhwa</button>
-            <button class="f-btn" onclick="setMediaClass('manhua', this)">Manhua</button>
+            <button class="f-btn" onclick="setMediaClass('upcoming', this)">Upcoming</button>
+            <button class="f-btn" onclick="setMediaClass('manga', this)">Manga Grid</button>
         </div>
         <div id="media-grid-display" class="grid"></div>
     </div>
@@ -149,36 +128,23 @@
     <div id="chat-view" class="view-section">
         <div class="chat-layout">
             <div class="chat-channels-bar">
-                <div onclick="switchToGlobalRoom()" id="global-room-tab" class="room-toggle-card active">
-                    <svg class="svg-icon" viewBox="0 0 24 24" style="color:var(--accent);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-                    🌐 Global Broadcast Room
-                </div>
-                <h4 style="font-size:0.65rem; color:var(--text-muted); margin:10px 0 2px; text-transform:uppercase; letter-spacing:1px;">Private Messages (PM)</h4>
+                <div onclick="switchToGlobalRoom()" id="global-room-tab" class="room-toggle-card active">🌐 Global Terminal</div>
+                <h4 style="font-size:0.65rem; color:var(--text-muted); margin:10px 0 2px; text-transform:uppercase; letter-spacing:1px;">Private Secure Matrix</h4>
                 <div id="pm-users-list" class="user-list"></div>
             </div>
             <div class="chat-main">
-                <div id="active-chat-header" style="padding:14px; background:rgba(0,0,0,0.1); font-weight:bold; font-size:0.85rem; border-bottom:1px solid var(--border-color); color:var(--accent);">Channel: Global Room</div>
+                <div id="active-chat-header" style="padding:14px; background:rgba(0,0,0,0.1); font-weight:bold; font-size:0.85rem; border-bottom:1px solid var(--border-color); color:var(--accent);">Active: Public Global</div>
                 <div class="chat-messages" id="chat-messages-container"></div>
                 <div class="chat-controls">
-                    <input type="text" id="chat-message-input" placeholder="Type a secure message...">
-                    <button class="ctrl-btn" onclick="sendOmniChatMessage()">
-                        <svg class="svg-icon" viewBox="0 0 24 24" style="fill:white;"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-                    </button>
+                    <input type="text" id="chat-message-input" placeholder="Broadcast to network...">
+                    <button class="ctrl-btn" onclick="sendOmniChatMessage()">✔</button>
                 </div>
             </div>
         </div>
     </div>
 
     <div id="audio-view" class="view-section">
-        <input type="text" id="audio-search-box" class="search-box" placeholder="🔍 Search Phonk, TikTok Trends, English Hits, OPM, J-Pop..." oninput="renderSpotifyLayout()">
-        <div class="filter-tabs">
-            <button class="f-btn active" onclick="setAudioCategory('all', this)">All Music</button>
-            <button class="f-btn" onclick="setAudioCategory('phonk', this)">TikTok Phonk</button>
-            <button class="f-btn" onclick="setAudioCategory('trending', this)">TikTok Viral</button>
-            <button class="f-btn" onclick="setAudioCategory('english', this)">English Hits</button>
-            <button class="f-btn" onclick="setAudioCategory('tagalog', this)">OPM Tagalog</button>
-            <button class="f-btn" onclick="setAudioCategory('japanese', this)">J-Pop / Anime</button>
-        </div>
+        <input type="text" id="audio-search-box" class="search-box" placeholder="🔍 Search Phonk, OPM Hits, TikTok Viral..." oninput="renderSpotifyLayout()">
         <div id="spotify-tracks-container" class="spotify-container"></div>
     </div>
 
@@ -186,9 +152,9 @@
         <div class="profile-card">
             <img id="profile-avatar-display" class="profile-avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><rect width='100%' height='100%' fill='%23222530'/></svg>">
             <input type="file" id="profile-file-trigger" accept="image/*" style="display:none;" onchange="processAvatarBuffer(event, false)">
-            <button onclick="document.getElementById('profile-file-trigger').click()" style="background:none; border:none; color:var(--accent); font-size:0.8rem; cursor:pointer; margin-bottom:20px; font-weight:bold;">[ Change Avatar Picture ]</button>
-            <input type="text" id="profile-username-field" class="search-box" style="text-align:center; font-weight:bold;" placeholder="Username">
-            <button class="action-btn" onclick="updateProfileIdentity()">Update Cloud Identity</button>
+            <button onclick="document.getElementById('profile-file-trigger').click()" style="background:none; border:none; color:var(--accent); font-size:0.8rem; cursor:pointer; margin-bottom:20px; font-weight:bold;">[ Re-upload Image ]</button>
+            <input type="text" id="profile-username-field" class="search-box" style="text-align:center; font-weight:bold;">
+            <button class="action-btn" onclick="updateProfileIdentity()">Save To Cloud</button>
         </div>
     </div>
     <div class="modal" id="media-modal" onclick="closeMediaModal()">
@@ -199,43 +165,25 @@
     </div>
 
     <div class="master-player">
-        <div id="player-track-title" style="font-weight:bold; font-size:0.85rem;">No Track Loaded</div>
+        <div id="player-track-title" style="font-weight:bold; font-size:0.85rem;">No Audio Source Injected</div>
         <div class="player-btns">
-            <button class="ctrl-btn" onclick="audioPrevTrack()">
-                <svg class="svg-icon" viewBox="0 0 24 24" style="fill:white;"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
-            </button>
-            <button class="ctrl-btn" id="audio-play-pause-btn" style="width:46px; height:46px;" onclick="toggleAudioEngineState()">
-                <svg class="svg-icon" viewBox="0 0 24 24" style="fill:white;"><path d="M8 5v14l11-7z"/></svg>
-            </button>
-            <button class="ctrl-btn" onclick="audioNextTrack()">
-                <svg class="svg-icon" viewBox="0 0 24 24" style="fill:white;"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6z"/></svg>
-            </button>
+            <button class="ctrl-btn" onclick="audioPrevTrack()">◀</button>
+            <button class="ctrl-btn" id="audio-play-pause-btn" style="width:46px; height:46px;" onclick="toggleAudioEngineState()">▶</button>
+            <button class="ctrl-btn" onclick="audioNextTrack()">▶</button>
         </div>
     </div>
 
     <div class="bottom-nav">
-        <button class="nav-btn active" onclick="routeTo('home', this)">
-            <svg class="svg-icon" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-            <span>Home</span>
-        </button>
-        <button class="nav-btn" onclick="routeTo('chat', this)">
-            <svg class="svg-icon" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
-            <span>Chat Hub</span>
-        </button>
-        <button class="nav-btn" onclick="routeTo('audio', this)">
-            <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
-            <span>Spotify Audio</span>
-        </button>
-        <button class="nav-btn" onclick="routeTo('profile', this)">
-            <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-            <span>Identity</span>
-        </button>
+        <button class="nav-btn active" onclick="routeTo('home', this)"><span>Core Grid</span></button>
+        <button class="nav-btn" onclick="routeTo('chat', this)"><span>Chat Hub</span></button>
+        <button class="nav-btn" onclick="routeTo('audio', this)"><span>Spotify</span></button>
+        <button class="nav-btn" onclick="routeTo('profile', this)"><span>Identity</span></button>
     </div>
 
     <audio id="hardware-audio-streamer"></audio>
 
     <script>
-        // FIREBASE CONNECTION CONFIGURATION
+        // CONFIG DISK CLOUD SYSTEM DATABASE LINK
         const firebaseConfig = { databaseURL: "https://studio-8164628274-c414a-default-rtdb.asia-southeast1.firebasedatabase.app/" };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
@@ -243,7 +191,6 @@
         let localProfileName = localStorage.getItem('omni_v3_name') || "";
         let localProfileAvatar = localStorage.getItem('omni_v3_pfp') || "";
         let targetChatRoom = "Global";
-        
         let mediaCacheBlock = [];
         let activeTrackIndex = 0;
         let selectedAudioCategory = "all";
@@ -276,7 +223,7 @@
 
         function saveGatekeeperIdentity() {
             const nameInput = document.getElementById('lockout-username-field').value.trim();
-            if(!nameInput) return alert("Username input field cannot be left blank.");
+            if(!nameInput) return alert("Username required.");
             localProfileName = nameInput;
             localStorage.setItem('omni_v3_name', localProfileName);
             localStorage.setItem('omni_v3_pfp', localProfileAvatar);
@@ -291,7 +238,7 @@
                 localStorage.setItem('omni_v3_name', localProfileName);
                 localStorage.setItem('omni_v3_pfp', localProfileAvatar);
                 verifyIdentityRequirements();
-                alert("Cloud Sync Successful!");
+                alert("Cloud Profiles Synced Successfully!");
             }
         }
 
@@ -316,11 +263,7 @@
                         const activeClass = (targetChatRoom === onlineUser) ? 'active' : '';
                         pmBox.innerHTML += `
                             <div class="online-user ${activeClass}" onclick="switchToPrivateMessage('${onlineUser}')">
-                                <div style="display:flex; align-items:center; gap:8px;">
-                                    <div class="status-dot"></div>
-                                    <span>${onlineUser}</span>
-                                </div>
-                                <svg class="svg-icon" style="width:14px; height:14px; color:var(--text-muted);" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+                                <span>👤 ${onlineUser}</span>
                             </div>
                         `;
                     }
@@ -330,22 +273,21 @@
 
         function switchToGlobalRoom() {
             targetChatRoom = "Global";
-            document.getElementById('global-room-tab').classList.add('active');
-            document.getElementById('active-chat-header').innerText = "Channel: Global Broadcast Room";
+            document.getElementById('active-chat-header').innerText = "Channel: Global Public Broadcast";
             database.ref('global_broadcast_messages').limitToLast(50).once('value', s => renderChatBubbles(s.val()));
         }
 
         function switchToPrivateMessage(userTarget) {
             targetChatRoom = userTarget;
-            document.getElementById('global-room-tab').classList.remove('active');
-            document.getElementById('active-chat-header').innerText = `Private Secure Channel: @${userTarget}`;
-            
+            document.getElementById('active-chat-header').innerText = `Secure Tunnel Connection: @${userTarget}`;
             const tunnelPathID = [localProfileName, userTarget].sort().join("_pmchannel_");
             database.ref('private_tunnels/' + tunnelPathID).limitToLast(50).on('value', snap => {
                 if(targetChatRoom === userTarget) renderChatBubbles(snap.val());
             });
-        }
-
+        } 
+    
+    </script>
+    <script>
         function renderChatBubbles(messagesData) {
             const container = document.getElementById('chat-messages-container');
             container.innerHTML = '';
@@ -353,14 +295,13 @@
             for(let msgKey in messagesData) {
                 const payload = messagesData[msgKey];
                 const isSelf = payload.sender === localProfileName ? 'self' : '';
-                const fallbackAvatar = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='36'><rect width='100%' height='100%' fill='%23ff4757'/></svg>";
-                
+                const pfpImg = payload.avatar || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='36'><rect width='100%' height='100%' fill='%23ff4757'/></svg>";
                 container.innerHTML += `
                     <div class="msg-bubble ${isSelf}">
-                        <img src="${payload.avatar || fallbackAvatar}">
-                        <div>
+                        <img src="${pfpImg}" style="width:30px; height:30px; border-radius:50%; inline-block;">
+                        <div style="display:inline-block; vertical-align:top;">
                             <strong style="color:var(--accent); font-size:0.75rem;">${payload.sender}</strong>
-                            <p style="margin-top:4px; font-size:0.85rem; word-break:break-word;">${payload.text}</p>
+                            <p style="font-size:0.85rem;">${payload.text}</p>
                         </div>
                     </div>
                 `;
@@ -383,34 +324,22 @@
             }
             input.value = '';
         }
-        // ADVANCED API JIKAN SYSTEM
+
+        // FETCH SYNCING ENGINE VIA OFFICIAL JAPAN DIRECTORY
         let activeMediaCategory = "all";
-
         async function fetchJikanCloudFeeds() {
-            const grid = document.getElementById('media-grid-display');
-            grid.innerHTML = "<p style='color:var(--text-muted); padding:10px;'>Fetching live data streams from legal directory frameworks...</p>";
             try {
-                const airingRes = await (await fetch('https://api.jikan.moe/v4/top/anime?filter=airing&limit=12')).json();
-                const upcomingRes = await (await fetch('https://api.jikan.moe/v4/top/anime?filter=upcoming&limit=12')).json();
-                const generalMangaRes = await (await fetch('https://api.jikan.moe/v4/top/manga?limit=25')).json();
-
+                const airingRes = await (await fetch('https://api.jikan.moe/v4/top/anime?filter=airing&limit=10')).json();
+                const upcomingRes = await (await fetch('https://api.jikan.moe/v4/top/anime?filter=upcoming&limit=10')).json();
                 mediaCacheBlock = [
                     ...airingRes.data.map(m => ({...m, calculatedType: 'airing'})),
-                    ...upcomingRes.data.map(m => ({...m, calculatedType: 'upcoming'})),
-                    ...generalMangaRes.data.map(m => {
-                        let dynamicClass = 'manga';
-                        if(m.type === 'Manhwa') dynamicClass = 'manhwa';
-                        if(m.type === 'Manhua') dynamicClass = 'manhua';
-                        return {...m, calculatedType: dynamicClass};
-                    })
+                    ...upcomingRes.data.map(m => ({...m, calculatedType: 'upcoming'}))
                 ];
                 filterMediaMatrix();
-            } catch(e) { grid.innerHTML = "<p style='color:var(--accent);'>Error syncing network data.</p>"; }
+            } catch(e) {}
         }
 
         function setMediaClass(classType, element) {
-            document.querySelectorAll('.filter-tabs .f-btn').forEach(b => b.classList.remove('active'));
-            element.classList.add('active');
             activeMediaCategory = classType;
             filterMediaMatrix();
         }
@@ -418,130 +347,45 @@
         function filterMediaMatrix() {
             const searchKeyword = document.getElementById('media-search').value.toLowerCase();
             const grid = document.getElementById('media-grid-display');
-            
-            let dataset = mediaCacheBlock.filter(item => {
-                const queryMatch = item.title.toLowerCase().includes(searchKeyword);
-                const categoryMatch = (activeMediaCategory === "all") || (item.calculatedType === activeMediaCategory);
-                return queryMatch && categoryMatch;
-            });
-
-            grid.innerHTML = dataset.map(item => {
-                const databasePointerIndex = mediaCacheBlock.findIndex(x => x.title === item.title);
-                return `
-                    <div class="media-card" onclick="openMediaDetailsModal(${databasePointerIndex})">
-                        <img src="${item.images.jpg.image_url}">
-                        <div class="media-card-info">
-                            <div class="media-title">${item.title}</div>
-                            <span class="badge">${item.type}</span>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function openMediaDetailsModal(index) {
-            const data = mediaCacheBlock[index];
-            const redirectionURL = data.calculatedType === 'airing' || data.calculatedType === 'upcoming'
-                ? `https://www.crunchyroll.com/search?q=${encodeURIComponent(data.title)}`
-                : `https://mangaplus.shueisha.co.jp/search?keyword=${encodeURIComponent(data.title)}`;
-
-            const trailerBlock = data.trailer && data.trailer.url
-                ? `<a href="${data.trailer.url}" target="_blank" class="f-btn" style="background:#e50914; color:white; border:none; display:inline-block; text-decoration:none; margin-top:10px;">▶ Watch Trailer</a>`
-                : '';
-
-            document.getElementById('modal-body-content').innerHTML = `
-                <div style="display:flex; gap:20px; flex-wrap:wrap; color:var(--text-main);">
-                    <img src="${data.images.jpg.image_url}" style="width:140px; border-radius:8px; object-fit:cover;">
-                    <div style="flex:1; min-width:240px;">
-                        <h3>${data.title}</h3>
-                        <p style="color:var(--accent); font-weight:bold; margin:6px 0;">Score: ⭐ ${data.score || 'N/A'}</p>
-                        <p style="font-size:0.85rem;"><b>Status:</b> ${data.status}</p>
-                        <p style="font-size:0.85rem;"><b>Units/Episodes:</b> ${data.episodes || data.chapters || 'Ongoing'}</p>
-                        ${trailerBlock}
-                    </div>
+            let dataset = mediaCacheBlock.filter(item => item.title.toLowerCase().includes(searchKeyword));
+            grid.innerHTML = dataset.map(item => `
+                <div class="media-card">
+                    <img src="${item.images.jpg.image_url}">
+                    <div class="media-card-info"><div class="media-title">${item.title}</div></div>
                 </div>
-                <div style="margin-top:20px; border-top:1px solid var(--border-color); padding-top:12px; color:var(--text-main);">
-                    <h5 style="font-size:0.9rem;">Synopsis Output:</h5>
-                    <p style="font-size:0.8rem; color:var(--text-muted); line-height:1.5; margin-top:6px;">${data.synopsis || 'No detailed log overview file provided.'}</p>
-                    <a href="${redirectionURL}" target="_blank" class="action-btn" style="display:block; text-align:center; text-decoration:none; margin-top:20px;">ACCESS OFFICIAL BROADCAST PLATFORM</a>
-                </div>
-            `;
-            document.getElementById('media-modal').style.display = 'flex';
+            `).join('');
         }
 
-        function closeMediaModal() {
-            document.getElementById('media-modal').style.display = 'none';
-        }
-
-        // COMPREHENSIVE INTERNAL SPOTIFY AUDIO DATA ARRAYS
+        // INTERNAL MUSIC PACKET LISTS
         const trackDatabase = [
-            { title: "Metamorphosis (TikTok Super Speed Phonk)", stream: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", trackClass: "phonk" },
-            { title: "Brazilian Dança Phonk (TikTok Bass Edit)", stream: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", trackClass: "phonk" },
-            { title: "Paint The Town Red (TikTok Viral Loop)", stream: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", trackClass: "trending" },
-            { title: "Greedy - Tate McRae (Speed Up Remix)", stream: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3", trackClass: "trending" },
-            { title: "Blinding Lights (Slowed & Reverb Ultimate Mix)", stream: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3", trackClass: "english" },
-            { title: "Stay With Me (Acoustic Billboard Cut)", stream: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3", trackClass: "english" },
-            { title: "Raining In Manila - Lola Amour (TikTok Trend)", stream: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3", trackClass: "tagalog" },
-            { title: "Ere - Juan Karlos (Viral OPM Slowed)", stream: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3", trackClass: "tagalog" },
-            { title: "Idol - YOASOBI (Oshi No Ko Theme Track)", stream: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3", trackClass: "japanese" },
-            { title: "Renai Circulation (Super Cute Kawaii Mix)", stream: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3", trackClass: "japanese" }
+            { title: "Metamorphosis Phonk Loop Track", stream: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", trackClass: "phonk" },
+            { title: "Raining In Manila (OPM Hit Block)", stream: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3", trackClass: "tagalog" }
         ];
 
         const audioCoreNode = document.getElementById('hardware-audio-streamer');
         audioCoreNode.onended = () => { audioNextTrack(); };
 
-        function setAudioCategory(cat, element) {
-            document.querySelectorAll('#audio-view .filter-tabs .f-btn').forEach(b => b.classList.remove('active'));
-            element.classList.add('active');
-            selectedAudioCategory = cat;
-            renderSpotifyLayout();
-        }
-
         function renderSpotifyLayout() {
-            const query = document.getElementById('audio-search-box').value.toLowerCase();
             const wrapper = document.getElementById('spotify-tracks-container');
-            
-            let subset = trackDatabase.filter(m => {
-                const searchMatch = m.title.toLowerCase().includes(query);
-                const classMatch = (selectedAudioCategory === "all") || (m.trackClass === selectedAudioCategory);
-                return searchMatch && classMatch;
-            });
-
-            wrapper.innerHTML = subset.map(track => {
-                const absoluteIndex = trackDatabase.findIndex(x => x.title === track.title);
-                return `
-                    <div class="track-row">
-                        <div class="track-details">
-                            <strong style="font-size:0.9rem;">${track.title}</strong>
-                            <span class="track-meta">${track.trackClass}</span>
-                        </div>
-                        <button onclick="bootAudioTrack(${absoluteIndex})" class="ctrl-btn" style="border-radius:6px; width:auto; padding:0 16px; font-size:0.75rem; font-weight:bold;">PLAY</button>
-                    </div>
-                `;
-            }).join('');
+            wrapper.innerHTML = trackDatabase.map((track, index) => `
+                <div class="track-row">
+                    <div class="track-details"><strong>${track.title}</strong></div>
+                    <button onclick="bootAudioTrack(${index})" class="f-btn">BOOT AUDIO</button>
+                </div>
+            `).join('');
         }
 
         function bootAudioTrack(index) {
             activeTrackIndex = index;
-            const chosenTrack = trackDatabase[activeTrackIndex];
-            audioCoreNode.src = chosenTrack.stream;
-            audioCoreNode.play().catch(e => console.log("Autoplay context saved."));
-            document.getElementById('player-track-title').innerText = "Playing: " + chosenTrack.title;
-            document.getElementById('audio-play-pause-btn').innerHTML = `<svg class="svg-icon" viewBox="0 0 24 24" style="fill:white;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
+            audioCoreNode.src = trackDatabase[activeTrackIndex].stream;
+            audioCoreNode.play();
+            document.getElementById('player-track-title').innerText = "Streaming: " + trackDatabase[activeTrackIndex].title;
         }
 
         function toggleAudioEngineState() {
-            const btn = document.getElementById('audio-play-pause-btn');
-            if(audioCoreNode.paused) {
-                audioCoreNode.play();
-                btn.innerHTML = `<svg class="svg-icon" viewBox="0 0 24 24" style="fill:white;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
-            } else {
-                audioCoreNode.pause();
-                btn.innerHTML = `<svg class="svg-icon" viewBox="0 0 24 24" style="fill:white;"><path d="M8 5v14l11-7z"/></svg>`;
-            }
+            if(audioCoreNode.paused) audioCoreNode.play(); else audioCoreNode.pause();
         }
 
-        // NEXT/PREV AUDIO LOOP ENGINE
         function audioNextTrack() {
             activeTrackIndex = (activeTrackIndex + 1) % trackDatabase.length;
             bootAudioTrack(activeTrackIndex);
@@ -553,12 +397,7 @@
         }
 
         function toggleThemeCore() {
-            const body = document.body;
-            if(body.getAttribute('data-theme') === 'light') {
-                body.removeAttribute('data-theme');
-            } else {
-                body.setAttribute('data-theme', 'light');
-            }
+            document.body.toggleAttribute('data-theme');
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -568,8 +407,5 @@
             renderSpotifyLayout();
         });
     </script>
-
-    <script src="https://pl29471258.effectivecpmnetwork.com/27/7b/f8/277bf845b91c531ad9fb066482ac8cae.js"></script>
-
 </body>
 </html>
