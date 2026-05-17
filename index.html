@@ -3,376 +3,500 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OMNIVERSE CLOUD | Absolute Hub</title>
+    <title>OMNIVERSE CORE | Premium System</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <style>
         :root {
-            --bg-dark: #08090c;
-            --panel-bg: #12141c;
+            --bg-main: #060709;
+            --bg-panel: #11131a;
             --accent: #ff4757;
             --text-main: #ffffff;
             --text-muted: #a4b0be;
-            --success: #2ed573;
+            --border-color: #222530;
+            --input-bg: #000000;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-        body { background: var(--bg-dark); color: var(--text-main); padding-bottom: 140px; }
+        [data-theme="light"] {
+            --bg-main: #f1f2f6;
+            --bg-panel: #ffffff;
+            --accent: #eb4d4b;
+            --text-main: #1e272e;
+            --text-muted: #57606f;
+            --border-color: #ced6e0;
+            --input-bg: #ffffff;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: var(--bg-main); color: var(--text-main); padding-bottom: 150px; overflow-x: hidden; transition: background 0.2s, color 0.2s; }
         
-        /* Header at Navigation */
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: var(--panel-bg); border-bottom: 1px solid #222; }
-        .header .logo { font-weight: 800; color: var(--accent); letter-spacing: 1px; }
-        .view-section { display: none; padding: 15px; max-width: 1200px; margin: 0 auto; }
+        /* Layout Framework */
+        .top-bar { position: sticky; top: 0; display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: var(--bg-panel); border-bottom: 1px solid var(--border-color); z-index: 999; }
+        .logo { font-weight: 900; color: var(--accent); letter-spacing: 2px; font-size: 1.3rem; }
+        .view-section { display: none; padding: 20px; max-width: 1400px; margin: 0 auto; }
         .view-section.active { display: block; }
 
-        /* Search Input */
-        .search-box { width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: white; border-radius: 8px; margin-bottom: 15px; font-size: 0.9rem; }
+        /* Search Bar & Filtering Matrix */
+        .search-box { width: 100%; padding: 14px 18px; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 8px; margin-bottom: 20px; font-size: 0.95rem; box-shadow: 0 4px 6px rgba(0,0,0,0.02); transition: all 0.2s; }
+        .search-box:focus { border-color: var(--accent); outline: none; }
+        .filter-tabs { display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
+        .f-btn { background: var(--bg-panel); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; font-weight: 600; white-space: nowrap; }
+        .f-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
 
-        /* Grid Cards para sa Anime/Manga */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
-        .api-card { background: var(--panel-bg); border-radius: 8px; overflow: hidden; border: 1px solid #222; display: flex; flex-direction: column; text-decoration: none; color: white; transition: 0.2s; }
-        .api-card:hover { border-color: var(--accent); transform: translateY(-2px); }
-        .api-card img { width: 100%; aspect-ratio: 11/16; object-fit: cover; }
-        .api-card-details { padding: 8px; font-size: 0.75rem; flex-grow: 1; }
+        /* Advanced Display Grid */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 18px; }
+        .media-card { background: var(--bg-panel); border-radius: 10px; overflow: hidden; border: 1px solid var(--border-color); display: flex; flex-direction: column; cursor: pointer; transition: transform 0.2s, border-color 0.2s; }
+        .media-card:hover { transform: translateY(-4px); border-color: var(--accent); }
+        .media-card img { width: 100%; aspect-ratio: 11/16; object-fit: cover; }
+        .media-card-info { padding: 12px; font-size: 0.8rem; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .media-title { font-weight: 700; line-height: 1.3; max-height: 2.6em; overflow: hidden; margin-bottom: 6px; }
+        .badge { display: inline-block; padding: 2px 6px; background: rgba(255, 71, 87, 0.1); color: var(--accent); font-size: 0.65rem; font-weight: bold; border-radius: 4px; width: fit-content; margin-top: 4px; }
 
-        /* Live Chat Layout */
-        .chat-layout { display: grid; grid-template-columns: 1fr; gap: 15px; }
-        @media (min-width: 768px) { .chat-layout { grid-template-columns: 220px 1fr; } }
-        .user-list { background: var(--panel-bg); padding: 12px; border-radius: 8px; border: 1px solid #222; max-height: 400px; overflow-y: auto; }
-        .online-user { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; margin-bottom: 8px; cursor: pointer; padding: 6px; border-radius: 4px; background: rgba(255,255,255,0.02); }
-        .online-user:hover { background: rgba(255,71,87,0.1); }
-        .status-dot { width: 7px; height: 7px; background: var(--success); border-radius: 50%; }
-        .chat-main { background: var(--panel-bg); border-radius: 8px; border: 1px solid #222; display: flex; flex-direction: column; }
-        .chat-messages { height: 300px; overflow-y: auto; padding: 15px; font-size: 0.85rem; display: flex; flex-direction: column; gap: 8px; background: rgba(0,0,0,0.1); }
-        
-        .msg-bubble { background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 8px; max-width: 80%; width: fit-content; display: flex; align-items: flex-start; gap: 8px; }
-        .msg-bubble img { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; }
-        .chat-controls { display: flex; padding: 10px; gap: 8px; background: rgba(0,0,0,0.2); }
-        .chat-controls input { flex: 1; padding: 10px; background: #000; border: 1px solid #333; color: white; border-radius: 6px; }
-        .chat-controls button { padding: 0 20px; background: var(--accent); border: none; color: white; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        /* Full Details Pop-Up Window (Modal) */
+        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 2000; align-items: center; justify-content: center; padding: 15px; }
+        .modal-content { background: var(--bg-panel); border: 1px solid var(--border-color); padding: 25px; border-radius: 12px; max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; position: relative; }
+        .close-modal { position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--text-main); cursor: pointer; }
 
-        /* Audio Row at System Controls */
-        .audio-row { display: flex; align-items: center; justify-content: space-between; background: var(--panel-bg); padding: 12px; margin-bottom: 8px; border-radius: 8px; border: 1px solid #222; }
-        .master-player { position: fixed; bottom: 65px; left: 0; right: 0; background: #0b0c10; border-top: 2px solid var(--accent); padding: 12px 20px; z-index: 99; text-align: center; box-shadow: 0 -5px 15px rgba(0,0,0,0.5); }
-        .player-btns { display: flex; justify-content: center; gap: 15px; margin-top: 8px; }
-        .p-btn { background: var(--accent); border: none; color: white; padding: 6px 15px; border-radius: 4px; font-weight: bold; cursor: pointer; }
-
-        /* Profile Style */
-        .profile-card { background: var(--panel-bg); border-radius: 10px; padding: 25px; text-align: center; max-width: 400px; margin: 0 auto; border: 1px solid #222; }
-        .profile-avatar { width: 90px; height: 90px; border-radius: 50%; margin: 0 auto 15px; object-fit: cover; border: 2px solid var(--accent); background: #2c3540; display: block; }
-
-        /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--panel-bg); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #222; z-index: 100; }
-        .nav-btn { background: none; border: none; color: var(--text-muted); font-size: 0.75rem; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
-        .nav-btn.active { color: var(--accent); font-weight: bold; }
+        /* SVG Icon Wrappers */
+        .svg-icon { width: 20px; height: 20px; fill: currentColor; display: inline-block; vertical-align: middle; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="logo">● OMNIVERSE SYSTEM</div>
-        <div id="user-tag" style="font-size: 0.8rem; color: var(--success);">● Syncing Profile...</div>
+    <style>
+        /* Live Chat Layout Matrix */
+        .chat-layout { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        @media (min-width: 768px) { .chat-layout { grid-template-columns: 260px 1fr; } }
+        .user-list { background: var(--bg-panel); padding: 15px; border-radius: 10px; border: 1px solid var(--border-color); max-height: 450px; overflow-y: auto; }
+        .online-user { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; margin-bottom: 10px; cursor: pointer; padding: 8px; border-radius: 6px; background: rgba(255,255,255,0.01); border: 1px solid transparent; }
+        .online-user:hover { border-color: var(--accent); }
+        .status-dot { width: 8px; height: 8px; background: #2ed573; border-radius: 50%; }
+        
+        .chat-main { background: var(--bg-panel); border-radius: 10px; border: 1px solid var(--border-color); display: flex; flex-direction: column; overflow: hidden; }
+        .chat-messages { height: 350px; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; background: rgba(0,0,0,0.02); }
+        .msg-bubble { background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); padding: 10px 14px; border-radius: 10px; max-width: 75%; display: flex; gap: 10px; }
+        .msg-bubble img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+        .chat-controls { display: flex; padding: 12px; gap: 10px; background: rgba(0,0,0,0.05); border-top: 1px solid var(--border-color); }
+        .chat-controls input { flex: 1; padding: 12px; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 6px; }
+
+        /* Professional Audio Components */
+        .audio-row { display: flex; align-items: center; justify-content: space-between; background: var(--bg-panel); padding: 14px 20px; margin-bottom: 10px; border-radius: 8px; border: 1px solid var(--border-color); }
+        .master-player { position: fixed; bottom: 70px; left: 0; right: 0; background: var(--bg-panel); border-top: 2px solid var(--accent); padding: 15px 30px; z-index: 999; display: flex; flex-direction: column; align-items: center; gap: 10px; box-shadow: 0 -8px 24px rgba(0,0,0,0.2); }
+        @media (min-width: 768px) { .master-player { flex-direction: row; justify-content: space-between; } }
+        .player-btns { display: flex; align-items: center; gap: 12px; }
+        .ctrl-btn { background: var(--accent); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: opacity 0.2s; }
+        .ctrl-btn:hover { opacity: 0.9; }
+
+        /* Identity System Card */
+        .profile-card { background: var(--bg-panel); border-radius: 12px; padding: 30px; text-align: center; max-width: 450px; margin: 0 auto; border: 1px solid var(--border-color); }
+        .profile-avatar { width: 100px; height: 100px; border-radius: 50%; margin: 0 auto 15px; object-fit: cover; border: 3px solid var(--accent); display: block; }
+        .action-btn { width: 100%; padding: 12px; background: var(--accent); border: none; color: white; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+
+        /* Fixed Navigation Layout (Pang App at Pang Desktop) */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-panel); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border-color); z-index: 1000; }
+        .nav-btn { background: none; border: none; color: var(--text-muted); font-size: 0.75rem; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; width: 70px; }
+        .nav-btn.active { color: var(--accent); font-weight: bold; }
+    </style>
+    <div class="top-bar">
+        <div class="logo">● OMNIVERSE CORE</div>
+        <button class="f-btn" onclick="toggleThemeSystem()" id="theme-btn">
+            <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>
+            Theme
+        </button>
     </div>
 
     <div id="home-view" class="view-section active">
-        <input type="text" id="anime-search" class="search-box" placeholder="🔍 Mag-search ng Anime, Manga, Manhwa, Manhua..." oninput="filterMediaList()">
+        <input type="text" id="media-search" class="search-box" placeholder="🔍 Mag-search ng Anime, Manga, Manhwa, Manhua..." oninput="filterMediaMatrix()">
         
-        <h3 style="margin-bottom: 12px; color: var(--accent); font-size: 0.9rem; letter-spacing: 1px;">AUTO-UPDATED TRENDING ANIME</h3>
-        <div id="anime-api-list" class="grid"></div>
-        
-        <h3 style="margin-top: 25px; margin-bottom: 12px; color: var(--accent); font-size: 0.9rem; letter-spacing: 1px;">AUTO-UPDATED TOP MANGA & MANHWA</h3>
-        <div id="manga-api-list" class="grid"></div>
+        <div class="filter-tabs">
+            <button class="f-btn active" onclick="setMediaCategory('all', this)">Lahat</button>
+            <button class="f-btn" onclick="setMediaCategory('airing', this)">Airing Anime</button>
+            <button class="f-btn" onclick="setMediaCategory('upcoming', this)">Upcoming (Inaasahan)</button>
+            <button class="f-btn" onclick="setMediaCategory('manga', this)">Manga Portal</button>
+        </div>
+
+        <div id="media-grid-display" class="grid"></div>
     </div>
 
     <div id="chat-view" class="view-section">
         <div class="chat-layout">
             <div class="user-list">
-                <div onclick="setToGlobalChat()" class="online-user" style="font-weight:bold; color:var(--accent);">🌐 GLOBAL ROOM</div>
-                <h4 style="font-size:0.7rem; color:var(--text-muted); margin: 10px 0 5px; text-transform:uppercase;">Private Messages (PM):</h4>
-                <div id="active-chatters-list"></div>
+                <div onclick="setToGlobalChat()" class="online-user" style="font-weight:bold; color:var(--accent);">
+                    <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                    GLOBAL ROOM
+                </div>
+                <h4 style="font-size:0.7rem; color:var(--text-muted); margin:15px 0 8px; text-transform:uppercase;">MGA USER (PM):</h4>
+                <div id="chatters-injection-box"></div>
             </div>
             <div class="chat-main">
-                <div class="chat-messages" id="chat-display-box"></div>
+                <div id="chat-room-title" style="padding:12px; background:rgba(0,0,0,0.1); font-weight:bold; font-size:0.85rem; border-bottom:1px solid var(--border-color);">Channel: Global</div>
+                <div class="chat-messages" id="live-chat-box"></div>
                 <div class="chat-controls">
-                    <input type="text" id="chat-message-input" placeholder="Sumulat ng live message...">
-                    <button onclick="sendLiveMessage()">SEND</button>
+                    <input type="text" id="chat-input-field" placeholder="Sumulat ng encrypted message...">
+                    <button class="ctrl-btn" onclick="dispatchLiveMessage()">
+                        <svg class="svg-icon" viewBox="0 0 24 24" style="fill:white;"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
     <div id="audio-view" class="view-section">
-        <input type="text" id="audio-search" class="search-box" placeholder="🔍 Mag-search ng TikTok tracks, Phonk, OPM, o Anime music..." oninput="filterAudioList()">
-        <div id="audio-list-container"></div>
+        <input type="text" id="audio-search-field" class="search-box" placeholder="🔍 Mag-search ng Phonk, Edit tracks, Anime, OPM..." oninput="renderAudioPortal()">
+        <div id="audio-tracks-wrapper"></div>
     </div>
 
     <div id="profile-view" class="view-section">
         <div class="profile-card">
-            <img id="my-avatar-img" class="profile-avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='90' height='90' viewBox='0 0 100 100'><rect width='100%' height='100%' fill='%232c3540'/></svg>">
-            <input type="file" id="avatar-file-input" accept="image/*" style="display:none;" onchange="handleAvatarUpload(event)">
-            <button onclick="document.getElementById('avatar-file-input').click()" style="background:none; border:none; color:var(--accent); font-size:0.8rem; cursor:pointer; margin-bottom:15px; display:inline-block;">[ Kumuha ng Pic sa Gallery/Files ]</button>
-            
-            <input type="text" id="username-input" style="width:100%; padding:10px; background:#000; border:1px solid #333; color:white; border-radius:5px; text-align:center; font-weight:bold;" placeholder="Gumawa ng Iyong Identity">
-            <button onclick="saveLiveProfile()" style="width:100%; margin-top:10px; padding:10px; background:var(--accent); border:none; color:white; border-radius:5px; font-weight:bold; cursor:pointer;">I-SAVE IDENTITY</button>
+            <img id="avatar-img-view" class="profile-avatar" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><rect width='100%' height='100%' fill='%23222530'/></svg>">
+            <input type="file" id="upload-file-trigger" accept="image/*" style="display:none;" onchange="processAvatarFile(event)">
+            <button onclick="document.getElementById('upload-file-trigger').click()" style="background:none; border:none; color:var(--accent); font-size:0.8rem; cursor:pointer; margin-bottom:20px; font-weight:bold;">[ Kumuha sa Gallery / Files ]</button>
+            <input type="text" id="username-input-field" class="search-box" style="text-align:center; font-weight:bold;" placeholder="I-type ang iyong Username">
+            <button class="action-btn" onclick="saveSystemIdentity()">I-SAVE SYSTEM PROFILE</button>
+        </div>
+    </div>
+
+    <div class="modal" id="details-modal" onclick="closeMediaModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="close-modal" onclick="document.getElementById('details-modal').style.display='none'">✕ Close</button>
+            <div id="modal-data-body"></div>
         </div>
     </div>
 
     <div class="master-player">
-        <div id="now-playing-title" style="font-size:0.8rem; font-weight:bold; color: var(--text-main);">No track playing</div>
+        <div style="display:flex; align-items:center; gap:10px;">
+            <div style="font-weight:bold; font-size:0.85rem;" id="player-track-name">No track running</div>
+        </div>
         <div class="player-btns">
-            <button class="p-btn" onclick="playPreviousTrack()">⏮ Back</button>
-            <button class="p-btn" id="play-pause-toggle-btn" onclick="togglePlayPause()">⏸ Pause</button>
-            <button class="p-btn" onclick="playNextTrack()">Next ⏭</button>
+            <button class="ctrl-btn" onclick="triggerPrevTrack()">
+                <svg class="svg-icon" viewBox="0 0 24 24" style="fill:white;"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+            </button>
+            <button class="ctrl-btn" id="master-toggle-btn" style="width:46px; height:46px;" onclick="toggleAudioState()">
+                <svg class="svg-icon" viewBox="0 0 24 24" style="fill:white;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+            </button>
+            <button class="ctrl-btn" onclick="triggerNextTrack()">
+                <svg class="svg-icon" viewBox="0 0 24 24" style="fill:white;"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6z"/></svg>
+            </button>
         </div>
     </div>
 
     <div class="bottom-nav">
-        <button class="nav-btn active" onclick="switchTab('home', this)"><span>Home</span></button>
-        <button class="nav-btn" onclick="switchTab('chat', this)"><span>Chat Room</span></button>
-        <button class="nav-btn" onclick="switchTab('audio', this)"><span>Audio Portal</span></button>
-        <button class="nav-btn" onclick="switchTab('profile', this)"><span>Profile</span></button>
+        <button class="nav-btn active" onclick="routeTo('home', this)">
+            <svg class="svg-icon" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            <span>Home</span>
+        </button>
+        <button class="nav-btn" onclick="routeTo('chat', this)">
+            <svg class="svg-icon" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+            <span>Chat</span>
+        </button>
+        <button class="nav-btn" onclick="routeTo('audio', this)">
+            <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+            <span>Audio</span>
+        </button>
+        <button class="nav-btn" onclick="routeTo('profile', this)">
+            <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            <span>Profile</span>
+        </button>
     </div>
 
-    <audio id="core-audio-engine"></audio>
+    <audio id="audio-hardware-core"></audio>
     <script>
-        // 1. INITIALIZE FIREBASE DIRECTLY TO YOUR REALTIME DATABASE URL
+        // FIREBASE MASTER MATRIX CONFIGURATION
         const firebaseConfig = { databaseURL: "https://studio-8164628274-c414a-default-rtdb.asia-southeast1.firebasedatabase.app/" };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // Local System States
-        let localUser = localStorage.getItem('omni_name') || "User_" + Math.floor(1000 + Math.random()*9000);
-        let localAvatar = localStorage.getItem('omni_pfp') || "";
-        let chatTarget = "Global";
+        // Application State
+        let systemUser = localStorage.getItem('omni_v2_name') || "OmniUser_" + Math.floor(1000 + Math.random()*9000);
+        let systemAvatar = localStorage.getItem('omni_v2_pfp') || "";
+        let currentChatChannel = "Global";
         
-        let allAnimeMangaCached = [];
-        let currentTrackIndex = 0;
+        let apiCacheStore = [];
+        let activeAudioPointer = 0;
 
-        // Sync Profile Data
-        function initProfile() {
-            document.getElementById('username-input').value = localUser;
-            if(localAvatar) document.getElementById('my-avatar-img').src = localAvatar;
-            document.getElementById('user-tag').innerText = `● Connected: ${localUser}`;
+        function initializeIdentitySystem() {
+            document.getElementById('username-input-field').value = systemUser;
+            if(systemAvatar) document.getElementById('avatar-img-view').src = systemAvatar;
             
-            // I-rehistro sa database upang makita ng ibang online users
-            database.ref('users/' + localUser).set({ pfp: localAvatar, lastSeen: Date.now() });
+            // I-broadast ang presensya sa real-time node
+            database.ref('users/' + systemUser).set({ pfp: systemAvatar, ping: Date.now() });
         }
 
-        // Pagkuha ng Larawan mula sa Gallery/Files ng Phone o PC
-        function handleAvatarUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    localAvatar = e.target.result; // Ginagawang Base64 text string
-                    document.getElementById('my-avatar-img').src = localAvatar;
+        function processAvatarFile(event) {
+            const uploadedFile = event.target.files[0];
+            if (uploadedFile) {
+                const streamReader = new FileReader();
+                streamReader.onload = function(e) {
+                    systemAvatar = e.target.result; // Base64 Buffer Engine
+                    document.getElementById('avatar-img-view').src = systemAvatar;
                 };
-                reader.readAsDataURL(file);
+                streamReader.readAsDataURL(uploadedFile);
             }
         }
 
-        function saveLiveProfile() {
-            const newName = document.getElementById('username-input').value.trim();
-            if(newName) {
-                database.ref('users/' + localUser).remove(); // Alisin ang lumang pangalan
-                localUser = newName;
-                localStorage.setItem('omni_name', localUser);
-                localStorage.setItem('omni_pfp', localAvatar);
-                initProfile();
-                alert("Identity Updated!");
+        function saveSystemIdentity() {
+            const targetedName = document.getElementById('username-input-field').value.trim();
+            if(targetedName) {
+                database.ref('users/' + systemUser).remove(); // Wasakin ang lumang register node
+                systemUser = targetedName;
+                localStorage.setItem('omni_v2_name', systemUser);
+                localStorage.setItem('omni_v2_pfp', systemAvatar);
+                initializeIdentitySystem();
+                alert("Identity Block Secured Successfully!");
             }
         }
 
-        function switchTab(viewId, btn) {
+        function routeTo(viewId, element) {
             document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(viewId + '-view').classList.add('active');
-            btn.classList.add('active');
+            element.classList.add('active');
         }
-        // 2. LIVE REAL-TIME CHAT ENGINE (GLOBAL & PRIVATE CHANNEL)
-        function startLiveChatSync() {
-            // Makinig sa Global Room
-            database.ref('global_messages').limitToLast(30).on('value', snapshot => {
-                if(chatTarget === "Global") renderChatBubbles(snapshot.val());
+
+        // CHAT NETWORKING PROTOCOLS
+        function startChatNetworkSync() {
+            database.ref('global_messages').limitToLast(40).on('value', snap => {
+                if(currentChatChannel === "Global") executeRenderMessages(snap.val());
             });
 
-            // Makinig sa lahat ng aktibong users para sa PM channel
-            database.ref('users').on('value', snapshot => {
-                const users = snapshot.val() || {};
-                let html = '';
-                for(let username in users) {
-                    if(username !== localUser) {
-                        html += `
-                            <div class="online-user" onclick="setToPMChat('${username}')">
+            database.ref('users').on('value', snap => {
+                const nodes = snap.val() || {};
+                let injectionHTML = '';
+                for(let nodeName in nodes) {
+                    if(nodeName !== systemUser) {
+                        injectionHTML += `
+                            <div class="online-user" onclick="routeToPMChannel('${nodeName}')">
                                 <div class="status-dot"></div>
-                                <div>${username}</div>
+                                <div>${nodeName}</div>
                             </div>
                         `;
                     }
                 }
-                document.getElementById('active-chatters-list').innerHTML = html;
+                document.getElementById('chatters-injection-box').innerHTML = injectionHTML;
             });
         }
 
         function setToGlobalChat() {
-            chatTarget = "Global";
-            database.ref('global_messages').limitToLast(30).once('value', s => renderChatBubbles(s.val()));
+            currentChatChannel = "Global";
+            document.getElementById('chat-room-title').innerText = "Channel: Global Room";
+            database.ref('global_messages').limitToLast(40).once('value', s => executeRenderMessages(s.val()));
         }
 
-        function setToPMChat(targetUser) {
-            chatTarget = targetUser;
-            alert(`Naka-pribadong channel ka na ngayon kay: ${targetUser}`);
-            // Pagsamahin ang dalawang pangalan para makabuo ng natatanging Room ID sa Firebase
-            const roomID = [localUser, targetUser].sort().join("_to_");
-            database.ref('pms/' + roomID).limitToLast(30).on('value', snapshot => {
-                renderChatBubbles(snapshot.val());
+        function routeToPMChannel(userTarget) {
+            currentChatChannel = userTarget;
+            document.getElementById('chat-room-title').innerText = `Private PM with: ${userTarget}`;
+            const tunnelID = [systemUser, userTarget].sort().join("_secure_");
+            database.ref('pms/' + tunnelID).limitToLast(40).on('value', snap => {
+                executeRenderMessages(snap.val());
             });
         }
 
-        function renderChatBubbles(data) {
-            const box = document.getElementById('chat-display-box');
-            box.innerHTML = '';
-            if(!data) return;
-            for(let id in data) {
-                const m = data[id];
-                const avatarImg = m.pfp || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 100 100'><rect width='100%' height='100%' fill='%23ff4757'/></svg>";
-                box.innerHTML += `
+        function executeRenderMessages(dataPack) {
+            const logBox = document.getElementById('live-chat-box');
+            logBox.innerHTML = '';
+            if(!dataPack) return;
+            for(let key in dataPack) {
+                const payload = dataPack[key];
+                const cleanAvatar = payload.pfp || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><rect width='100%' height='100%' fill='%23ff4757'/></svg>";
+                logBox.innerHTML += `
                     <div class="msg-bubble">
-                        <img src="${avatarImg}">
+                        <img src="${cleanAvatar}">
                         <div>
-                            <strong style="color:var(--accent); font-size:0.75rem;">${m.sender}</strong>
-                            <p style="margin-top:2px;">${m.text}</p>
+                            <strong style="color:var(--accent); font-size:0.75rem;">${payload.sender}</strong>
+                            <p style="margin-top:4px; font-size:0.85rem;">${payload.text}</p>
                         </div>
                     </div>
                 `;
             }
-            box.scrollTop = box.scrollHeight;
+            logBox.scrollTop = logBox.scrollHeight;
         }
 
-        function sendLiveMessage() {
-            const input = document.getElementById('chat-message-input');
-            const txt = input.value.trim();
-            if(!txt) return;
+        function dispatchLiveMessage() {
+            const inputField = document.getElementById('chat-input-field');
+            const messageTxt = inputField.value.trim();
+            if(!messageTxt) return;
 
-            const packet = { sender: localUser, pfp: localAvatar, text: txt, time: Date.now() };
+            const messagePacket = { sender: systemUser, pfp: systemAvatar, text: messageTxt, timestamp: Date.now() };
 
-            if(chatTarget === "Global") {
-                database.ref('global_messages').push(packet);
+            if(currentChatChannel === "Global") {
+                database.ref('global_messages').push(messagePacket);
             } else {
-                const roomID = [localUser, chatTarget].sort().join("_to_");
-                database.ref('pms/' + roomID).push(packet);
+                const tunnelID = [systemUser, currentChatChannel].sort().join("_secure_");
+                database.ref('pms/' + tunnelID).push(messagePacket);
             }
-            input.value = '';
+            inputField.value = '';
         }
-        // 3. AUTO-UPDATED ANIME/MANGA DIRECTORY CORES (LEGAL PLATFORM SEARCH)
-        async function loadJikanAPI() {
+        // ADVANCED JIKAN API FOR ANIME, UPCOMING, MANGA, MANHWA, AND MANHUA
+        let activeCategoryFilter = "all";
+
+        async function fetchOmniverseMediaCore() {
+            const displayGrid = document.getElementById('media-grid-display');
+            displayGrid.innerHTML = "<p style='color:var(--text-muted)'>Awtomatikong kinukuha ang live global network data...</p>";
             try {
-                const animeRes = await fetch('https://api.jikan.moe/v4/top/anime?limit=20');
-                const animeData = await animeRes.json();
-                const mangaRes = await fetch('https://api.jikan.moe/v4/top/manga?limit=20');
-                const mangaData = await mangaRes.json();
+                const airingAnime = await (await fetch('https://api.jikan.moe/v4/top/anime?filter=airing&limit=12')).json();
+                const upcomingAnime = await (await fetch('https://api.jikan.moe/v4/top/anime?filter=upcoming&limit=12')).json();
+                const generalManga = await (await fetch('https://api.jikan.moe/v4/top/manga?limit=25')).json();
 
-                allAnimeMangaCached = [
-                    ...animeData.data.map(i => ({...i, omniType: 'anime'})),
-                    ...mangaData.data.map(i => ({...i, omniType: 'manga'}))
+                apiCacheStore = [
+                    ...airingAnime.data.map(i => ({...i, omniClass: 'airing'})),
+                    ...upcomingAnime.data.map(i => ({...i, omniClass: 'upcoming'})),
+                    ...generalManga.data.map(i => {
+                        // Awtomatikong pag-uuri ng data base sa MyAnimeList types
+                        let subClass = 'manga';
+                        if(i.type === 'Manhwa') subClass = 'manhwa';
+                        if(i.type === 'Manhua') subClass = 'manhua';
+                        return {...i, omniClass: subClass};
+                    })
                 ];
-                filterMediaList();
-            } catch(e) { console.log("Slow connection to API endpoints."); }
+                filterMediaMatrix();
+            } catch(err) { displayGrid.innerHTML = "<p style='color:var(--accent)'>Error loading API data.</p>"; }
         }
 
-        function filterMediaList() {
-            const query = document.getElementById('anime-search').value.toLowerCase();
-            const aList = document.getElementById('anime-api-list');
-            const mList = document.getElementById('manga-api-list');
-            
-            let filtered = allAnimeMangaCached.filter(i => i.title.toLowerCase().includes(query));
-            
-            aList.innerHTML = filtered.filter(i => i.omniType === 'anime').map(item => `
-                <a href="https://www.crunchyroll.com/search?q=${encodeURIComponent(item.title)}" target="_blank" class="api-card">
-                    <img src="${item.images.jpg.image_url}">
-                    <div class="api-card-details"><b>${item.title}</b></div>
-                </a>
-            `).join('');
-
-            mList.innerHTML = filtered.filter(i => i.omniType === 'manga').map(item => `
-                <a href="https://mangaplus.shueisha.co.jp/search?keyword=${encodeURIComponent(item.title)}" target="_blank" class="api-card">
-                    <img src="${item.images.jpg.image_url}">
-                    <div class="api-card-details"><b>${item.title}</b></div>
-                </a>
-            `).join('');
+        function setMediaCategory(cat, element) {
+            document.querySelectorAll('.filter-tabs .f-btn').forEach(b => b.classList.remove('active'));
+            element.classList.add('active');
+            activeCategoryFilter = cat;
+            filterMediaMatrix();
         }
 
-        // 4. MUSIC CONTROLLER (TIKTOK PHONK, ANIME CUTE, JAPANESE, ENGLISH, TAGALOG)
-        const globalTracks = [
+        function filterMediaMatrix() {
+            const searchKeyword = document.getElementById('media-search').value.toLowerCase();
+            const gridContainer = document.getElementById('media-grid-display');
+            
+            let matchedData = apiCacheStore.filter(item => {
+                const matchesSearch = item.title.toLowerCase().includes(searchKeyword);
+                const matchesTab = (activeCategoryFilter === "all") || (item.omniClass === activeCategoryFilter);
+                return matchesSearch && matchesTab;
+            });
+
+            gridContainer.innerHTML = matchedData.map((item, index) => {
+                const realCacheIndex = apiCacheStore.findIndex(x => x.title === item.title);
+                return `
+                    <div class="media-card" onclick="launchMediaModal(${realCacheIndex})">
+                        <img src="${item.images.jpg.image_url}">
+                        <div class="media-card-info">
+                            <div class="media-title">${item.title}</div>
+                            <span class="badge">${item.type}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function launchMediaModal(index) {
+            const media = apiCacheStore[index];
+            const targetModal = document.getElementById('details-modal');
+            const bodyInjection = document.getElementById('modal-data-body');
+            
+            // Link configs
+            const extLink = media.omniClass === 'airing' || media.omniClass === 'upcoming' 
+                ? `https://www.crunchyroll.com/search?q=${encodeURIComponent(media.title)}`
+                : `https://mangaplus.shueisha.co.jp/search?keyword=${encodeURIComponent(media.title)}`;
+
+            const trailerLink = media.trailer && media.trailer.url 
+                ? `<a href="${media.trailer.url}" target="_blank" class="f-btn" style="background:#e50914; color:white; display:inline-block; margin-top:10px; text-decoration:none;">▶ Watch Official Trailer</a>`
+                : '';
+
+            bodyInjection.innerHTML = `
+                <div style="display:flex; gap:20px; flex-wrap:wrap; color:var(--text-main);">
+                    <img src="${media.images.jpg.image_url}" style="width:150px; border-radius:8px; object-fit:cover;">
+                    <div style="flex:1; min-width:250px;">
+                        <h2>${media.title}</h2>
+                        <p style="color:var(--accent); font-weight:bold; margin:5px 0;">Score: ⭐ ${media.score || 'N/A'}</p>
+                        <p><b>Status:</b> ${media.status}</p>
+                        <p><b>Episodes/Chapters:</b> ${media.episodes || media.chapters || 'Ongoing'}</p>
+                        ${trailerLink}
+                    </div>
+                </div>
+                <div style="margin-top:20px; border-top:1px solid var(--border-color); padding-top:15px; color:var(--text-main);">
+                    <h4>Synopsis / Summary:</h4>
+                    <p style="font-size:0.85rem; color:var(--text-muted); margin-top:5px; line-height:1.5;">${media.synopsis || 'Walang nakalaang impormasyon sa kasalukuyan.'}</p>
+                    <a href="${extLink}" target="_blank" class="action-btn" style="display:block; text-align:center; text-decoration:none; margin-top:20px;">READ / WATCH ON OFFICIAL PLATFORM</a>
+                </div>
+            `;
+            targetModal.style.display = "flex";
+        }
+
+        function closeMediaModal(e) {
+            document.getElementById('details-modal').style.display = 'none';
+        }
+
+        // PROFESSIONAL MUSIC CONTROLLER DATA (AUTO-UPDATED SIMULATION)
+        const musicLibrary = [
             { title: "⚡ PHONK - Metamorphosis (TikTok Speed Up)", source: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
             { title: "😈 PHONK - Brazilian Dança Phonk Track", source: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
             { title: "🇺🇸 English Pop - Stay (TikTok Speed Mix)", source: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" },
             { title: "🇵🇭 OPM Hit - Raining In Manila (Trend Edit)", source: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" },
             { title: "🎸 OPM Pop - Ere (Popular TikTok Slowed)", source: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3" },
-            { title: "🇯🇵 J-Pop Hit - Idol / Yoasobi (Oshi No Ko Theme)", source: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3" },
-            { title: "🌸 Anime Cute - Renai Circulation Mix", source: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3" }
+            { title: "🇯🇵 J-Pop Hit - Idol / Yoasobi (Oshi No Ko)", source: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3" },
+            { title: "🌸 Anime Cute - Renai Circulation Kawaii Mix", source: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3" }
         ];
 
-        const audioPlayer = document.getElementById('core-audio-engine');
+        const audioNode = document.getElementById('audio-hardware-core');
+        audioNode.onended = () => { triggerNextTrack(); };
 
-        // AUTO-NEXT ENGINE MECHANISM
-        audioPlayer.onended = function() {
-            playNextTrack();
-        };
-
-        function filterAudioList() {
-            const query = document.getElementById('audio-search').value.toLowerCase();
-            const container = document.getElementById('audio-list-container');
+        function renderAudioPortal() {
+            const query = document.getElementById('audio-search-field').value.toLowerCase();
+            const wrapper = document.getElementById('audio-tracks-wrapper');
             
-            container.innerHTML = globalTracks
-                .filter(t => t.title.toLowerCase().includes(query))
-                .map((track) => {
-                    const realIndex = globalTracks.findIndex(t => t.title === track.title);
+            wrapper.innerHTML = musicLibrary
+                .filter(m => m.title.toLowerCase().includes(query))
+                .map(track => {
+                    const trackingIndex = musicLibrary.findIndex(x => x.title === track.title);
                     return `
                         <div class="audio-row">
-                            <div><b>${track.title}</b></div>
-                            <button onclick="launchTrack(${realIndex})" style="background:var(--success); border:none; color:black; padding:6px 12px; font-weight:bold; border-radius:4px; cursor:pointer;">▶ PLAY</button>
+                            <div><b style="font-size:0.85rem;">${track.title}</b></div>
+                            <button onclick="bootTrack(${trackingIndex})" class="ctrl-btn" style="border-radius:6px; width:auto; padding:0 15px; font-size:0.75rem;">PLAY</button>
                         </div>
                     `;
                 }).join('');
         }
 
-        function launchTrack(index) {
-            currentTrackIndex = index;
-            const track = globalTracks[currentTrackIndex];
-            audioPlayer.src = track.source;
-            audioPlayer.play().catch(e => console.log("Interaction needed."));
-            document.getElementById('now-playing-title').innerText = "Now Playing: " + track.title;
-            document.getElementById('play-pause-toggle-btn').innerText = "⏸ Pause";
+        function bootTrack(index) {
+            activeAudioPointer = index;
+            const targetTrack = musicLibrary[activeAudioPointer];
+            audioNode.src = targetTrack.source;
+            audioNode.play().catch(e => console.log('Autoplay blocked.'));
+            document.getElementById('player-track-name').innerText = "Running: " + targetTrack.title;
+            document.getElementById('master-toggle-btn').innerHTML = `<svg class="svg-icon" viewBox="0 0 24 24" style="fill:white;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
         }
 
-        function togglePlayPause() {
-            const btn = document.getElementById('play-pause-toggle-btn');
-            if (audioPlayer.paused) {
-                audioPlayer.play();
-                btn.innerText = "⏸ Pause";
+        function toggleAudioState() {
+            const btn = document.getElementById('master-toggle-btn');
+            if(audioNode.paused) {
+                audioNode.play();
+                btn.innerHTML = `<svg class="svg-icon" viewBox="0 0 24 24" style="fill:white;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
             } else {
-                audioPlayer.pause();
-                btn.innerText = "▶ Play";
+                audioNode.pause();
+                btn.innerHTML = `<svg class="svg-icon" viewBox="0 0 24 24" style="fill:white;"><path d="M8 5v14l11-7z"/></svg>`;
             }
         }
 
-        function playNextTrack() {
-            currentTrackIndex = (currentTrackIndex + 1) % globalTracks.length;
-            launchTrack(currentTrackIndex);
+        function triggerNextTrack() {
+            activeAudioPointer = (activeAudioPointer + 1) % musicLibrary.length;
+            bootTrack(activeAudioPointer);
         }
 
-        function playPreviousTrack() {
-            currentTrackIndex = (currentTrackIndex - 1 + globalTracks.length) % globalTracks.length;
-            launchTrack(currentTrackIndex);
+        function triggerPrevTrack() {
+            activeAudioPointer = (activeAudioPointer - 1 + musicLibrary.length) % musicLibrary.length;
+            bootTrack(activeAudioPointer);
         }
 
-        // ALL CRITICAL CORE TRIGGER SYSTEM ON LOAD
+        // WHITE AND BLACK CONTROLLER THEME SYSTEM
+        function toggleThemeSystem() {
+            const bodyNode = document.body;
+            if(bodyNode.getAttribute('data-theme') === 'light') {
+                bodyNode.removeAttribute('data-theme');
+            } else {
+                bodyNode.setAttribute('data-theme', 'light');
+            }
+        }
+
+        // RUN SYSTEM INSTANCES
         document.addEventListener('DOMContentLoaded', () => {
-            initProfile();
-            startLiveChatSync();
-            loadJikanAPI();
-            filterAudioList();
+            initializeIdentitySystem();
+            startChatNetworkSync();
+            fetchOmniverseMediaCore();
+            renderAudioPortal();
         });
     </script>
 </body>
