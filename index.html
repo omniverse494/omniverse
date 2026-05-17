@@ -3,173 +3,273 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OMNIVERSE CORE | Streaming Hub</title>
+    <title>OMNIVERSE CORE | Enterprise Edition</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <style>
         :root {
-            --bg-main: #060709;
-            --bg-panel: #11131a;
-            --accent: #ff4757;
-            --text-main: #ffffff;
-            --text-muted: #a4b0be;
-            --border-color: #222530;
-            --input-bg: #000000;
+            --bg-dark-core: #0a0c10;
+            --bg-panel-solid: #121620;
+            --bg-input-focus: #020406;
+            --color-brand-primary: #ff4757;
+            --color-text-premium: #ffffff;
+            --color-text-sub: #8b9bb4;
+            --border-ui-glow: #1f2635;
+            --premium-gradient: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%);
         }
-        [data-theme="light"] {
-            --bg-main: #f1f2f6;
-            --bg-panel: #ffffff;
-            --accent: #eb4d4b;
-            --text-main: #1e272e;
-            --text-muted: #57606f;
-            --border-color: #ced6e0;
-            --input-bg: #ffffff;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
-        body { background: var(--bg-main); color: var(--text-main); padding-bottom: 160px; overflow-x: hidden; transition: background 0.2s, color 0.2s; }
         
-        .top-bar { position: sticky; top: 0; display: flex; justify-content: space-between; align-items: center; padding: 15px 25px; background: var(--bg-panel); border-bottom: 1px solid var(--border-color); z-index: 999; }
-        .logo { font-weight: 900; color: var(--accent); letter-spacing: 2px; font-size: 1.3rem; }
-        .view-section { display: none; padding: 20px; max-width: 1400px; margin: 0 auto; }
-        .view-section.active { display: block; }
-
-        .search-box { width: 100%; padding: 14px 18px; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 8px; margin-bottom: 20px; font-size: 0.95rem; }
-        .filter-tabs { display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
-        .f-btn { background: var(--bg-panel); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 16px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; font-weight: 600; white-space: nowrap; }
-        .f-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
-
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 18px; }
-        .media-card { background: var(--bg-panel); border-radius: 10px; overflow: hidden; border: 1px solid var(--border-color); display: flex; flex-direction: column; cursor: pointer; }
-        .media-card img { width: 100%; aspect-ratio: 11/16; object-fit: cover; }
-        .media-card-info { padding: 12px; font-size: 0.8rem; }
-        .media-title { font-weight: 700; line-height: 1.3; max-height: 2.6em; overflow: hidden; }
-
-        .chat-layout { display: grid; grid-template-columns: 1fr; gap: 20px; }
-        @media (min-width: 768px) { .chat-layout { grid-template-columns: 280px 1fr; } }
-        .chat-channels-bar { display: flex; flex-direction: column; gap: 10px; }
-        .room-toggle-card { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; cursor: pointer; font-weight: bold; }
-        .room-toggle-card.active { border-color: var(--accent); }
-        .user-list { background: var(--bg-panel); padding: 15px; border-radius: 10px; border: 1px solid var(--border-color); max-height: 320px; overflow-y: auto; }
-        .online-user { padding: 10px; border-radius: 6px; cursor: pointer; margin-bottom: 5px; background: rgba(255,255,255,0.01); }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        body { background: var(--bg-dark-core); color: var(--color-text-premium); padding-bottom: 180px; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
         
-        .chat-main { background: var(--bg-panel); border-radius: 10px; border: 1px solid var(--border-color); display: flex; flex-direction: column; overflow: hidden; }
-        .chat-messages { height: 380px; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 14px; }
-        .msg-bubble { background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: 12px; max-width: 80%; width: fit-content; }
-        .msg-bubble.self { align-self: flex-end; border-color: var(--accent); }
-        .chat-controls { display: flex; padding: 12px; gap: 10px; }
-        .chat-controls input { flex: 1; padding: 12px; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 6px; }
+        /* APPLICATION BAR HEADER */
+        .app-header-bar { position: sticky; top: 0; display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; background: rgba(18, 22, 32, 0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-ui-glow); z-index: 999; }
+        .app-brand-identity { font-weight: 800; font-size: 1.4rem; letter-spacing: 1.5px; background: var(--premium-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: flex; align-items: center; gap: 8px; }
+        .app-brand-dot { width: 8px; height: 8px; background: var(--color-brand-primary); border-radius: 50%; display: inline-block; box-shadow: 0 0 10px var(--color-brand-primary); }
 
-        .identity-lockout { background: rgba(6,7,9,0.96); position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .profile-card { background: var(--bg-panel); border: 1px solid var(--border-color); padding: 30px; border-radius: 12px; text-align: center; }
-        .action-btn { background: var(--accent); color: white; border: none; padding: 12px 24px; border-radius: 6px; font-weight: bold; width: 100%; cursor: pointer; }
+        /* MULTI-VIEW LAYER SYSTEM */
+        .view-frame-section { display: none; padding: 24px 16px; max-width: 1400px; margin: 0 auto; animation: viewFadeIn 0.3s ease-in-out; }
+        .view-frame-section.active-view { display: block; }
+        @keyframes viewFadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-        .spotify-container { display: flex; flex-direction: column; gap: 8px; }
-        .track-row { display: flex; align-items: center; justify-content: space-between; background: var(--bg-panel); padding: 14px 20px; border-radius: 8px; border: 1px solid var(--border-color); }
+        /* ADVANCED GRID CONTROLS */
+        .search-container-box { position: relative; margin-bottom: 24px; }
+        .search-input-field { width: 100%; padding: 16px 20px; background: var(--bg-panel-solid); border: 1px solid var(--border-ui-glow); color: var(--color-text-premium); border-radius: 12px; font-size: 0.95rem; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+        .search-input-field:focus { border-color: var(--color-brand-primary); background: var(--bg-input-focus); outline: none; box-shadow: 0 0 15px rgba(255, 71, 87, 0.15); }
         
-        .master-player { position: fixed; bottom: 70px; left: 0; right: 0; background: var(--bg-panel); border-top: 2px solid var(--accent); padding: 15px 30px; z-index: 998; display: flex; justify-content: space-between; align-items: center; }
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-panel); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--border-color); z-index: 1000; }
-        .nav-btn { background: none; border: none; color: var(--text-muted); font-size: 0.75rem; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; width: 80px; }
-        .nav-btn.active { color: var(--accent); font-weight: bold; }
+        .filter-navigation-tabs { display: flex; gap: 10px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
+        .filter-navigation-tabs::-webkit-scrollbar { display: none; }
+        
+        .ui-action-btn { background: var(--bg-panel-solid); border: 1px solid var(--border-ui-glow); color: var(--color-text-premium); padding: 10px 20px; border-radius: 30px; font-size: 0.85rem; cursor: pointer; font-weight: 600; white-space: nowrap; transition: all 0.2s ease; }
+        .ui-action-btn.active-tab, .ui-action-btn:hover { background: var(--premium-gradient); border-color: transparent; box-shadow: 0 4px 12px rgba(255, 71, 87, 0.3); }
+
+        /* CONTENT ENGINE MATRIX */
+        .content-display-matrix { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; }
+        @media (min-width: 480px) { .content-display-matrix { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; } }
+        
+        .premium-media-card { background: var(--bg-panel-solid); border-radius: 14px; overflow: hidden; border: 1px solid var(--border-ui-glow); display: flex; flex-direction: column; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); position: relative; }
+        .premium-media-card:hover { transform: translateY(-6px); border-color: var(--color-brand-primary); box-shadow: 0 12px 24px rgba(0,0,0,0.5); }
+        .premium-media-card img { width: 100%; aspect-ratio: 11/16; object-fit: cover; background: #161a25; }
+        
+        .card-metadata-area { padding: 14px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; background: linear-gradient(180deg, rgba(18,22,32,0) 0%, rgba(18,22,32,0.95) 100%); }
+        .card-data-title { font-weight: 700; font-size: 0.9rem; line-height: 1.4; color: var(--color-text-premium); margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .card-data-badge { display: inline-block; padding: 3px 8px; background: rgba(255, 71, 87, 0.12); color: var(--color-brand-primary); font-size: 0.7rem; font-weight: 700; border-radius: 6px; width: fit-content; text-transform: uppercase; }
+
+        /* MODAL LAYER WINDOW */
+        .overlay-modal-view { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(4,5,7,0.85); backdrop-filter: blur(10px); z-index: 2000; align-items: center; justify-content: center; padding: 16px; }
+        .modal-body-container { background: var(--bg-panel-solid); border: 1px solid var(--border-ui-glow); padding: 28px; border-radius: 20px; max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
+        .modal-dismiss-trigger { position: absolute; top: 20px; right: 20px; background: none; border: none; color: var(--color-text-sub); cursor: pointer; transition: color 0.2s; }
+        .modal-dismiss-trigger:hover { color: var(--color-brand-primary); }
+
+        /* VECTOR UTILITY ICON GRAPHICS */
+        .vector-icon-root { width: 20px; height: 20px; fill: currentColor; display: inline-block; vertical-align: middle; }
+    </style>
+      <style>
+        /* CHAT HUB NETWORKING UI */
+        .network-chat-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        @media (min-width: 768px) { .network-chat-grid { grid-template-columns: 300px 1fr; } }
+        
+        .sidebar-channels-panel { display: flex; flex-direction: column; gap: 12px; }
+        .channel-selector-card { background: var(--bg-panel-solid); border: 1px solid var(--border-ui-glow); border-radius: 12px; padding: 16px; cursor: pointer; font-weight: 700; font-size: 0.95rem; display: flex; align-items: center; gap: 12px; transition: all 0.2s ease; }
+        .channel-selector-card.active-channel-node { border-color: var(--color-brand-primary); background: rgba(255, 71, 87, 0.05); }
+        
+        .active-cloud-users-container { background: var(--bg-panel-solid); padding: 16px; border-radius: 14px; border: 1px solid var(--border-ui-glow); max-height: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .cloud-user-row { display: flex; align-items: center; justify-content: space-between; font-size: 0.88rem; padding: 12px; border-radius: 8px; background: rgba(255,255,255,0.01); border: 1px solid transparent; cursor: pointer; transition: all 0.2s; }
+        .cloud-user-row:hover, .cloud-user-row.active-pm-node { border-color: var(--color-brand-primary); background: rgba(255,71,87,0.03); }
+        .network-online-indicator { width: 8px; height: 8px; background: #2ed573; border-radius: 50%; box-shadow: 0 0 8px #2ed573; }
+        
+        .terminal-chat-main-wrapper { background: var(--bg-panel-solid); border-radius: 14px; border: 1px solid var(--border-ui-glow); display: flex; flex-direction: column; overflow: hidden; height: 520px; }
+        .terminal-messages-stream { flex-grow: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 16px; background: rgba(0,0,0,0.05); }
+        .chat-msg-bubble-node { background: rgba(255,255,255,0.02); border: 1px solid var(--border-ui-glow); padding: 14px 18px; border-radius: 14px; max-width: 75%; width: fit-content; display: flex; gap: 14px; }
+        .chat-msg-bubble-node.origin-self { align-self: flex-end; border-color: rgba(255,71,87,0.25); background: rgba(255,71,87,0.02); flex-direction: row-reverse; }
+        .chat-msg-bubble-node img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border-ui-glow); }
+        
+        .terminal-input-controls-bar { display: flex; padding: 16px; gap: 12px; background: rgba(0,0,0,0.15); border-top: 1px solid var(--border-ui-glow); }
+        .terminal-input-controls-bar input { flex: 1; padding: 14px 18px; background: var(--bg-input-focus); border: 1px solid var(--border-ui-glow); color: var(--color-text-premium); border-radius: 10px; font-size: 0.9rem; }
+        .terminal-send-btn { background: var(--premium-gradient); border: none; color: white; width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+
+        /* SECURITY IDENTITY GATEWAY */
+        .gateway-lockout-backdrop { background: rgba(6,7,9,0.98); position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 24px; }
+        .gateway-profile-card { background: var(--bg-panel-solid); border: 1px solid var(--border-ui-glow); padding: 36px; border-radius: 20px; text-align: center; max-width: 420px; width: 100%; box-shadow: 0 24px 50px rgba(0,0,0,0.7); }
+        .gateway-avatar-node { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--color-brand-primary); display: block; margin: 0 auto 16px; box-shadow: 0 0 20px rgba(255, 71, 87, 0.2); }
+        .gateway-submit-btn { background: var(--premium-gradient); color: white; border: none; padding: 14px 28px; border-radius: 10px; font-weight: 700; width: 100%; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3); }
+
+        /* MUSIC HUB ARCHITECTURE */
+        .music-track-playlist-stack { display: flex; flex-direction: column; gap: 10px; }
+        .playlist-track-row-node { display: flex; align-items: center; justify-content: space-between; background: var(--bg-panel-solid); padding: 16px 24px; border-radius: 12px; border: 1px solid var(--border-ui-glow); transition: all 0.2s; }
+        .playlist-track-row-node:hover { background: rgba(255,255,255,0.02); border-color: rgba(255,71,87,0.3); }
+        
+        /* HARDWARE CONTROLLER BAR DOCK */
+        .persistent-audio-dock { position: fixed; bottom: 84px; left: 0; right: 0; background: rgba(18, 22, 32, 0.95); backdrop-filter: blur(20px); border-top: 2px solid var(--color-brand-primary); padding: 16px 32px; z-index: 998; display: flex; flex-direction: column; align-items: center; gap: 14px; box-shadow: 0 -10px 30px rgba(0,0,0,0.5); }
+        @media (min-width: 768px) { .persistent-audio-dock { flex-direction: row; justify-content: space-between; } }
+        .audio-controls-button-group { display: flex; align-items: center; gap: 14px; }
+        .hardware-media-action-btn { background: var(--color-brand-primary); border: none; color: white; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; }
+        .hardware-media-action-btn:active { transform: scale(0.92); }
+        
+        /* TASK NAVIGATION CONTROL PANELBAR */
+        .bottom-navigation-dock-panel { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-panel-solid); display: flex; justify-content: space-around; padding: 14px 0; border-top: 1px solid var(--border-ui-glow); z-index: 1000; height: 84px; }
+        .dock-nav-trigger-node { background: none; border: none; color: var(--color-text-sub); font-size: 0.8rem; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; width: 75px; font-weight: 600; transition: color 0.2s; }
+        .dock-nav-trigger-node.active-nav-node { color: var(--color-brand-primary); }
     </style>
 </head>
 <body>
-    <div id="identity-interceptor" class="identity-lockout">
-        <div class="profile-card" style="max-width:400px; width:100%;">
-            <h2 style="margin-bottom: 10px; color: var(--accent);">Setup Identity</h2>
-            <input type="text" id="lockout-username-field" class="search-box" style="text-align:center;" placeholder="Enter Nickname...">
-            <button class="action-btn" onclick="saveGatekeeperIdentity()">Launch App System</button>
+
+    <div id="identity-interceptor" class="gateway-lockout-backdrop">
+        <div class="gateway-profile-card">
+            <h2 style="margin-bottom: 8px; font-size: 1.6rem;">Cloud Gateway Authentication</h2>
+            <p style="font-size:0.85rem; color:var(--color-text-sub); margin-bottom:24px;">Initialize secure credential profile configuration files.</p>
+            <img id="lockout-avatar-view" class="gateway-avatar-node" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 24 24' fill='%238b9bb4'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'/></svg>">
+            <input type="file" id="lockout-file-trigger" accept="image/*" style="display:none;" onchange="processAvatarBuffer(event, true)">
+            <button onclick="document.getElementById('lockout-file-trigger').click()" style="background:none; border:none; color:var(--color-brand-primary); font-size:0.85rem; cursor:pointer; margin-bottom:24px; font-weight:700;">[ UPLOAD AVATAR TARGET ]</button>
+            <input type="text" id="lockout-username-field" class="search-input-field" style="text-align:center; font-weight:700; margin-bottom: 16px;" placeholder="Create Client Nickname...">
+            <button class="gateway-submit-btn" onclick="saveGatekeeperIdentity()">ENGAGE CORE SYSTEM</button>
         </div>
     </div>
 
-    <div class="top-bar">
-        <div class="logo">● OMNIVERSE CORE</div>
-        <button class="f-btn" onclick="toggleThemeCore()">Theme Switch</button>
+    <div class="app-header-bar">
+        <div class="app-brand-identity"><span class="app-brand-dot"></span>OMNIVERSE CORE</div>
+        <button class="ui-action-btn" onclick="toggleThemeCore()">Interface Shift</button>
     </div>
 
-    <div id="home-view" class="view-section active">
-        <input type="text" id="media-search" class="search-box" placeholder="🔍 Filter Anime/Manga..." oninput="filterMediaMatrix()">
-        <div id="media-grid-display" class="grid"></div>
+    <div id="home-view" class="view-frame-section active-view">
+        <div class="search-container-box">
+            <input type="text" id="media-search" class="search-input-field" placeholder="Search Japanese Otaku Database Architecture..." oninput="filterMediaMatrix()">
+        </div>
+        <div class="filter-navigation-tabs">
+            <button class="ui-action-btn active-tab" onclick="setMediaClass('anime', this)">Global Anime Broadcasts</button>
+            <button class="ui-action-btn" onclick="setMediaClass('manga', this)">Global Manga Networks</button>
+        </div>
+        <div id="media-grid-display" class="content-display-matrix"></div>
     </div>
 
-    <div id="chat-view" class="view-section">
-        <div class="chat-layout">
-            <div class="chat-channels-bar">
-                <div onclick="switchToGlobalRoom()" id="global-room-tab" class="room-toggle-card active">🌐 Global Chat</div>
-                <div id="pm-users-list" class="user-list"></div>
+    <div id="chat-view" class="view-frame-section">
+        <div class="network-chat-grid">
+            <div class="sidebar-channels-panel">
+                <div onclick="switchToGlobalRoom()" id="global-room-tab" class="channel-selector-card active-channel-node">
+                    <svg class="vector-icon-root" viewBox="0 0 24 24"><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.53c-.26-.81-1-1.4-1.9-1.4h-1v-3c0-.55-.45-1-1-1h-6v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z'/></svg>
+                    <span>Global Chatroom Terminal</span>
+                </div>
+                <div id="pm-users-list" class="active-cloud-users-container"></div>
             </div>
-            <div class="chat-main">
-                <div id="active-chat-header" style="padding:14px; color:var(--accent);">Active: Public Global</div>
-                <div class="chat-messages" id="chat-messages-container"></div>
-                <div class="chat-controls">
-                    <input type="text" id="chat-message-input" placeholder="Type a message...">
-                    <button class="action-btn" style="width:auto;" onclick="sendOmniChatMessage()">Send</button>
+            <div class="terminal-chat-main-wrapper">
+                <div id="active-chat-header" style="padding:16px 24px; background:rgba(0,0,0,0.2); font-weight:700; font-size:0.9rem; border-bottom:1px solid var(--border-ui-glow); color:var(--color-brand-primary);">PORT LINK: PUBLIC_GLOBAL_NETWORK</div>
+                <div class="terminal-messages-stream" id="chat-messages-container"></div>
+                <div class="terminal-input-controls-bar">
+                    <input type="text" id="chat-message-input" placeholder="Inject packet message payload...">
+                    <button class="terminal-send-btn" onclick="sendOmniChatMessage()">
+                        <svg style="width:18px; height:18px; fill:#fff;" viewBox="0 0 24 24"><path d='M2.01 21L23 12 2.01 3 2 10l15 2-15 2z'/></svg>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="audio-view" class="view-section">
-        <div id="spotify-tracks-container" class="spotify-container"></div>
+    <div id="audio-view" class="view-frame-section">
+        <div id="spotify-tracks-container" class="music-track-playlist-stack"></div>
+            </div>
+            <div class="persistent-audio-dock">
+        <div id="player-track-title" style="font-weight:700; font-size:0.9rem; color: var(--color-text-premium);">System Idle: Audio Buffer Empty</div>
+        <div class="audio-controls-button-group">
+            <button class="hardware-media-action-btn" onclick="audioPrevTrack()">
+                <svg style="width:16px; height:16px; fill:#fff;" viewBox="0 0 24 24"><path d='M6 6h2v12H6zm3.5 6l8.5 6V6z'/></svg>
+            </button>
+            <button class="hardware-media-action-btn" id="audio-play-pause-btn" style="width:50px; height:50px; background: var(--premium-gradient);" onclick="toggleAudioEngineState()">
+                <svg style="width:18px; height:18px; fill:#fff;" viewBox="0 0 24 24"><path d='M8 5v14l11-7z'/></svg>
+            </button>
+            <button class="hardware-media-action-btn" onclick="audioNextTrack()">
+                <svg style="width:16px; height:16px; fill:#fff;" viewBox="0 0 24 24"><path d='M4 18l8.5-6L4 6zm9-12v12h2V6z'/></svg>
+            </button>
+        </div>
     </div>
 
-    <div class="master-player">
-        <div id="player-track-title">No Audio Loaded</div>
-        <button class="f-btn" id="audio-play-pause-btn" onclick="toggleAudioEngineState()">Play/Pause</button>
-    </div>
-
-    <div class="bottom-nav">
-        <button class="nav-btn active" onclick="routeTo('home', this)"><span>Home</span></button>
-        <button class="nav-btn" onclick="routeTo('chat', this)"><span>Chat</span></button>
-        <button class="nav-btn" onclick="routeTo('audio', this)"><span>Music</span></button>
+    <div class="bottom-navigation-dock-panel">
+        <button class="dock-nav-trigger-node active-nav-node" onclick="routeTo('home', this)">
+            <svg class="vector-icon-root" viewBox="0 0 24 24"><path d='M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z'/></svg>
+            <span>Database</span>
+        </button>
+        <button class="dock-nav-trigger-node" onclick="routeTo('chat', this)">
+            <svg class="vector-icon-root" viewBox="0 0 24 24"><path d='M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z'/></svg>
+            <span>Network</span>
+        </button>
+        <button class="dock-nav-trigger-node" onclick="routeTo('audio', this)">
+            <svg class="vector-icon-root" viewBox="0 0 24 24"><path d='M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z'/></svg>
+            <span>Audio</span>
+        </button>
     </div>
 
     <audio id="hardware-audio-streamer"></audio>
+
     <script>
         const firebaseConfig = { databaseURL: "https://studio-8164628274-c414a-default-rtdb.asia-southeast1.firebasedatabase.app/" };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
         let localProfileName = localStorage.getItem('omni_v3_name') || "";
+        let localProfileAvatar = localStorage.getItem('omni_v3_pfp') || "";
         let targetChatRoom = "Global";
+        let activeDataEngineClass = "anime";
         let mediaCacheBlock = [];
+        let activeTrackIndex = 0;
 
         function verifyIdentityRequirements() {
             if (localProfileName) {
                 document.getElementById('identity-interceptor').style.display = 'none';
-                database.ref('users/' + localProfileName).set({ heartbeat: Date.now() });
+                if(localProfileAvatar) document.getElementById('lockout-avatar-view').src = localProfileAvatar;
+                database.ref('users/' + localProfileName).set({ pfp: localProfileAvatar, heartbeat: Date.now() });
             } else {
                 document.getElementById('identity-interceptor').style.display = 'flex';
             }
         }
 
+        function processAvatarBuffer(event, isLockoutView) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    localProfileAvatar = e.target.result;
+                    document.getElementById('lockout-avatar-view').src = localProfileAvatar;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
         function saveGatekeeperIdentity() {
             const nameInput = document.getElementById('lockout-username-field').value.trim();
-            if(!nameInput) return alert("Username required.");
+            if(!nameInput) return alert("System Profile Username Invalid.");
             localProfileName = nameInput;
             localStorage.setItem('omni_v3_name', localProfileName);
+            localStorage.setItem('omni_v3_pfp', localProfileAvatar);
             verifyIdentityRequirements();
         }
 
+        /* 🟢 SYSTEM CONTROLLER / NAVIGATION TRIGGER FOR MULTI-VIEWS (FIXED ERROR) */
         function routeTo(viewId, element) {
-            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(viewId + '-view').classList.add('active');
-            element.classList.add('active');
+            document.querySelectorAll('.view-frame-section').forEach(v => v.classList.remove('active-view'));
+            document.querySelectorAll('.dock-nav-trigger-node').forEach(b => b.classList.remove('active-nav-node'));
+            
+            document.getElementById(viewId + '-view').classList.add('active-view');
+            element.classList.add('active-nav-node');
         }
 
         function startLiveChatRouter() {
             database.ref('global_broadcast_messages').limitToLast(50).on('value', snap => {
                 if(targetChatRoom === "Global") renderChatBubbles(snap.val());
             });
+
             database.ref('users').on('value', snap => {
                 const users = snap.val() || {};
                 const pmBox = document.getElementById('pm-users-list');
                 pmBox.innerHTML = '';
-                for(let u in users) {
-                    if(u !== localProfileName) {
-                        pmBox.innerHTML += `<div class="online-user" onclick="switchToPrivateMessage('${u}')">👤 ${u}</div>`;
+                for(let onlineUser in users) {
+                    if(onlineUser !== localProfileName) {
+                        const activeClass = (targetChatRoom === onlineUser) ? 'active-pm-node' : '';
+                        pmBox.innerHTML += `
+                            <div class="cloud-user-row ${activeClass}" onclick="switchToPrivateMessage('${onlineUser}')">
+                                <span>SYSTEM_CLIENT: @${onlineUser}</span>
+                                <span class="network-online-indicator"></span>
+                            </div>
+                        `;
                     }
                 }
             });
@@ -177,91 +277,136 @@
 
         function switchToGlobalRoom() {
             targetChatRoom = "Global";
-            document.getElementById('active-chat-header').innerText = "Channel: Global Room";
+            document.getElementById('active-chat-header').innerText = "PORT LINK: PUBLIC_GLOBAL_NETWORK";
             database.ref('global_broadcast_messages').limitToLast(50).once('value', s => renderChatBubbles(s.val()));
         }
 
         function switchToPrivateMessage(userTarget) {
             targetChatRoom = userTarget;
-            document.getElementById('active-chat-header').innerText = `PM: @${userTarget}`;
-            const tunnel = [localProfileName, userTarget].sort().join("_pmchannel_");
-            database.ref('private_tunnels/' + tunnel).limitToLast(50).on('value', snap => {
+            document.getElementById('active-chat-header').innerText = `ENCRYPTED TUNNEL: @${userTarget}`;
+            const tunnelPathID = [localProfileName, userTarget].sort().join("_pmchannel_");
+            database.ref('private_tunnels/' + tunnelPathID).limitToLast(50).on('value', snap => {
                 if(targetChatRoom === userTarget) renderChatBubbles(snap.val());
             });
         }
 
-        function renderChatBubbles(data) {
+        function renderChatBubbles(messagesData) {
             const container = document.getElementById('chat-messages-container');
             container.innerHTML = '';
-            if(!data) return;
-            for(let k in data) {
-                const isSelf = data[k].sender === localProfileName ? 'self' : '';
-                container.innerHTML += `<div class="msg-bubble ${isSelf}"><strong>${data[k].sender}:</strong> ${data[k].text}</div>`;
+            if(!messagesData) return;
+            for(let msgKey in messagesData) {
+                const payload = messagesData[msgKey];
+                const isSelf = payload.sender === localProfileName ? 'origin-self' : '';
+                const pfpImg = payload.avatar || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='36' fill='%23ff4757'><rect width='100%' height='100%'/></svg>";
+                container.innerHTML += `
+                    <div class="chat-msg-bubble-node ${isSelf}">
+                        <img src="${pfpImg}">
+                        <div>
+                            <div style="font-size:0.75rem; font-weight:700; color:var(--color-brand-primary); margin-bottom:4px;">${payload.sender}</div>
+                            <div style="font-size:0.9rem; color:var(--color-text-premium);">${payload.text}</div>
+                        </div>
+                    </div>
+                `;
             }
             container.scrollTop = container.scrollHeight;
         }
 
         function sendOmniChatMessage() {
             const input = document.getElementById('chat-message-input');
-            if(!input.value.trim()) return;
-            const packet = { sender: localProfileName, text: input.value.trim(), epochTime: Date.now() };
+            const dataString = input.value.trim();
+            if(!dataString) return;
+
+            const structuredPacket = { sender: localProfileName, avatar: localProfileAvatar, text: dataString, epochTime: Date.now() };
+
             if(targetChatRoom === "Global") {
-                database.ref('global_broadcast_messages').push(packet);
+                database.ref('global_broadcast_messages').push(structuredPacket);
             } else {
-                const tunnel = [localProfileName, targetChatRoom].sort().join("_pmchannel_");
-                database.ref('private_tunnels/' + tunnel).push(packet);
+                const tunnelPathID = [localProfileName, targetChatRoom].sort().join("_pmchannel_");
+                database.ref('private_tunnels/' + tunnelPathID).push(structuredPacket);
             }
             input.value = '';
         }
 
+        /* 🌐 AUTO-UPDATED REALTIME JIKAN JAPANESE DIRECTORY PIPELINE ENGINE */
         async function fetchJikanCloudFeeds() {
             try {
-                const res = await (await fetch('https://api.jikan.moe/v4/top/anime?limit=12')).json();
+                let endpoint = activeDataEngineClass === "anime" ? 'https://api.jikan.moe/v4/top/anime?limit=24' : 'https://api.jikan.moe/v4/top/manga?limit=24';
+                const res = await (await fetch(endpoint)).json();
                 mediaCacheBlock = res.data;
                 filterMediaMatrix();
-            } catch(e) {}
+            } catch(e) { console.error("Database cloud pipeline failure.", e); }
+        }
+
+        function setMediaClass(classType, element) {
+            document.querySelectorAll('.filter-navigation-tabs .ui-action-btn').forEach(b => b.classList.remove('active-tab'));
+            element.classList.add('active-tab');
+            activeDataEngineClass = classType;
+            fetchJikanCloudFeeds();
         }
 
         function filterMediaMatrix() {
             const searchKeyword = document.getElementById('media-search').value.toLowerCase();
             const grid = document.getElementById('media-grid-display');
-            let dataset = mediaCacheBlock.filter(item => item.title.toLowerCase().includes(searchKeyword));
+            let dataset = mediaCacheBlock.filter(item => {
+                let titleString = item.title || "";
+                return titleString.toLowerCase().includes(searchKeyword);
+            });
+            
             grid.innerHTML = dataset.map(item => `
-                <div class="media-card">
-                    <img src="${item.images.jpg.image_url}">
-                    <div class="media-card-info"><div class="media-title">${item.title}</div></div>
+                <div class="premium-media-card">
+                    <img src="${item.images?.jpg?.image_url || ''}" loading="lazy">
+                    <div class="card-metadata-area">
+                        <div class="card-data-title">${item.title}</div>
+                        <div class="card-data-badge">${item.type || activeDataEngineClass}</div>
+                    </div>
                 </div>
             `).join('');
         }
 
+        /* 🎵 100% LEGAL & SAFE AUTO-STREAM MUSIC DATABASE */
         const trackDatabase = [
-            { title: "Metamorphosis Phonk Track", stream: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
-            { title: "Raining In Manila - Lola Amour", stream: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3" }
+            { title: "Lofi HipHop Cloud Terminal Live (Legal Stream)", stream: "https://stream.zeno.fm/0r0xa792kw8uv" },
+            { title: "Synthwave Enterprise Programmer Radio", stream: "https://stream.zeno.fm/4nzg7646gzeuv" },
+            { title: "Cyberpunk Industrial Beats Network", stream: "https://stream.zeno.fm/8066b172f38uv" },
+            { title: "Chillhop Chillout Lounge Mix", stream: "https://stream.zeno.fm/6v0v67w77eeuv" }
         ];
+
         const audioCoreNode = document.getElementById('hardware-audio-streamer');
 
         function renderSpotifyLayout() {
-            document.getElementById('spotify-tracks-container').innerHTML = trackDatabase.map((t, idx) => `
-                <div class="track-row">
-                    <span>🎵 ${t.title}</span>
-                    <button class="f-btn" onclick="bootAudioTrack(${idx})">PLAY</button>
+            document.getElementById('spotify-tracks-container').innerHTML = trackDatabase.map((track, index) => `
+                <div class="playlist-track-row-node">
+                    <div>
+                        <div style="font-weight:700; font-size:0.95rem;">${track.title}</div>
+                        <div style="font-size:0.75rem; color:var(--color-text-sub); margin-top:2px;">SECURE DIGITAL BITSTREAM</div>
+                    </div>
+                    <button onclick="bootAudioTrack(${index})" class="ui-action-btn">CONNECT BUFFER</button>
                 </div>
             `).join('');
         }
 
         function bootAudioTrack(index) {
-            audioCoreNode.src = trackDatabase[index].stream;
+            activeTrackIndex = index;
+            audioCoreNode.src = trackDatabase[activeTrackIndex].stream;
             audioCoreNode.play();
-            document.getElementById('player-track-title').innerText = "Streaming: " + trackDatabase[index].title;
+            document.getElementById('player-track-title').innerText = "Active Feed: " + trackDatabase[activeTrackIndex].title;
+            document.getElementById('audio-play-pause-btn').innerHTML = `<svg style="width:18px; height:18px; fill:#fff;" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
         }
 
         function toggleAudioEngineState() {
-            if(audioCoreNode.paused) audioCoreNode.play(); else audioCoreNode.pause();
+            if(audioCoreNode.paused) {
+                audioCoreNode.play();
+                document.getElementById('audio-play-pause-btn').innerHTML = `<svg style="width:18px; height:18px; fill:#fff;" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
+            } else {
+                audioCoreNode.removeEventListener
+                audioCoreNode.pause();
+                document.getElementById('audio-play-pause-btn').innerHTML = `<svg style="width:18px; height:18px; fill:#fff;" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
+            }
         }
 
-        function toggleThemeCore() {
-            document.body.toggleAttribute('data-theme');
-        }
+        function audioNextTrack() { activeTrackIndex = (activeTrackIndex + 1) % trackDatabase.length; bootAudioTrack(activeTrackIndex); }
+        function audioPrevTrack() { activeTrackIndex = (activeTrackIndex - 1 + trackDatabase.length) % trackDatabase.length; bootAudioTrack(activeTrackIndex); }
+        function toggleThemeCore() { document.body.toggleAttribute('data-theme'); }
 
         document.addEventListener('DOMContentLoaded', () => {
             verifyIdentityRequirements();
